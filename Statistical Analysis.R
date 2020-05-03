@@ -22,16 +22,12 @@ variables
 QPALeaf.mod  <- lm(QPALeaflitter ~ TimeLeaf, data=variables)
 summary(QPALeaf.mod)
 
-coefficients(QPALeaf.mod)
-resid(QPALeaf.mod)
 
 variables$resid <- NA
 variables$QPAresid<- QPALeaf.mod$resid
 variables
 
-apply(variables, 2, sd)
-
-
+1/apply(variables, 2, sd)
 
 p1 <- ggplot(variables,aes(TimeLeaf ,
                 y=QPALeaflitter))+
@@ -56,7 +52,30 @@ p2 <- ggplot(variables,aes(TimeLeaf ,
 p2
 
 
+# QPA CHLA ----------------------------------------------------------------
 
+
+chla <- variables %>% select(TimeChla,QPAChla,QPBChla)
+chla <- na.omit(chla)
+
+QPAChla.mod  <- lm(QPAChla~ TimeChla   , data=chla)
+summary(QPAChla.mod)
+
+coefficients(QPAChla.mod)
+resid(QPAChla.mod)
+
+chla$QPAChlaresid <- NA
+chla$QPAChlaresid<- QPAChla.mod$resid
+chla
+
+1/apply(chla, 2, sd)
+
+
+p3 <- ggplot(variables,aes(TimeChla ,
+                           y=QPAChla))+
+  geom_point() + 
+  geom_smooth(method=lm,se=FALSE)
+p3
 
 
 
