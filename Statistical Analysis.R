@@ -8,21 +8,29 @@
 #PEGF
 #--------------------------------------------
 #
+
+library(modelr)
 library(ggplot2)
+library(dplyr)
 
-
-setwd("D:/LTER/Manuscript 2017/Ecosystem stability/Statistical Analysis")
-variables <- read.csv("variables.csv")
+variables<- read.csv("variables.csv")
 variables
+
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-
-QPALeaf.mod <- lm(variables,QPALeaflitter ~ TimeLeaf, data=variables)
+QPALeaf.mod  <- lm(QPALeaflitter ~ TimeLeaf, data=variables)
 summary(QPALeaf.mod)
 
 coefficients(QPALeaf.mod)
 resid(QPALeaf.mod)
+
+variables$resid <- NA
+variables$QPAresid<- QPALeaf.mod$resid
+variables
+
+apply(variables, 2, sd)
+
 
 
 p1 <- ggplot(variables,aes(TimeLeaf ,
@@ -38,5 +46,17 @@ summary(QPBLeaf.mod)
 
 coefficients(QPBLeaf.mod)
 resid(QPBLeaf.mod)
+variables %>% spread_residuals(QPALeaf.mod,QPBLeaf.mod)
+
+
+p2 <- ggplot(variables,aes(TimeLeaf ,
+                           y=QPBLeaflitter))+
+  geom_point() + 
+  geom_smooth(method=lm,se=FALSE)
+p2
+
+
+
+
 
 
