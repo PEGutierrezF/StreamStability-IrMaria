@@ -71,11 +71,27 @@ chla
 1/apply(chla, 2, sd)
 
 
-p3 <- ggplot(variables,aes(TimeChla ,
-                           y=QPAChla))+
+
+# Canopy QPA ---------------------------------------------------------------
+
+
+Canopy <- variables %>% select(TimeCanopy,QPACanopy,QPBCanopy)
+Canopy <- na.omit(Canopy)
+
+QPACanopy.mod  <- lm(QPACanopy~ TimeCanopy, data=Canopy)
+summary(QPACanopy.mod)
+
+coefficients(QPACanopy.mod)
+resid(QPACanopy.mod)
+
+Canopy$QPACanopyresid <- NA
+Canopy$QPACanopyresid<- QPACanopy.mod$resid
+Canopy
+
+1/apply(Canopy, 2, sd)
+
+c1 <- ggplot(Canopy,aes(TimeCanopy ,
+                           y=QPACanopy))+
   geom_point() + 
   geom_smooth(method=lm,se=FALSE)
-p3
-
-
-
+c1
