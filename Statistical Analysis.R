@@ -95,3 +95,8 @@ c1 <- ggplot(Canopy,aes(TimeCanopy ,
   geom_point() + 
   geom_smooth(method=lm,se=FALSE)
 c1
+
+
+# Canopy QPB --------------------------------------------------------------
+
+
