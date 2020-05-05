@@ -19,17 +19,19 @@ variables
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-QPALeaf.mod  <- lm(QPALeaflitter ~ TimeLeaf, data=variables)
+LeafLitter <- variables %>% select(TimeLeaf,QPALeaflitter,QPBLeaflitter )
+LeafLitter <- na.omit(LeafLitter)
+LeafLitter
+
+QPALeaf.mod  <- lm(log(QPALeaflitter) ~ TimeLeaf, data=LeafLitter)
 summary(QPALeaf.mod)
 
+LeafLitter$QPAresid<- QPALeaf.mod$resid
+LeafLitter
 
-variables$resid <- NA
-variables$QPAresid<- QPALeaf.mod$resid
-variables
+1/apply(LeafLitter, 2, sd)
 
-1/apply(variables, 2, sd)
-
-p1 <- ggplot(variables,aes(TimeLeaf ,
+p1 <- ggplot(LeafLitter,aes(TimeLeaf ,
                 y=QPALeaflitter))+
   geom_point() + 
   geom_smooth(method=lm,se=FALSE)
@@ -37,19 +39,20 @@ p1
 
   # Lm QPB Leaf Litter ------------------------------------------------------
 
-QPBLeaf.mod <- lm(QPBLeaflitter ~ TimeLeaf, data=variables)
+QPBLeaf.mod <- lm(QPBLeaflitter ~ TimeLeaf, data=LeafLitter)
 summary(QPBLeaf.mod)
 
-coefficients(QPBLeaf.mod)
-resid(QPBLeaf.mod)
-variables %>% spread_residuals(QPALeaf.mod,QPBLeaf.mod)
+LeafLitter %>% spread_residuals(QPBLeaf.mod)
 
+1/apply(LeafLitter, 2, sd)
 
-p2 <- ggplot(variables,aes(TimeLeaf ,
+p2 <- ggplot(LeafLitter,aes(TimeLeaf ,
                            y=QPBLeaflitter))+
   geom_point() + 
   geom_smooth(method=lm,se=FALSE)
 p2
+
+
 
 
 # QPA CHLA ----------------------------------------------------------------
