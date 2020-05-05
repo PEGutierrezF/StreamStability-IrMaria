@@ -55,6 +55,8 @@ p2
 
 
 
+
+
 # QPA CHLA ----------------------------------------------------------------
 
 
@@ -64,14 +66,35 @@ chla <- na.omit(chla)
 QPAChla.mod  <- lm(QPAChla~ TimeChla   , data=chla)
 summary(QPAChla.mod)
 
-coefficients(QPAChla.mod)
-resid(QPAChla.mod)
-
-chla$QPAChlaresid <- NA
 chla$QPAChlaresid<- QPAChla.mod$resid
 chla
 
 1/apply(chla, 2, sd)
+
+c1 <- ggplot(chla,aes(TimeChla,
+                    y=QPAChla))+
+  geom_point() + 
+  geom_smooth(method=lm,se=FALSE)
+c1
+
+
+
+# QPB CHL-A ---------------------------------------------------------------
+
+QPBChla.mod  <- lm(QPBChla~ TimeChla, data=chla)
+summary(QPBChla.mod)
+
+chla$QPBChlaresid<- QPBChla.mod$resid
+chla
+
+1/apply(chla, 2, sd)
+
+c2 <- ggplot(chla,aes(TimeChla,
+                      y=QPBChla))+
+  geom_point() + 
+  geom_smooth(method=lm,se=FALSE)
+c2
+
 
 
 
