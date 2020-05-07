@@ -34,8 +34,17 @@ LeafLitter
 
 p1 <- ggplot(LeafLitter,aes(TimeLeaf ,
                 y=QPALeaflitter))+
-  geom_point() + 
-  geom_smooth(method=lm,se=FALSE)
+  geom_point(size = 3) + 
+  geom_smooth(method=lm,se=FALSE) +
+  
+  xlab('') + ylab("Mean litter input rate ("*~g~m^-2~d^-1*")") + # axis x
+  
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+
+  ylim(-3,0)
 p1
 
   # Lm QPB Leaf Litter ------------------------------------------------------
@@ -48,15 +57,24 @@ LeafLitter
 
 1/apply(LeafLitter, 2, sd)
 
+
 p2 <- ggplot(LeafLitter,aes(TimeLeaf ,
                            y=QPBLeaflitter))+
-  geom_point() + 
-  geom_smooth(method=lm,se=FALSE)
+  geom_point(size = 3) + 
+  geom_smooth(method=lm,se=FALSE) +
+  
+  xlab('15-days sampling')+ ylab("Mean litter input rate ("*~g~m^-2~d^-1*")") +
+  theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+
+ylim(-3,0)
 p2
 
-
-p1 + p2
-
+leaf <- p1 / p2
+leaf + ggsave("Leaf.jpeg", width=6, height=10,dpi=600)
 
 
 
