@@ -12,6 +12,7 @@
 library(modelr)
 library(ggplot2)
 library(dplyr)
+library(patchwork)
 
 variables<- read.csv("variables.csv")
 variables
@@ -23,7 +24,7 @@ LeafLitter <- variables %>% select(TimeLeaf,QPALeaflitter,QPBLeaflitter )
 LeafLitter <- na.omit(LeafLitter)
 LeafLitter
 
-QPALeaf.mod  <- lm(log(QPALeaflitter) ~ TimeLeaf, data=LeafLitter)
+QPALeaf.mod  <- lm(QPALeaflitter ~ TimeLeaf, data=LeafLitter)
 summary(QPALeaf.mod)
 
 LeafLitter$QPAresid<- QPALeaf.mod$resid
@@ -42,7 +43,8 @@ p1
 QPBLeaf.mod <- lm(QPBLeaflitter ~ TimeLeaf, data=LeafLitter)
 summary(QPBLeaf.mod)
 
-LeafLitter %>% spread_residuals(QPBLeaf.mod)
+LeafLitter$QPBresid<- QPBLeaf.mod$resid
+LeafLitter
 
 1/apply(LeafLitter, 2, sd)
 
@@ -53,6 +55,7 @@ p2 <- ggplot(LeafLitter,aes(TimeLeaf ,
 p2
 
 
+p1 + p2
 
 
 
