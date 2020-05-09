@@ -79,14 +79,65 @@ cc2 <- ggplot(canopy, aes(TimeCanopy,
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 cc2
 
-canopylong <- cc1 / cc2
-canopylong + ggsave("Canopy.jpeg", width=6, height=10,dpi=600)
+canopyreg <- cc1 / cc2
+canopyreg + ggsave("Canopy.jpeg", width=6, height=10,dpi=600)
 
 
 
 # Long term ---------------------------------------------------------------
 
+canopycover
+# QPA
+cc3 <- ggplot(canopycover,aes(TimeCanopy,
+                       y=QPACanopy))+
+  geom_point() + 
+  geom_line() +
+  geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
+                position=position_dodge(0.05)) + 
+  geom_segment(aes(x = 1, y = 13.28, xend = 6, yend = 13.28))+
+  geom_segment((aes(x = 7, y = 13.28, xend = 18, yend = 13.28)), color="red", linetype="dashed", size=1) + 
+  
+  xlab('')+ ylab("Canopy openness (%)") +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(5,100) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+cc3
+
+# QPB
+
+cc4 <- ggplot(canopycover,aes(TimeCanopy,
+                              y=QPBCanopy))+
+  geom_point() + 
+  geom_line() +
+  geom_errorbar(aes(ymin=QPBCanopy-QPBsdCanopy, ymax=QPBCanopy+QPBsdCanopy), width=.2,
+                position=position_dodge(0.05)) + 
+  geom_segment(aes(x = 1, y = 13.28, xend = 6, yend = 13.28))+
+  geom_segment((aes(x = 7, y = 13.28, xend = 18, yend = 13.28)), color="red", linetype="dashed", size=1) + 
+  
+  xlab('')+ ylab("Canopy openness (%)") +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(5,100) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+cc4
+
+canopyLong <- cc3 / cc4
+canopyLong + ggsave("canopyOpenness.jpeg", width=6, height=10,dpi=600)
 
 
 
