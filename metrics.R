@@ -21,6 +21,7 @@ metrics
 
 # Resistance --------------------------------------------------------------
 
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
 
 r1 <- ggplot(metrics, 
       aes(x=Resitance,
@@ -28,24 +29,121 @@ r1 <- ggplot(metrics,
 #          color=Stream,
  #         group=Variable)) +
   geom_vline(aes(xintercept = 0), color='darkgrey') +
-  geom_point(size=3)+ #aes(shape=Variable),size=2.7) +#, position=pd, stat="identity") + 
-  facet_grid(Variable~.)
+  geom_point(size=5)+ #aes(shape=Variable),size=2.7) +#, position=pd, stat="identity") + 
+  
+  theme(axis.title.x = element_text(size = 18, angle = 0)) +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+   xlim(-1,1) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+  
+  facet_grid(Variable_f~.) +
+  theme(strip.text.y = element_text(size = 12, colour = "black", angle = 270)) +
+  theme(strip.background = element_rect(colour = "black", fill = "grey"))
 
+r1
 
 
 # Resilience --------------------------------------------------------------
 
 
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
+
 r2 <- ggplot(metrics, 
-       aes(x=Resiliences,
-           y=Stream))+ 
+             aes(x=Resiliences,
+                 y=Stream))+ 
   #          color=Stream,
   #         group=Variable)) +
   geom_vline(aes(xintercept = 0), color='darkgrey') +
-  geom_point(size=3)+ #aes(shape=Variable),size=2.7) +#, position=pd, stat="identity") + 
-  facet_grid(Variable~.)
+  geom_point(size=5)+ #aes(shape=Variable),size=2.7) +#, position=pd, stat="identity") + 
+  
+  theme(axis.title.x = element_text(size = 18, angle = 0)) +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  xlim(-1,1) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+  
+  facet_grid(Variable_f~.) +
+  theme(strip.text.y = element_text(size = 12, colour = "black", angle = 270)) +
+  theme(strip.background = element_rect(colour = "black", fill = "grey"))
 
-r1 + r2
+r2
+
+
+# Recovery ----------------------------------------------------------------
+
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
+
+r3 <- ggplot(metrics, 
+             aes(x=Recovery,
+                 y=Stream))+ 
+  #          color=Stream,
+  #         group=Variable)) +
+  geom_vline(aes(xintercept = 0), color='darkgrey') +
+  geom_point(size=5)+ #aes(shape=Variable),size=2.7) +#, position=pd, stat="identity") + 
+  
+  theme(axis.title.x = element_text(size = 18, angle = 0)) +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  xlim(-1,1) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+  
+  facet_grid(Variable_f~.) +
+  theme(strip.text.y = element_text(size = 12, colour = "black", angle = 270)) +
+  theme(strip.background = element_rect(colour = "black", fill = "grey"))
+
+r3
+
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
+metrics
+
+r4 <- ggplot(metrics, 
+             aes(x=TemporalStab,
+                 y=Stream))+ 
+  #          color=Stream,
+  #         group=Variable)) +
+  geom_vline(aes(xintercept = 0), color='darkgrey') +
+  geom_point(size=5)+ #aes(shape=Variable),size=2.7) +#, position=pd, stat="identity") + 
+  
+  theme(axis.title.x = element_text(size = 18, angle = 0)) +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  xlim(-15,15) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+  
+  facet_grid(Variable_f~.) +
+  theme(strip.text.y = element_text(size = 12, colour = "black", angle = 270)) +
+  theme(strip.background = element_rect(colour = "black", fill = "grey"))
+
+r4
+
+(r1 + r3) / (r2 + r4)
+
+
 
 
 r3<- ggplot(metrics, 
@@ -53,7 +151,7 @@ r3<- ggplot(metrics,
                  y=Resiliences,
                  color= Stream,
                  group=Variable)) +
-geom_point(aes(shape=Variable, color=Stream), size=3) +
+geom_point(aes(color=Stream,shape=Variable), size=3) +
 geom_vline(aes(xintercept = 0), color='darkgrey') +
   geom_hline(aes(yintercept = 0), color='darkgrey')
 
