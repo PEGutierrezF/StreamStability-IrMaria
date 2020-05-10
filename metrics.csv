@@ -1,7 +1,9 @@
 Variable,Stream,Resitance,Resiliences,Recovery,TemporalStab
-Leaf,QPA,0.64,0.05,-0.64,1.76
-Leaf,QPB,0.78,0.01,-0.42,3.19
 Canopy,QPA,0.83,-0.05,0.52,12.16
 Canopy,QPB,0.79,-0.05,0.52,7.52
+Leaf,QPA,0.64,0.05,-0.64,1.76
+Leaf,QPB,0.78,0.01,-0.42,3.19
+Leaf_Exp,QPA,0.464946327,0.001,-0.40,1.06
+Leaf_Exp,QPB,0.241908544,0.008,0.28,1.33
 Chla,QPA,-0.13,0.007,-0.15,1.93
 Chla,QPB,-0.4,0.01,-0.05,2.1
