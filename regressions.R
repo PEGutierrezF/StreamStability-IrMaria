@@ -23,7 +23,7 @@ ggplot(regression, aes(Time,
                        shape= variable , 
                        col = stream)) + 
  geom_point(size = 5) +
- geom_smooth(method = 'lm', se = T,  aes(color=stream)) + #, alpha = .15, aes(fill = stream)) +
+ geom_smooth(method = 'lm', se = F,  aes(color=stream)) + #, alpha = .15, aes(fill = stream)) +
 
 
 xlab('Sampling period') + ylab("Varible (random units)") + 
@@ -35,6 +35,6 @@ xlab('Sampling period') + ylab("Varible (random units)") +
 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
       panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
- # facet_grid(stream~ variable)
+ facet_grid(~ variable)
   # facet_wrap(. ~ variable)
 
