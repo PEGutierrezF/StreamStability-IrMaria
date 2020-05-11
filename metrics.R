@@ -153,7 +153,7 @@ r3<- ggplot(metrics,
                  group=Variable)) +
 geom_point(aes(color=Stream,shape=Variable), size=3) +
 geom_vline(aes(xintercept = 0), color='darkgrey') +
-  geom_hline(aes(yintercept = 0), color='darkgrey')
-
+  geom_hline(aes(yintercept = 0), color='darkgrey') +
+  xlim(-1,1) 
 r3
-
+ 
