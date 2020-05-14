@@ -14,13 +14,13 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-variables<- read.csv("variables.csv")
-variables
+LeafLitter<- read.csv("01 Leaflitter.csv")
+LeafLitter
 
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-LeafLitter <- variables %>% select(TimeLeaf,QPALeaflitter,QPBLeaflitter )
+LeafLitter <- LeafLitter %>% select(TimeLeaf,QPALeaflitter,QPBLeaflitter )
 LeafLitter <- na.omit(LeafLitter)
 LeafLitter
 
@@ -87,9 +87,13 @@ leaf + ggsave("Leaf.jpeg", width=6, height=10,dpi=600)
 
 # Long-term ---------------------------------------------------------------
 
+LeafLitter
 # QPA
-p3 <- ggplot(variables,aes(TimeLeaf ,
-                            y=QPALeaf))+
+p3 <- ggplot(LeafLitter,aes(TimeLeaf ,
+                            y=QPALeaf ))+
+  
+  annotate(geom = "rect",xmin=1,xmax=41,ymin=1.136391643,ymax=1.524018959,alpha = 0.4,fill = "grey") +
+  
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPALeaf-QPAsdLeaf   , ymax=QPALeaf+QPAsdLeaf), width=.2,
@@ -97,7 +101,7 @@ p3 <- ggplot(variables,aes(TimeLeaf ,
   geom_segment(aes(x = 1, y = 1.33, xend = 16, yend = 1.33))+
   geom_segment((aes(x = 17, y = 1.33, xend = 41, yend = 1.33)), color="red", linetype="dashed", size=1) + 
 
-  xlab('')+ ylab("Mean litter input rate ("*~g~m^-2~d^-1*")") +
+  xlab('')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
@@ -113,8 +117,11 @@ p3
 
 # QPB
 
-p4 <- ggplot(variables,aes(TimeLeaf ,
+p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
                            y=QPBLeaf))+
+  
+  annotate(geom = "rect",xmin=1,xmax=41,ymin=1.042275203,ymax=1.759151731,alpha = 0.4,fill = "grey") +
+  
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPBLeaf-QPBsdLeaf   , ymax=QPBLeaf+QPBsdLeaf), width=.2,
@@ -122,7 +129,7 @@ p4 <- ggplot(variables,aes(TimeLeaf ,
   geom_segment(aes(x = 1, y = 1.40, xend = 16, yend = 1.40))+
   geom_segment((aes(x = 17, y = 1.40, xend = 41, yend = 1.40)), color="red", linetype="dashed", size=1) + 
 
-  xlab('Sampling period')+ ylab("Mean litter input rate ("*~g~m^-2~d^-1*")") +
+  xlab('Sampling period')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
   theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   

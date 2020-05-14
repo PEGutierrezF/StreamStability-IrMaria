@@ -21,7 +21,7 @@ metrics
 
 # Resistance --------------------------------------------------------------
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
 
 r1 <- ggplot(metrics, 
       aes(x=Resitance,
@@ -53,7 +53,7 @@ r1
 # Resilience --------------------------------------------------------------
 
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
 
 r2 <- ggplot(metrics, 
              aes(x=Resiliences,
@@ -84,7 +84,7 @@ r2
 
 # Recovery ----------------------------------------------------------------
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
 
 r3 <- ggplot(metrics, 
              aes(x=Recovery,
@@ -112,7 +112,7 @@ r3 <- ggplot(metrics,
 
 r3
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla'))
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
 metrics
 
 r4 <- ggplot(metrics, 

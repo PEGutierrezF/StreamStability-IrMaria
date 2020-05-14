@@ -36,13 +36,13 @@ cc1 <- ggplot(canopy, aes(TimeCanopy,
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
-  xlab('') + ylab("Canopy openness (%)") + # axis x
+  xlab('') + ylab("Residuals") + # axis x
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
-#  ylim(-2,1.5) +
+  ylim(-2.5,0.5) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
@@ -66,13 +66,14 @@ cc2 <- ggplot(canopy, aes(TimeCanopy,
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
-  xlab('') + ylab("Canopy openness (%)") + # axis x
+  xlab('Sampling period') + ylab("Residuals") + # axis x
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  theme(axis.title.x = element_text(size = 18, angle = 0)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
-  #  ylim(-2,1.5) +
+  ylim(-2.5,0.5) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
@@ -91,16 +92,16 @@ canopycover
 cc3 <- ggplot(canopycover,aes(TimeCanopy,
                        y=QPACanopy))+
   
-  annotate(geom = "rect",xmin=1,xmax=18,ymin=7.72,ymax=18.83,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=18,ymin=83.37,ymax=93.27,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
-  geom_segment(aes(x = 1, y = 13.28, xend = 6, yend = 13.28))+
-  geom_segment((aes(x = 7, y = 13.28, xend = 18, yend = 13.28)), color="red", linetype="dashed", size=1) +
+  geom_segment(aes(x = 1, y = 88.32, xend = 6, yend = 88.32))+
+  geom_segment((aes(x = 7, y = 88.32, xend = 18, yend = 88.32)), color="red", linetype="dashed", size=1) +
   
-  xlab('')+ ylab("Canopy openness (%)") +
+  xlab('')+ ylab("Canopy cover (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
@@ -119,17 +120,18 @@ cc3
 cc4 <- ggplot(canopycover,aes(TimeCanopy,
                               y=QPBCanopy))+
   
-  annotate(geom = "rect",xmin=1,xmax=18,ymin=8.79,ymax=14.60,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=18,ymin=85.60,ymax=92.18,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPBCanopy-QPBsdCanopy, ymax=QPBCanopy+QPBsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
-  geom_segment(aes(x = 1, y = 11.69, xend = 6, yend = 11.69))+
-  geom_segment((aes(x = 7, y = 11.69, xend = 18, yend = 11.69)), color="red", linetype="dashed", size=1) + 
+  geom_segment(aes(x = 1, y = 88.89, xend = 6, yend = 88.89))+
+  geom_segment((aes(x = 7, y = 88.89, xend = 18, yend = 88.89)), color="red", linetype="dashed", size=1) + 
   
-  xlab('')+ ylab("Canopy openness (%)") +
+  xlab('Sampling period')+ ylab("Canopy cover (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  theme(axis.title.x = element_text(size = 18, angle = 0)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
@@ -143,7 +145,7 @@ cc4 <- ggplot(canopycover,aes(TimeCanopy,
 cc4
 
 canopyLong <- cc3 / cc4
-canopyLong + ggsave("canopyOpenness.jpeg", width=6, height=10,dpi=600)
+canopyLong + ggsave("CanopyCover.jpeg", width=6, height=10,dpi=600)
 
 
 
