@@ -17,7 +17,7 @@ library(patchwork)
 regression<- read.csv("regressions.csv")
 regression
 
-ggplot(regression, aes(Time, 
+regression <- ggplot(regression, aes(Time, 
                        value, 
                        shape= variable , 
                        col = stream)) + 
@@ -25,7 +25,7 @@ ggplot(regression, aes(Time,
  geom_smooth(method = 'lm', se = F,  aes(color=stream)) + #, alpha = .15, aes(fill = stream)) +
 
 
-xlab('Sampling period') + ylab("Residuals") + 
+xlab('Sampling period') + ylab("Resilience (LN[Vdis/Vcont])") + 
   theme(axis.title.x = element_text(size = 16, angle = 0)) +# axis x
   theme(axis.title.y = element_text(size = 16, angle = 90)) +
   
@@ -42,4 +42,7 @@ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 
  facet_grid(~ variable)
   # facet_wrap(. ~ variable)
+
+regression
+regression + ggsave("Regression.jpeg", width=10, height=6,dpi=600)
 

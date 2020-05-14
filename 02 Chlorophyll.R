@@ -14,7 +14,7 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-chl_a<- read.csv("chl_a.csv")
+chl_a<- read.csv("02 chl_a.csv")
 chl_a
 
 
@@ -90,6 +90,9 @@ chl_a
 # QPA
 c3 <- ggplot(chl_a,aes(TimeCHLA  ,
                            y=QPAchla))+
+  
+  annotate(geom = "rect",xmin=1,xmax=23,ymin=707.2232635,ymax=1383.981903,alpha = 0.4,fill = "grey") +
+  
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPAchla-QPAsdCHLA, ymax=QPAchla+QPAsdCHLA), width=.2,
@@ -115,6 +118,7 @@ c3
 
 c4 <- ggplot(chl_a,aes(TimeCHLA  ,
                        y=QPBchla))+
+  annotate(geom = "rect",xmin=1,xmax=23,ymin=718.5855469,ymax=2077.039499,alpha = 0.4,fill = "grey") +
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPBchla-QPBsdCHLA, ymax=QPBchla+QPBsdCHLA), width=.2,
