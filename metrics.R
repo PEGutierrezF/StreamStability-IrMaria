@@ -44,10 +44,11 @@ r1 <- ggplot(metrics,
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
   facet_grid(Variable_f~.) +
-  theme(strip.text.y = element_text(size = 12, colour = "black", angle = 270)) +
-  theme(strip.background = element_rect(colour = "black", fill = "grey"))
+  theme(strip.text.y = element_text(size = 16, colour = "black", angle = 270)) +
+  theme(strip.background = element_rect(colour = "black", fill = "grey94"))
 
-r1
+
+r1 + ggsave("Resistance.jpeg", width=6, height=6,dpi=600)
 
 
 # Resilience --------------------------------------------------------------
@@ -76,10 +77,10 @@ r2 <- ggplot(metrics,
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
   facet_grid(Variable_f~.) +
-  theme(strip.text.y = element_text(size = 12, colour = "black", angle = 270)) +
-  theme(strip.background = element_rect(colour = "black", fill = "grey"))
+  theme(strip.text.y = element_text(size = 16, colour = "black", angle = 270)) +
+  theme(strip.background = element_rect(colour = "black", fill = "grey94"))
 
-r2
+r2 + ggsave("Resilience.jpeg", width=6, height=6,dpi=600)
 
 
 # Recovery ----------------------------------------------------------------
