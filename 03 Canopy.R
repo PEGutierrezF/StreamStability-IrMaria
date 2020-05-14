@@ -14,7 +14,7 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-canopycover<- read.csv("canopy.csv")
+canopycover<- read.csv("03 canopy.csv")
 canopycover
 
 
