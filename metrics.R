@@ -141,9 +141,9 @@ r4 <- ggplot(metrics,
 
 r4
 
-(r1 + r3) / (r2 + r4)
+metrics <- (r1 + r3) / (r2 + r4) + plot_annotation(tag_levels = 'A')
 
-
+metrics + ggsave("Metrics.jpeg", width=6, height=10,dpi=600)
 
 
 r5<- ggplot(metrics, 
