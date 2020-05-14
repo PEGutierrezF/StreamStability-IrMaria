@@ -37,7 +37,7 @@ p1 <- ggplot(LeafLitter,aes(TimeLeaf ,
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
-  xlab('') + ylab("Mean litter input rate ("*~g~m^-2~d^-1*")") + # axis x
+  xlab('') + ylab("Residuals") + # axis x
   
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
 
@@ -67,7 +67,7 @@ p2 <- ggplot(LeafLitter,aes(TimeLeaf ,
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
-  xlab('Sampling period')+ ylab("Mean litter input rate ("*~g~m^-2~d^-1*")") +
+  xlab('Sampling period')+ ylab("Residuals") +
   theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
