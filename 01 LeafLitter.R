@@ -44,7 +44,7 @@ p1 <- ggplot(LeafLitter,aes(TimeLeaf ,
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
 
-  ylim(-3,0) +
+  ylim(-3,3) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
@@ -74,7 +74,7 @@ p2 <- ggplot(LeafLitter,aes(TimeLeaf ,
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
 
-ylim(-3,0) +
+ylim(-3,3) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
@@ -92,14 +92,14 @@ LeafLitter
 p3 <- ggplot(LeafLitter,aes(TimeLeaf ,
                             y=QPALeaf ))+
   
-  annotate(geom = "rect",xmin=1,xmax=41,ymin=1.136391643,ymax=1.524018959,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=57,ymin=1.136391643,ymax=1.524018959,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPALeaf-QPAsdLeaf   , ymax=QPALeaf+QPAsdLeaf), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 1.33, xend = 16, yend = 1.33))+
-  geom_segment((aes(x = 17, y = 1.33, xend = 41, yend = 1.33)), color="red", linetype="dashed", size=1) + 
+  geom_segment((aes(x = 17, y = 1.33, xend = 57, yend = 1.33)), color="red", linetype="dashed", size=1) + 
 
   xlab('')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
@@ -120,14 +120,14 @@ p3
 p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
                            y=QPBLeaf))+
   
-  annotate(geom = "rect",xmin=1,xmax=41,ymin=1.042275203,ymax=1.759151731,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=57,ymin=1.042275203,ymax=1.759151731,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPBLeaf-QPBsdLeaf   , ymax=QPBLeaf+QPBsdLeaf), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 1.40, xend = 16, yend = 1.40))+
-  geom_segment((aes(x = 17, y = 1.40, xend = 41, yend = 1.40)), color="red", linetype="dashed", size=1) + 
+  geom_segment((aes(x = 17, y = 1.40, xend = 57, yend = 1.40)), color="red", linetype="dashed", size=1) + 
 
   xlab('Sampling period')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
   theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
