@@ -87,11 +87,16 @@ leaf + ggsave("Leaf.jpeg", width=6, height=10,dpi=600)
 
 # Long-term ---------------------------------------------------------------
 
+LeafLitter<- read.csv("01 Leaflitter.csv")
 LeafLitter
+
 # QPA
 p3 <- ggplot(LeafLitter,aes(TimeLeaf ,
                             y=QPALeaf ))+
   
+  annotate("text", x = 25.8, y = 9.8, label = "? H. Maria",colour = "black", size = 5) +
+  annotate(geom = "point", x = 19, y = 9.7,colour = "red",size=3) +
+  annotate("text", x = 11.5, y = 6, label = "H. Irma",colour = "black", size = 5) +
   annotate(geom = "rect",xmin=1,xmax=57,ymin=1.136391643,ymax=1.524018959,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
@@ -119,7 +124,9 @@ p3
 
 p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
                            y=QPBLeaf))+
-  
+  annotate("text", x = 25.8, y = 9.8, label = "? H. Maria",colour = "black", size = 5) +
+  annotate(geom = "point", x = 19, y = 9.7,colour = "red",size=3) +
+  annotate("text", x = 11.5, y = 8.5, label = "H. Irma",colour = "black", size = 5) +
   annotate(geom = "rect",xmin=1,xmax=57,ymin=1.042275203,ymax=1.759151731,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
@@ -147,6 +154,6 @@ p4
 
 
 leaf <- p3 / p4
-leaf + ggsave("LeafMean.jpeg", width=6, height=10,dpi=600)
+leaf + ggsave("LeafMean1.jpeg", width=6, height=10,dpi=600)
 
 
