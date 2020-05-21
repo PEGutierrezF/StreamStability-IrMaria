@@ -92,14 +92,14 @@ canopycover
 cc3 <- ggplot(canopycover,aes(TimeCanopy,
                        y=QPACanopy))+
   
-  annotate(geom = "rect",xmin=1,xmax=28,ymin=83.37,ymax=93.27,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=31,ymin=83.37,ymax=93.27,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 88.32, xend = 6, yend = 88.32))+
-  geom_segment((aes(x = 7, y = 88.32, xend = 28, yend = 88.32)), color="red", linetype="dashed", size=1) +
+  geom_segment((aes(x = 7, y = 88.32, xend = 31, yend = 88.32)), color="red", linetype="dashed", size=1) +
   
   xlab('')+ ylab("Canopy cover (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
@@ -120,14 +120,14 @@ cc3
 cc4 <- ggplot(canopycover,aes(TimeCanopy,
                               y=QPBCanopy))+
   
-  annotate(geom = "rect",xmin=1,xmax=28,ymin=85.60,ymax=92.18,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=31,ymin=85.60,ymax=92.18,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPBCanopy-QPBsdCanopy, ymax=QPBCanopy+QPBsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 88.89, xend = 6, yend = 88.89))+
-  geom_segment((aes(x = 7, y = 88.89, xend = 28, yend = 88.89)), color="red", linetype="dashed", size=1) + 
+  geom_segment((aes(x = 7, y = 88.89, xend = 31, yend = 88.89)), color="red", linetype="dashed", size=1) + 
   
   xlab('Sampling period')+ ylab("Canopy cover (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
