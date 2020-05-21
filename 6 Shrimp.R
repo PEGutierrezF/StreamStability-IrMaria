@@ -16,7 +16,7 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-Shrimp<- read.csv("6_Shrimp.csv")
+Shrimp<- read.csv("6 Shrimp.csv")
 Shrimp
 
 
