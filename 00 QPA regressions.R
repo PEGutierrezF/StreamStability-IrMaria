@@ -24,6 +24,7 @@ QPAregression$variable_f = factor(QPAregression$variable, levels=c('Canopy','Lea
 RegressionQPA <- ggplot(QPAregression, aes(Time, 
                                      value,
                                      color=variable)) + 
+  # geom_point() +
   geom_smooth(se = F, size=5)  + 
 
   geom_hline(yintercept = 0, color="darkred") +
@@ -42,7 +43,7 @@ xlab('Sampling period') + ylab("Change in magnitude") +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + 
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
   theme(strip.text.x  = element_text(size = 14, colour = "black", angle = 0)) +
   theme(strip.background = element_rect(colour = "black", fill = "grey94")) +
