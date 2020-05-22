@@ -88,3 +88,65 @@ RegressionS <- ggplot(Sregression, aes(Time,
 # facet_wrap(. ~ variable)
 RegressionS
 RegressionS + ggsave("RegressionSrimp.jpeg", width=10, height=6,dpi=600)
+
+
+# Long term Shrimp --------------------------------------------------------
+
+ShrimpNC
+# QPA
+S3 <- ggplot(ShrimpNC,aes(TimeCHLA,
+                              y=QPAShrimp))+
+  
+  annotate(geom = "rect",xmin=1,xmax=36,ymin=14.32,ymax=22.73,alpha = 0.4,fill = "grey") +
+  
+  geom_point() + 
+  geom_line() +
+#  geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
+ #               position=position_dodge(0.05)) + 
+  geom_segment(aes(x = 1, y = 18.53, xend = 6, yend = 18.53))+
+  geom_segment((aes(x = 7, y = 18.53, xend = 36, yend = 18.53)), color="red", linetype="dashed", size=1) +
+  
+  xlab('')+ ylab("Canopy cover (%)") +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(5,45) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+S3
+
+
+S4 <- ggplot(ShrimpNC,aes(TimeCHLA,
+                          y=QPBShrimp))+
+  
+  annotate(geom = "rect",xmin=1,xmax=36,ymin=8.03,ymax=11.72,alpha = 0.4,fill = "grey") +
+  
+  geom_point() + 
+  geom_line() +
+  #  geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
+  #               position=position_dodge(0.05)) + 
+  geom_segment(aes(x = 1, y = 9.88, xend = 6, yend = 9.88))+
+  geom_segment((aes(x = 7, y = 9.88, xend = 36, yend = 9.88)), color="red", linetype="dashed", size=1) +
+  
+  xlab('')+ ylab("Canopy cover (%)") +
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(5,45) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+S4
+
+
+ShrimpNCorrected <- S3 / S4
+ShrimpNCorrected + ggsave("CShrimpNCorrected.jpeg", width=6, height=10,dpi=600)
