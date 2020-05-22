@@ -18,7 +18,8 @@ library(patchwork)
 QPAregression<- read.csv("00 QPAregressions.csv")
 QPAregression
 
-QPAregression$variable_f = factor(QPAregression$variable, levels=c('Canopy','Leaf_litter','Shrimp','Chlorophyll-a'))
+QPAregression$variable_f = factor(QPAregression$variable, levels=c('Canopy','Leaf_litter','Shrimp',
+                                                                   'Chlorophyll-a','Macroinvertebrates'))
 
 Regression <- ggplot(QPAregression, aes(Time, 
                                      value,
@@ -27,7 +28,7 @@ Regression <- ggplot(QPAregression, aes(Time,
 
   geom_hline(yintercept = 0, color="darkred") +
 
-xlab('Sampling period') + ylab("Changes in magnitude") + 
+xlab('Sampling period') + ylab("Change in magnitude") + 
   theme(axis.title.x = element_text(size = 16, angle = 0)) +# axis x
   theme(axis.title.y = element_text(size = 16, angle = 90)) +
   
