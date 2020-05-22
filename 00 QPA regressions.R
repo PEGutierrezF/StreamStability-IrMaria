@@ -24,8 +24,10 @@ QPAregression$variable_f = factor(QPAregression$variable, levels=c('Canopy','Lea
 RegressionQPA <- ggplot(QPAregression, aes(Time, 
                                      value,
                                      color=variable)) + 
-  # geom_point() +
-  geom_smooth(se = F, size=5)  + 
+  #   annotate("rect", xmin = 0, xmax = 8, ymin = -Inf, ymax = Inf, alpha = 0.4, fill = "lightblue") +
+  
+  geom_point() +
+  geom_smooth(se = T, size=5)  + 
 
   geom_hline(yintercept = 0, color="darkred") +
 
