@@ -31,7 +31,7 @@ RegressionQPA <- ggplot(QPAregression, aes(Time,
 
   geom_hline(yintercept = 0, color="darkred") +
 
-xlab('Sampling period') + ylab("Change in magnitude") + 
+xlab('Sampling period (2017-2019)') + ylab("Change in magnitude") + 
   theme(axis.title.x = element_text(size = 16, angle = 0)) +# axis x
   theme(axis.title.y = element_text(size = 16, angle = 90)) +
   
@@ -54,4 +54,4 @@ xlab('Sampling period') + ylab("Change in magnitude") +
 
 RegressionQPA
 
-RegressionQPA + ggsave("ResistanceQPA.jpeg", width=10, height=6,dpi=600)  
+RegressionQPA + ggsave("TrajectoriesQPA.jpeg", width=10, height=6,dpi=600)  
