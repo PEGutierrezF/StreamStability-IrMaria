@@ -31,9 +31,11 @@ RegressionQPA <- ggplot(QPAregression, aes(Time,
 
   geom_hline(yintercept = 0, color="darkred") +
 
-xlab('Sampling period (2017-2019)') + ylab("Change in magnitude") + 
-  theme(axis.title.x = element_text(size = 16, angle = 0)) +# axis x
-  theme(axis.title.y = element_text(size = 16, angle = 90)) +
+  xlab('Sampling period (2017-2019)') + ylab("Change in magnitude") + 
+  theme(axis.title.x = element_text(size = 16, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 16, angle = 90)) + # axis 7
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
   ylim(-3,3) + 
 #  annotate("text", x = 5, y = 2.5, label = "Increase",colour = "black", size = 6,angle = 90) +
