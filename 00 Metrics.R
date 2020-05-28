@@ -14,14 +14,14 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-metrics<- read.csv("metrics.csv")
+metrics<- read.csv("00 Metrics.csv")
 metrics
 
 
 
 # Resistance --------------------------------------------------------------
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Shrimp', 'Chla','Macroinvt.'))
 
 r1 <- ggplot(metrics, 
       aes(x=Resitance,
@@ -54,7 +54,7 @@ r1 + ggsave("Resistance.jpeg", width=6, height=6,dpi=600)
 # Resilience --------------------------------------------------------------
 
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Shrimp', 'Chla','Macroinvt.'))
 
 r2 <- ggplot(metrics, 
              aes(x=Resilience,
@@ -85,7 +85,7 @@ r2 + ggsave("Resilience.jpeg", width=6, height=6,dpi=600)
 
 # Recovery ----------------------------------------------------------------
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Shrimp', 'Chla','Macroinvt.'))
 
 r3 <- ggplot(metrics, 
              aes(x=Recovery,
@@ -113,8 +113,8 @@ r3 <- ggplot(metrics,
 
 r3
 
-metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Chla','Shrimp'))
-metrics
+metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Shrimp', 'Chla','Macroinvt.'))
+
 
 r4 <- ggplot(metrics, 
              aes(x=TemporalStab,
@@ -143,16 +143,16 @@ r4 <- ggplot(metrics,
 r4
 
 metrics <- (r1 + r3) / (r2 + r4) + plot_annotation(tag_levels = 'A')
-
+metrics
 metrics + ggsave("Metrics.jpeg", width=6, height=10,dpi=600)
 
-
+metrics
 r5<- ggplot(metrics, 
              aes(x=Resitance,
-                 y=Resiliences,
+                 y=Resilience,
                  color= Stream,
                  group=Variable)) +
-geom_point(aes(color=Stream,shape=Variable), size=3) +
+geom_point(aes(color=Stream,shape=Variable), size=5) +
 geom_vline(aes(xintercept = 0), color='darkgrey') +
   geom_hline(aes(yintercept = 0), color='darkgrey') +
   xlim(-1,1) 

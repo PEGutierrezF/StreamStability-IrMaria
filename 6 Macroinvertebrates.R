@@ -19,7 +19,7 @@ Macroinvertebrates<- read.csv("6 Macroinvertebrates.csv")
 Macroinvertebrates
 
 
-# Lm QPA Leaf Litter ------------------------------------------------------
+# Lm QPA Macroinvertebrates ------------------------------------------------------
 
 Macroinvertebrates <- Macroinvertebrates %>% select(TimeMacro, QPAMacroinvLog, QPBMacroinvLog)
 Macroinvertebrates <- na.omit(Macroinvertebrates)
@@ -32,3 +32,20 @@ Macroinvertebrates$QPAresid<- QPAMacroinv.mod$resid
 Macroinvertebrates
 
 1/apply(Macroinvertebrates, 2, sd)
+
+
+
+
+# LM QPB Macroinvertebrates  ----------------------------------------------
+
+
+QPBMacroinv.mod  <- lm(QPBMacroinvLog ~ TimeMacro, data=Macroinvertebrates)
+summary(QPBMacroinv.mod)
+
+Macroinvertebrates$QPBresid<- QPBMacroinv.mod$resid
+Macroinvertebrates
+
+1/apply(Macroinvertebrates, 2, sd)
+
+
+
