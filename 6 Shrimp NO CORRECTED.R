@@ -135,7 +135,7 @@ RegressionS + ggsave("RegressionSrimp.jpeg", width=10, height=6,dpi=600)
 
 ShrimpNC
 # QPA
-S3 <- ggplot(ShrimpNC,aes(TimeCHLA,
+S3 <- ggplot(ShrimpNC,aes(TimeShrimp,
                               y=QPAShrimp))+
   
   annotate(geom = "rect",xmin=1,xmax=36,ymin=14.32,ymax=22.73,alpha = 0.4,fill = "grey") +
@@ -147,7 +147,7 @@ S3 <- ggplot(ShrimpNC,aes(TimeCHLA,
   geom_segment(aes(x = 1, y = 18.53, xend = 6, yend = 18.53))+
   geom_segment((aes(x = 7, y = 18.53, xend = 36, yend = 18.53)), color="red", linetype="dashed", size=1) +
   
-  xlab('')+ ylab("Canopy cover (%)") +
+  xlab('')+ ylab("Shrimp abundance") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
@@ -162,7 +162,7 @@ S3 <- ggplot(ShrimpNC,aes(TimeCHLA,
 S3
 
 
-S4 <- ggplot(ShrimpNC,aes(TimeCHLA,
+S4 <- ggplot(ShrimpNC,aes(TimeShrimp,
                           y=QPBShrimp))+
   
   annotate(geom = "rect",xmin=1,xmax=36,ymin=8.03,ymax=11.72,alpha = 0.4,fill = "grey") +
@@ -174,7 +174,7 @@ S4 <- ggplot(ShrimpNC,aes(TimeCHLA,
   geom_segment(aes(x = 1, y = 9.88, xend = 6, yend = 9.88))+
   geom_segment((aes(x = 7, y = 9.88, xend = 36, yend = 9.88)), color="red", linetype="dashed", size=1) +
   
-  xlab('')+ ylab("Canopy cover (%)") +
+  xlab('')+ ylab("Shrimp abundance") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
