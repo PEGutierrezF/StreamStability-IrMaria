@@ -34,6 +34,25 @@ ShrimpNC
 
 
 
+S1 <- ggplot(ShrimpNC,aes(TimeShrimp,
+                            y=QPAShrimpLog))+
+  geom_point(size = 3) + 
+  geom_smooth(method=lm,se=FALSE) +
+  
+  xlab('Sampling period')+ ylab("Residuals") +
+  theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-3,3) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+S1
+
+
 # Shrimp QPB --------------------------------------------------------------
 
 
@@ -44,6 +63,28 @@ ShrimpNC$QPBresid<- QPBShrimpNC.mod$resid
 ShrimpNC
 
 1/apply(ShrimpNC, 2, sd)
+
+
+S2 <- ggplot(ShrimpNC,aes(TimeShrimp,
+                                y=QPBShrimpLog))+
+  geom_point(size = 3) + 
+  geom_smooth(method=lm,se=FALSE) +
+  
+  xlab('Sampling period')+ ylab("Residuals") +
+  theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-3,3) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+S2
+
+ShrimpsN<- S1 / S2
+ShrimpsN + ggsave("ShrimpNCorrected.jpeg", width=6, height=10,dpi=600)
 
 
 
