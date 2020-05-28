@@ -42,7 +42,7 @@ cc1 <- ggplot(canopy, aes(TimeCanopy,
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
-  ylim(-2.5,0.5) +
+  ylim(-2.5,2.5) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
@@ -73,7 +73,7 @@ cc2 <- ggplot(canopy, aes(TimeCanopy,
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
-  ylim(-2.5,0.5) +
+  ylim(-2.5,2.5) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +

@@ -20,11 +20,11 @@ ShrimpNC
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-ShrimpNC <- ShrimpNC %>% select(TimeCHLA, QPAShrimpLog, QPBShrimpLog)
+ShrimpNC <- ShrimpNC %>% select(TimeShrimp, QPAShrimpLog, QPBShrimpLog)
 ShrimpNC <- na.omit(ShrimpNC)
 ShrimpNC
 
-QPAShrimpNC.mod  <- lm(QPAShrimpLog ~ TimeCHLA, na.action=na.omit, data=ShrimpNC)
+QPAShrimpNC.mod  <- lm(QPAShrimpLog ~ TimeShrimp, na.action=na.omit, data=ShrimpNC)
 summary(QPAShrimpNC.mod)
 
 ShrimpNC$QPAresid<- QPAShrimpNC.mod$resid
@@ -37,7 +37,7 @@ ShrimpNC
 # Shrimp QPB --------------------------------------------------------------
 
 
-QPBShrimpNC.mod  <- lm(QPBShrimpLog ~ TimeCHLA, na.action=na.omit, data=ShrimpNC)
+QPBShrimpNC.mod  <- lm(QPBShrimpLog ~ TimeShrimp, na.action=na.omit, data=ShrimpNC)
 summary(QPBShrimpNC.mod)
 
 ShrimpNC$QPBresid<- QPBShrimpNC.mod$resid
