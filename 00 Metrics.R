@@ -108,10 +108,16 @@ r3 <- ggplot(metrics,
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
   facet_grid(Variable_f~.) +
-  theme(strip.text.y = element_text(size = 12, colour = "black", angle = 270)) +
-  theme(strip.background = element_rect(colour = "black", fill = "grey"))
+  theme(strip.text.y = element_text(size = 16, colour = "black", angle = 270)) +
+  theme(strip.background = element_rect(colour = "black", fill = "grey94"))
 
 r3
+
+r3 + ggsave("Recovery.jpeg", width=6, height=6,dpi=600)
+
+# Temporal Stability ------------------------------------------------------
+
+
 
 metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Shrimp', 'Chla','Macroinvt.'))
 
