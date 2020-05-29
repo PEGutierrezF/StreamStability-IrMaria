@@ -146,9 +146,17 @@ metrics <- (r1 + r3) / (r2 + r4) + plot_annotation(tag_levels = 'A')
 metrics
 metrics + ggsave("Metrics.jpeg", width=6, height=10,dpi=600)
 
+
+
+# Relationship between Resistance and Resiliences -------------------------
+
+
+
+metrics<- read.csv("00 Metrics.csv")
 metrics
+
 r5<- ggplot(metrics, 
-             aes(x=Resitance,
+             aes(x=Resistance,
                  y=Resilience,
                  color= Stream,
                  group=Variable)) +
@@ -157,4 +165,23 @@ geom_vline(aes(xintercept = 0), color='darkgrey') +
   geom_hline(aes(yintercept = 0), color='darkgrey') +
   xlim(-1,1) 
 r5
- 
+
+cor.test(metrics$Resistance,metrics$Resilience,method = "pearson", exact=F)
+
+# QPA Analisis ------------------------------------------------------------
+
+
+QPARvR <- metrics %>% select(Stream,Resistance, Resilience) 
+QPARvR1 <- QPARvR %>% filter(Stream=="QPA") 
+QPARvR1
+
+r6 <- ggplot(QPARvR1, 
+            aes(x=Resistance,
+                y=Resilience)) +
+  geom_point(aes(), size=5) +
+  geom_vline(aes(xintercept = 0), color='darkgrey') +
+  geom_smooth(method=lm,se=TRUE,colour="black", size=0.5) +
+  geom_hline(aes(yintercept = 0), color='darkgrey') +
+  xlim(-1,1) 
+r6
+
