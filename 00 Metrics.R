@@ -178,10 +178,10 @@ cor.test(metrics$Resistance,metrics$Resilience,method = "pearson", exact=F)
 
 
 QPARvR <- metrics %>% select(Stream,Resistance, Resilience) 
-QPARvR1 <- QPARvR %>% filter(Stream=="QPA") 
-QPARvR1
+#QPARvR1 <- QPARvR %>% filter(Stream=="QPA") 
+# QPARvR1
 
-r6 <- ggplot(QPARvR1, 
+r6 <- ggplot(QPARvR, 
             aes(x=Resistance,
                 y=Resilience)) +
   geom_point(aes(), size=5) +
@@ -190,4 +190,6 @@ r6 <- ggplot(QPARvR1,
   geom_hline(aes(yintercept = 0), color='darkgrey') +
   xlim(-1,1) 
 r6
+
+r6 + ggsave("MetricsQPARelationship.jpeg", width=6, height=6,dpi=600)
 
