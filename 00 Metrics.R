@@ -24,7 +24,7 @@ metrics
 metrics$Variable_f = factor(metrics$Variable, levels=c('Canopy','Leaf','Leaf_Exp','Shrimp', 'Chla','Macroinvt.'))
 
 r1 <- ggplot(metrics, 
-      aes(x=Resitance,
+      aes(x=Resistance,
           y=Stream))+ 
 #          color=Stream,
  #         group=Variable)) +
