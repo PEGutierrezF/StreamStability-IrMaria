@@ -97,14 +97,14 @@ p3 <- ggplot(LeafLitter,aes(TimeLeaf ,
   annotate("text", x = 26.3, y = 9.8, label = "? H. Maria",colour = "black", size = 5) +
   geom_segment(aes(x=19, xend = 19 , y=9, yend = 10), size=1.5,color = "red", arrow = arrow(length = unit(0.4,"cm")))+
   annotate("text", x = 11.5, y = 6, label = "H. Irma",colour = "black", size = 5) +
-  annotate(geom = "rect",xmin=1,xmax=57,ymin=1.136391643,ymax=1.524018959,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=78,ymin=1.136391643,ymax=1.524018959,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPALeaf-QPAsdLeaf   , ymax=QPALeaf+QPAsdLeaf), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 1.33, xend = 16, yend = 1.33))+
-  geom_segment((aes(x = 17, y = 1.33, xend = 57, yend = 1.33)), color="red", linetype="dashed", size=1) + 
+  geom_segment((aes(x = 17, y = 1.33, xend = 78, yend = 1.33)), color="red", linetype="dashed", size=1) + 
 
   xlab('')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
@@ -128,14 +128,14 @@ p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
   geom_segment(aes(x=19, xend = 19 , y=9, yend = 10), size=1.5,color = "red", arrow = arrow(length = unit(0.4,"cm")))+
   # annotate(geom = "point", x = 19, y = 9.7,colour = "red",size=3) +
   annotate("text", x = 11.5, y = 8.5, label = "H. Irma",colour = "black", size = 5) +
-  annotate(geom = "rect",xmin=1,xmax=57,ymin=1.042275203,ymax=1.759151731,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=78,ymin=1.042275203,ymax=1.759151731,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPBLeaf-QPBsdLeaf   , ymax=QPBLeaf+QPBsdLeaf), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 1.40, xend = 16, yend = 1.40))+
-  geom_segment((aes(x = 17, y = 1.40, xend = 57, yend = 1.40)), color="red", linetype="dashed", size=1) + 
+  geom_segment((aes(x = 17, y = 1.40, xend = 78, yend = 1.40)), color="red", linetype="dashed", size=1) + 
 
   xlab('Sampling period')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
   theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
