@@ -81,6 +81,7 @@ ylim(-3,3) +
 p2
 
 leaf <- p1 / p2
+leaf
 leaf + ggsave("Leaf.jpeg", width=6, height=10,dpi=600)
 
 
