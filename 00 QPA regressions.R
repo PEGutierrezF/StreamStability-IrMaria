@@ -96,11 +96,7 @@ RegressionQPB <- ggplot(QPB_regression1, aes(id,
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
   ylim(-3,3) + 
-  #  annotate("text", x = 5, y = 2.5, label = "Increase",colour = "black", size = 6,angle = 90) +
-  #  annotate("text", x = 5, y = -2.5, label = "Decrease",colour = "black", size = 6,angle = 90) +
-  
-  #theme(legend.title=element_blank())+
-  #theme(legend.text = element_text(size=20)) +
+
   theme(legend.position="none")+
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
