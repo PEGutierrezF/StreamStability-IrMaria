@@ -14,6 +14,7 @@ library(modelr)
 library(ggplot2)
 library(dplyr)
 library(patchwork)
+library(plyr)
 
 QPAregression<- read.csv("00 QPA regressions.csv")
 QPAregression
@@ -67,17 +68,22 @@ RegressionQPA + ggsave("TrajectoriesQPA.jpeg", width=10, height=6,dpi=600)
 
 
 
-QPBregression<- read.csv("00 QPB regressions.csv")
-QPBregression
+QPB_reg<- read.csv("00 QPB regressions.csv")
+QPB_reg
 
-QPBregression$variable_f = factor(QPBregression$variable, levels=c('Canopy','Leaf_litter','Shrimp',
-                                                                   'Chlorophyll-a','Macroinvertebrates'))
+QPB_regression<- melt(QPB_reg, na.rm = T)
+QPB_regression
+QPB_regression1<- ddply(QPB_regression, .(variable), mutate, id = seq_along(value))
 
-RegressionQPB <- ggplot(QPBregression, aes(Time, 
+
+QPB_regression1$variable_f = factor(QPB_regression1$variable, 
+                                  levels=c('Canopy','Leaf_litter','Shrimp',
+                                            'Chlorophyll.a','Macroinvertebrates'))
+
+
+RegressionQPB <- ggplot(QPB_regression1, aes(id, 
                                            value,
                                            color=variable)) + 
-  #   annotate("rect", xmin = 0, xmax = 8, ymin = -Inf, ymax = Inf, alpha = 0.4, fill = "lightblue") +
-  
   geom_point() +
   geom_smooth(se = T, size=5)  + 
   
