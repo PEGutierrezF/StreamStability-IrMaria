@@ -14,7 +14,7 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-LeafLitter<- read.csv("01 Leaflitter.csv")
+LeafLitter<- read.csv("data/Leaflitter.csv")
 LeafLitter
 
 
@@ -88,7 +88,7 @@ leaf + ggsave("Leaf.jpeg", width=6, height=10,dpi=600)
 
 # Long-term ---------------------------------------------------------------
 
-LeafLitter<- read.csv("01 Leaflitter.csv")
+LeafLitter<- read.csv("data/Leaflitter.csv")
 LeafLitter
 
 # QPA
@@ -154,9 +154,8 @@ p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
 p4
 
 
-
 leaf <- p3 / p4
 leaf
-leaf + ggsave("LeafMean1.jpeg", width=6, height=10,dpi=600)
+leaf + ggsave("Leaf litter Long-term.jpeg", width=6, height=10,dpi=600)
 
 
