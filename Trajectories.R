@@ -10,12 +10,6 @@
 #
 
 
-library(modelr)
-library(ggplot2)
-library(dplyr)
-library(patchwork)
-library(plyr)
-
 QPAregression<- read.csv("00 QPA regressions.csv")
 QPAregression
 
@@ -68,7 +62,7 @@ RegressionQPA + ggsave("TrajectoriesQPA.jpeg", width=10, height=6,dpi=600)
 
 
 
-QPB_reg<- read.csv("00 QPB regressions.csv")
+QPB_reg<- read.csv("data/Trajectories QPB.csv")
 QPB_reg
 
 QPB_regression<- melt(QPB_reg, na.rm = T)
