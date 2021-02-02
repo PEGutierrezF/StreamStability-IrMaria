@@ -87,6 +87,7 @@ canopyreg + ggsave("regression Canopy.jpeg", path = "figures", width=6, height=1
 # Long term ---------------------------------------------------------------
 ###########################################################################
 
+canopycover<- read.csv("data/Canopy.csv")
 canopycover
 # QPA
 cc3 <- ggplot(canopycover, aes(TimeCanopy,
@@ -101,7 +102,7 @@ cc3 <- ggplot(canopycover, aes(TimeCanopy,
   geom_segment(aes(x = 1, y = 11.68, xend = 6, yend = 11.68))+ # Line, mean= 11.68
   geom_segment((aes(x = 7, y = 11.68, xend = 42, yend = 11.68)), color="red", linetype="dashed", size=1) +
   
-  xlab('')+ ylab("Canopy cover (%)") +
+  xlab('')+ ylab("Canopy openness (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
@@ -129,7 +130,7 @@ cc4 <- ggplot(canopycover,aes(TimeCanopy,
   geom_segment(aes(x = 1, y = 11.11, xend = 6, yend = 11.11))+
   geom_segment((aes(x = 7, y = 11.11, xend = 42, yend = 11.11)), color="red", linetype="dashed", size=1) + 
   
-  xlab('Sampling period')+ ylab("Canopy cover (%)") +
+  xlab('Sampling period')+ ylab("Canopy openness (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   theme(axis.title.x = element_text(size = 18, angle = 0)) +
   
