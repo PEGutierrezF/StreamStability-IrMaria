@@ -82,7 +82,7 @@ p2
 
 leaf <- p1 / p2
 leaf
-leaf + ggsave("Leaf.jpeg", width=6, height=10,dpi=600)
+leaf + ggsave("regression Leaf.jpeg", path = "figures", width=6, height=10,dpi=600)
 
 
 
@@ -156,6 +156,6 @@ p4
 
 leaf <- p3 / p4
 leaf
-leaf + ggsave("Leaf litter Long-term.jpeg", width=6, height=10,dpi=600)
+leaf + ggsave("Long-term Leaf.jpeg",path = "figures", width=6, height=10,dpi=600)
 
 
