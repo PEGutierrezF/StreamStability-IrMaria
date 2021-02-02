@@ -9,14 +9,16 @@
 #--------------------------------------------
 #
 
-canopycover<- read.csv("03 canopy.csv")
+canopycover<- read.csv("data/Canopy.csv")
 canopycover
 
-
-# QPA CHLA ----------------------------------------------------------------
+################################################################
+# Linear model Canopy QPA --------------------------------------
+################################################################
 
 canopy <- canopycover %>% select(TimeCanopy, QPACanopyLog, QPBCanopyLog)
 canopy <- na.omit(canopy)
+canopy
 
 QPACanopy.mod  <- lm(QPACanopyLog~ TimeCanopy, data=canopy)
 summary(QPACanopy.mod)
@@ -37,7 +39,7 @@ cc1 <- ggplot(canopy, aes(TimeCanopy,
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
-  ylim(-2.5,2.5) +
+  ylim(-3,3) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
@@ -46,7 +48,9 @@ cc1
 
 
 
-# QPB CHL-A ---------------------------------------------------------------
+################################################################
+# Linear model Canopy QPB --------------------------------------
+################################################################
 
 QPBCanopy.mod  <- lm(QPBCanopyLog~ TimeCanopy, data=canopy)
 summary(QPBCanopy.mod)
@@ -68,7 +72,7 @@ cc2 <- ggplot(canopy, aes(TimeCanopy,
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
-  ylim(-2.5,2.5) +
+  ylim(-3,3) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
@@ -76,25 +80,26 @@ cc2 <- ggplot(canopy, aes(TimeCanopy,
 cc2
 
 canopyreg <- cc1 / cc2
-canopyreg + ggsave("Canopy.jpeg", width=6, height=10,dpi=600)
+canopyreg + ggsave("regression Canopy.jpeg", path = "figures", width=6, height=10,dpi=600)
 
 
-
+###########################################################################
 # Long term ---------------------------------------------------------------
+###########################################################################
 
 canopycover
 # QPA
-cc3 <- ggplot(canopycover,aes(TimeCanopy,
+cc3 <- ggplot(canopycover, aes(TimeCanopy,
                        y=QPACanopy))+
   
-  annotate(geom = "rect",xmin=1,xmax=31,ymin=83.37,ymax=93.27,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1, xmax=42,ymin=6.73,ymax=16.63,alpha = 0.4,fill = "grey") + # Rectangle
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
-  geom_segment(aes(x = 1, y = 88.32, xend = 6, yend = 88.32))+
-  geom_segment((aes(x = 7, y = 88.32, xend = 31, yend = 88.32)), color="red", linetype="dashed", size=1) +
+  geom_segment(aes(x = 1, y = 11.68, xend = 6, yend = 11.68))+ # Line, mean= 11.68
+  geom_segment((aes(x = 7, y = 11.68, xend = 42, yend = 11.68)), color="red", linetype="dashed", size=1) +
   
   xlab('')+ ylab("Canopy cover (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
@@ -115,14 +120,14 @@ cc3
 cc4 <- ggplot(canopycover,aes(TimeCanopy,
                               y=QPBCanopy))+
   
-  annotate(geom = "rect",xmin=1,xmax=31,ymin=85.60,ymax=92.18,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=42,ymin=7.82,ymax=14.40,alpha = 0.4,fill = "grey") +
   
   geom_point() + 
   geom_line() +
   geom_errorbar(aes(ymin=QPBCanopy-QPBsdCanopy, ymax=QPBCanopy+QPBsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
-  geom_segment(aes(x = 1, y = 88.89, xend = 6, yend = 88.89))+
-  geom_segment((aes(x = 7, y = 88.89, xend = 31, yend = 88.89)), color="red", linetype="dashed", size=1) + 
+  geom_segment(aes(x = 1, y = 11.11, xend = 6, yend = 11.11))+
+  geom_segment((aes(x = 7, y = 11.11, xend = 42, yend = 11.11)), color="red", linetype="dashed", size=1) + 
   
   xlab('Sampling period')+ ylab("Canopy cover (%)") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
@@ -140,7 +145,7 @@ cc4 <- ggplot(canopycover,aes(TimeCanopy,
 cc4
 
 canopyLong <- cc3 / cc4
-canopyLong + ggsave("CanopyCover.jpeg", width=6, height=10,dpi=600)
+canopyLong + ggsave("Long-term CanopyCover.jpeg", path = "figures", width=6, height=10,dpi=600)
 
 
 
