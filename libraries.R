@@ -10,9 +10,9 @@
 #--------------------------------------------
 #
 
-install.packages("reshape2")
+install.packages("ggpubr")
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
-               "reshape2")
+               "reshape2", "ggpubr")
 lapply(libraries, require, character.only = TRUE)
 
 
