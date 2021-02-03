@@ -153,9 +153,9 @@ canopyLong <- ggarrange(cc3 +rremove("x.text") , cc4 , align = "v",
 
 canopyLong. <-annotate_figure(canopyLong,
                            left = text_grob("Canopy openness (%)", rot = 90,
-                                            color = "Black", face = "bold", size = 14))
+                                            color = "Black", face = "bold", size = 18))
 
-canopyLong. + ggsave("Long-term CanopyCover.jpeg", path = "figures", width=6, height=10,dpi=600)
+canopyLong. + ggsave("Long-term CanopyCover.jpeg", path = "figures", width=8, height=10,dpi=600)
 
 
 

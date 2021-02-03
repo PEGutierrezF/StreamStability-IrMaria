@@ -86,7 +86,9 @@ leaf + ggsave("regression Leaf.jpeg", path = "figures", width=6, height=10,dpi=6
 
 
 
-# Long-term ---------------------------------------------------------------
+###########################################################################
+# Long term ---------------------------------------------------------------
+###########################################################################
 
 LeafLitter<- read.csv("data/Leaflitter.csv")
 LeafLitter
@@ -107,7 +109,7 @@ p3 <- ggplot(LeafLitter,aes(TimeLeaf ,
   geom_segment(aes(x = 1, y = 1.33, xend = 16, yend = 1.33))+
   geom_segment((aes(x = 17, y = 1.33, xend = 78, yend = 1.33)), color="red", linetype="dashed", size=1) + 
 
-  xlab('')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
+  xlab('')+ ylab("") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
@@ -138,7 +140,7 @@ p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
   geom_segment(aes(x = 1, y = 1.40, xend = 16, yend = 1.40))+
   geom_segment((aes(x = 17, y = 1.40, xend = 78, yend = 1.40)), color="red", linetype="dashed", size=1) + 
 
-  xlab('Sampling period')+ ylab("Mean litter input rate ("*g~m^-2~d^-1*")") +
+  xlab('Sampling period')+ ylab("") +
   theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   
@@ -153,9 +155,15 @@ p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
 
 p4
 
+Leaf_long_term <- ggarrange(p3 +rremove("x.text") , p4 , align = "v",
+                        labels = c("A", "B"),font.label = list(size = 13,face= "plain",color = "black"),
+                        ncol = 1, nrow = 2)
 
-leaf <- p3 / p4
-leaf
-leaf + ggsave("Long-term Leaf.jpeg",path = "figures", width=6, height=10,dpi=600)
+
+Leaf_long_term. <-annotate_figure(Leaf_long_term,
+                  left = text_grob("Mean litter input rate ("*g~m^-2~d^-1*")", rot = 90,
+                  color = "Black", face = "bold", size = 18))
+
+Leaf_long_term. + ggsave("Long-term Leaf.jpeg", path = "figures", width=8, height=10,dpi=600)
 
 
