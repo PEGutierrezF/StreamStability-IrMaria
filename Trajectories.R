@@ -10,13 +10,18 @@
 #
 
 
-QPAregression<- read.csv("00 QPA regressions.csv")
+QPAregression<- read.csv("data/Trajectories QPA.csv")
 QPAregression
 
-QPAregression$variable_f = factor(QPAregression$variable, levels=c('Canopy','Leaf_litter','Shrimp',
-                                                                   'Chlorophyll-a','Macroinvertebrates'))
+QPA_regression<- melt(QPAregression, na.rm = T)
+QPA_regression
+QPA_regression1<- ddply(QPA_regression, .(variable), mutate, id = seq_along(value))
 
-RegressionQPA <- ggplot(QPAregression, aes(Time, 
+
+QPA_regression1$variable_f = factor(QPA_regression1$variable, levels=c('Canopy','Leaf_litter','Shrimp',
+                                                                   'Chlorophyll_a','Macroinvertebrates'))
+
+RegressionQPA <- ggplot(QPA_regression1, aes(id, 
                                      value,
                                      color=variable)) + 
   #   annotate("rect", xmin = 0, xmax = 8, ymin = -Inf, ymax = Inf, alpha = 0.4, fill = "lightblue") +
