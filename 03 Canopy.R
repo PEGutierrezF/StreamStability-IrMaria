@@ -95,7 +95,7 @@ cc3 <- ggplot(canopycover, aes(TimeCanopy,
   
   annotate(geom = "rect",xmin=1, xmax=42,ymin=6.73,ymax=16.63,alpha = 0.4,fill = "grey") + # Rectangle
   
-  geom_point() + 
+  geom_point(data = canopycover %>% filter(rank(desc(QPACanopy)) <= 1),color = "red",size = 2) + 
   geom_line() +
   geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
@@ -123,14 +123,14 @@ cc4 <- ggplot(canopycover,aes(TimeCanopy,
   
   annotate(geom = "rect",xmin=1,xmax=42,ymin=7.82,ymax=14.40,alpha = 0.4,fill = "grey") +
   
-  geom_point() + 
+  geom_point() + # Red point
   geom_line() +
   geom_errorbar(aes(ymin=QPBCanopy-QPBsdCanopy, ymax=QPBCanopy+QPBsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 11.11, xend = 6, yend = 11.11))+
   geom_segment((aes(x = 7, y = 11.11, xend = 42, yend = 11.11)), color="red", linetype="dashed", size=1) + 
   
-  xlab('Sampling period')+ ylab("Canopy openness (%)") +
+  xlab('Sampling period')+ ylab("") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   theme(axis.title.x = element_text(size = 18, angle = 0)) +
   
@@ -146,7 +146,7 @@ cc4 <- ggplot(canopycover,aes(TimeCanopy,
 cc4
 
 
-canopyLong <- ggarrange(cc3 , cc4 , align = "v",
+canopyLong <- ggarrange(cc3 +rremove("x.text") , cc4 , align = "v",
                      labels = c("A", "B"),font.label = list(size = 13,face= "plain",color = "black"),
                      ncol = 1, nrow = 2)
 
