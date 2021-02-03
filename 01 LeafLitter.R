@@ -100,7 +100,7 @@ p3 <- ggplot(LeafLitter,aes(TimeLeaf ,
   annotate("text", x = 26.3, y = 9.8, label = "? H. Maria",colour = "black", size = 5) +
   geom_segment(aes(x=19, xend = 19 , y=9, yend = 10), size=1.5,color = "red", arrow = arrow(length = unit(0.4,"cm")))+
   annotate("text", x = 11.5, y = 6, label = "H. Irma",colour = "black", size = 5) +
-  annotate(geom = "rect",xmin=1,xmax=78,ymin=1.136391643,ymax=1.524018959,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=78,ymin=1.136391643,ymax=1.524018959,alpha = 0.2,fill = "green") +
   
   geom_point() + 
   geom_line() +
@@ -131,7 +131,7 @@ p4 <- ggplot(LeafLitter,aes(TimeLeaf ,
   geom_segment(aes(x=19, xend = 19 , y=9, yend = 10), size=1.5,color = "red", arrow = arrow(length = unit(0.4,"cm")))+
   # annotate(geom = "point", x = 19, y = 9.7,colour = "red",size=3) +
   annotate("text", x = 11.5, y = 8.5, label = "H. Irma",colour = "black", size = 5) +
-  annotate(geom = "rect",xmin=1,xmax=78,ymin=1.042275203,ymax=1.759151731,alpha = 0.4,fill = "grey") +
+  annotate(geom = "rect",xmin=1,xmax=78,ymin=1.042275203,ymax=1.759151731,alpha = 0.2,fill = "green") +
   
   geom_point() + 
   geom_line() +
