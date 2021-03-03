@@ -16,11 +16,13 @@ canopycover
 # Linear model Canopy QPA --------------------------------------
 ################################################################
 
-canopy <- canopycover %>% select(TimeCanopy, QPACanopyLog, QPBCanopyLog)
+canopycover$date<-as.POSIXct(canopycover$date,"%Y-%m-%d",tz = "UTC")
+
+canopy <- canopycover %>% select(date, QPACanopyLog, QPBCanopyLog)
 canopy <- na.omit(canopy)
 canopy
 
-QPACanopy.mod  <- lm(QPACanopyLog~ TimeCanopy, data=canopy)
+QPACanopy.mod  <- lm(QPACanopyLog~ date, data=canopy)
 summary(QPACanopy.mod)
 
 canopy$QPACanopyresid<- QPACanopy.mod$resid
@@ -28,8 +30,7 @@ canopy
 
 1/apply(canopy, 2, sd)
 
-cc1 <- ggplot(canopy, aes(TimeCanopy,
-                       y=QPACanopyLog))+
+cc1 <- ggplot(canopy, aes(date,y=QPACanopyLog))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
@@ -89,14 +90,19 @@ canopyreg + ggsave("regression Canopy.jpeg", path = "figures", width=6, height=1
 
 canopycover<- read.csv("data/Canopy.csv")
 canopycover
+canopycover$date<-as.POSIXct(canopycover$date,"%Y-%m-%d",tz = "UTC")
+summary(canopycover)
 # QPA
-cc3 <- ggplot(canopycover, aes(TimeCanopy,
-                       y=QPACanopy))+
-  
-  annotate(geom = "rect",xmin=1, xmax=42,ymin=6.73,ymax=16.63,alpha = 0.4,fill = "grey") + # Rectangle
-  
-  geom_point(data = canopycover %>% filter(rank(desc(QPACanopy)) <= 1),color = "red",size = 2) + 
+
+ggplot(canopycover, aes(date, QPACanopy))+
+ # geom_point(data = canopycover %>% filter(rank(desc(QPACanopy)) <= 1),color = "red",size = 2) + 
+  geom_point() + 
   geom_line() +
+
+  annotate("rect", xmin=as.Date("2017-01-14"), xmax=as.Date("2020-10-30"),
+  ymin=6.73,ymax=16.63, alpha = 0.4,fill = "grey")  # Rectangle
+  
+
   geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
   geom_segment(aes(x = 1, y = 11.68, xend = 6, yend = 11.68))+ # Line, mean= 11.68
