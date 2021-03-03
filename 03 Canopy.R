@@ -128,18 +128,17 @@ cc3
 # Quebrada Prieta B -------------------------------------------------------
 
 
-cc4 <- ggplot(canopycover,aes(TimeCanopy,
-                              y=QPBCanopy))+
+cc4 <- ggplot(canopycover,aes(date, y=QPBCanopy))+
+  geom_point() + geom_line() +
   
-  annotate(geom = "rect",xmin=1,xmax=42,ymin=7.82,ymax=14.40,alpha = 0.4,fill = "grey") +
-  
-  geom_point() + # Red point
-  geom_line() +
+  annotate("rect", xmin=as.POSIXct("2017-01-14"), xmax=as.POSIXct("2020-10-30"),
+           ymin=7.82, ymax=14.40, alpha = 0.4, fill = "grey") + # Rectangle
+
   geom_errorbar(aes(ymin=QPBCanopy-QPBsdCanopy, ymax=QPBCanopy+QPBsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
-  geom_segment(aes(x = 1, y = 11.11, xend = 6, yend = 11.11))+
-  geom_segment((aes(x = 7, y = 11.11, xend = 42, yend = 11.11)), color="red", linetype="dashed", size=1) + 
-  
+  geom_segment(aes(x = as.POSIXct("2017-01-14"), y = 11.11, xend =as.POSIXct("2017-10-04"), yend = 11.68))+ # Line, mean= 11.68
+  geom_segment((aes(x = as.POSIXct("2017-10-04"), y = 11.11, xend = as.POSIXct("2020-10-30"), yend = 11.68)), color="red", linetype="dashed", size=1) +
+
   xlab('Sampling period')+ ylab("") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
   theme(axis.title.x = element_text(size = 18, angle = 0)) +
@@ -155,7 +154,6 @@ cc4 <- ggplot(canopycover,aes(TimeCanopy,
 
 cc4
 
-
 canopyLong <- ggarrange(cc3 +rremove("x.text") , cc4 , align = "v",
                      labels = c("A", "B"),font.label = list(size = 13,face= "plain",color = "black"),
                      ncol = 1, nrow = 2)
@@ -166,6 +164,25 @@ canopyLong. <-annotate_figure(canopyLong,
                                             color = "Black", face = "bold", size = 18))
 
 canopyLong. + ggsave("Long-term CanopyCover.jpeg", path = "figures", width=8, height=10,dpi=600)
+
+
+#
+
+canopycover<- read.csv("data/Canopy.csv")
+
+a <- select(canopycover, date, QPACanopy, QPBCanopy, QPAsdCanopy, QPBsdCanopy)
+
+b. <- a %>% pivot_longer(cols = c("QPACanopy", "QPBCanopy"))  %>% 
+       pivot_longer(cols = c("QPAsdCanopy", "QPBsdCanopy"), 
+                    names_to = 'mean', values_to = 'SD')
+
+b.$date<-as.POSIXct(b.$date,"%Y-%m-%d",tz = "UTC")
+
+ggplot(b., aes(x= date,y= value, group=name)) +
+  geom_line() 
+  
+
+
 
 
 
