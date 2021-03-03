@@ -178,8 +178,10 @@ b. <- a %>% pivot_longer(cols = c("QPACanopy", "QPBCanopy"))  %>%
 
 b.$date<-as.POSIXct(b.$date,"%Y-%m-%d",tz = "UTC")
 
-ggplot(b., aes(x= date,y= value, group=name)) +
-  geom_line() 
+ggplot(b., aes(x= date,y= value, group=name, color=name)) +
+  geom_line() +
+  geom_errorbar(aes(ymin=value-SD, ymax=value+SD), width=.2,
+                position=position_dodge(0.05))
   
 
 
