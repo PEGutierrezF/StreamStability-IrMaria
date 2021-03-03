@@ -88,25 +88,26 @@ canopyreg + ggsave("regression Canopy.jpeg", path = "figures", width=6, height=1
 # Long term ---------------------------------------------------------------
 ###########################################################################
 
+
 canopycover<- read.csv("data/Canopy.csv")
 canopycover
 canopycover$date<-as.POSIXct(canopycover$date,"%Y-%m-%d",tz = "UTC")
 summary(canopycover)
-# QPA
 
-ggplot(canopycover, aes(date, QPACanopy))+
- # geom_point(data = canopycover %>% filter(rank(desc(QPACanopy)) <= 1),color = "red",size = 2) + 
-  geom_point() + 
-  geom_line() +
 
-  annotate("rect", xmin=as.Date("2017-01-14"), xmax=as.Date("2020-10-30"),
-  ymin=6.73,ymax=16.63, alpha = 0.4,fill = "grey")  # Rectangle
-  
 
-  geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
+# Quebrada Prieta A -------------------------------------------------------
+
+cc3 <-ggplot(canopycover, aes(date, QPACanopy))+
+  geom_point() + geom_line() +
+
+  annotate("rect", xmin=as.POSIXct("2017-01-14"), xmax=as.POSIXct("2020-10-30"),
+  ymin=6.73, ymax=16.63, alpha = 0.4, fill = "grey") + # Rectangle
+
+ geom_errorbar(aes(ymin=QPACanopy-QPAsdCanopy, ymax=QPACanopy+QPAsdCanopy), width=.2,
                 position=position_dodge(0.05)) + 
-  geom_segment(aes(x = 1, y = 11.68, xend = 6, yend = 11.68))+ # Line, mean= 11.68
-  geom_segment((aes(x = 7, y = 11.68, xend = 42, yend = 11.68)), color="red", linetype="dashed", size=1) +
+  geom_segment(aes(x = as.POSIXct("2017-01-14"), y = 11.68, xend =as.POSIXct("2017-10-04"), yend = 11.68))+ # Line, mean= 11.68
+  geom_segment((aes(x = as.POSIXct("2017-10-04"), y = 11.68, xend = as.POSIXct("2020-10-30"), yend = 11.68)), color="red", linetype="dashed", size=1) +
   
   xlab('')+ ylab("") +
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
@@ -122,7 +123,10 @@ ggplot(canopycover, aes(date, QPACanopy))+
 
 cc3
 
-# QPB
+
+
+# Quebrada Prieta B -------------------------------------------------------
+
 
 cc4 <- ggplot(canopycover,aes(TimeCanopy,
                               y=QPBCanopy))+
