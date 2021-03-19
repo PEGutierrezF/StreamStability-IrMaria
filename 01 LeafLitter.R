@@ -9,11 +9,6 @@
 #--------------------------------------------
 #
 
-library(modelr)
-library(ggplot2)
-library(dplyr)
-library(patchwork)
-
 LeafLitter<- read.csv("data/Leaflitter.csv")
 LeafLitter
 
