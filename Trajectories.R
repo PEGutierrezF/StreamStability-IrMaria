@@ -21,7 +21,7 @@ QPAregression$variable_f = factor(QPAregression$variable,
       levels=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps"))
 
 # Changes names in Facet_grid
-variable_f <- c("Canopy cover", "Leaf litter", "Chlorophyll-a","Shrimps")
+variable_f <- c("Canopy openness", "Leaf litter", "Chlorophyll-a","Shrimps")
 names(variable_f) <- c("canopy_cover", "Leaf_litter", "Chla", "Shrimps")
 
 streams <- c("Prieta A", "Prieta B")
@@ -38,8 +38,8 @@ names(streams) <- c("QPA", "QPB")
   xlab('Year') + ylab("Change in magnitude") + 
   theme(axis.title.x = element_text(size = 16, angle = 0)) + # axis x
   theme(axis.title.y = element_text(size = 16, angle = 90)) + # axis 7
-  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
-  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=12, vjust=0.5, color="black")) + #subaxis y
   
   ylim(-3,3) + 
 
@@ -52,15 +52,17 @@ names(streams) <- c("QPA", "QPB")
   facet_grid(vars(stream), vars(variable_f),
     labeller = labeller(variable_f = variable_f, stream = streams)) +
     theme(
-      strip.text.x = element_text(size = 12, color = "black"),
-      strip.text.y = element_text(size = 12, color = "black"),
+      strip.text.x = element_text(size = 10, color = "black"),
+      strip.text.y = element_text(size = 10, color = "black"),
       strip.placement = "outside",) +
    theme(strip.background=element_rect(color= "black", fill="gray85")) +
     
  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
-            col= "blue",linetype=4)+
+            col= "red",linetype=4, alpha=0.9) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
-             col= "green",linetype=4)
+             col= "blue",linetype=4, alpha=0.9) 
+  
+  ggsave("Trajectories.jpeg",  path = "figures", width=8, height=6,dpi=600)
 
 
 
