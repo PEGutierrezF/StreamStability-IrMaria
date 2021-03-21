@@ -13,18 +13,18 @@
 QPAregression<- read.csv("data/Trajectories QPA.csv")
 head(QPAregression)
 
+
 QPAregression$date<-as.POSIXct(QPAregression$date,"%Y-%m-%d",tz = "UTC")
 
-variables <- c("Canopy cover", "Chlorophyll-a", "Leaf Litter")
+# Changes names in Facet_grid
+variables <- c("Canopy cover", "Chlorophyll-a", "Leaf litter")
 names(variables) <- c("canopy_cover", "Chla", "Leaf_litter")
 
 streams <- c("Prieta A", "Prieta B")
 names(streams) <- c("QPA", "QPB")
 
 
-dat.vline <- data.frame(xp = as.Date(c("2017-09-10", "2017-09-15", "2017-09-01")))
-
-
+# General graph -----------------------------------------------------------
 
   ggplot(QPAregression, aes(date,value)) + 
   geom_point() +
@@ -41,24 +41,23 @@ dat.vline <- data.frame(xp = as.Date(c("2017-09-10", "2017-09-15", "2017-09-01")
 
   theme(legend.position="none")+
   
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme(panel.grid.major = element_line(colour = "gray90"), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  theme(strip.text.x  = element_text(size = 14, colour = "black", angle = 0)) +
-  theme(strip.background = element_rect(colour = "black", fill = "grey94")) +
-   
   facet_grid(vars(stream), vars(variable),
     labeller = labeller(variable = variables, stream = streams)) +
     theme(
-      strip.text.x = element_text(size = 12, color = "black", face = "bold"),
-      strip.text.y = element_text(size = 12, color = "black", face = "bold")) +
-   theme(strip.background=element_rect(fill="white")) +
+      strip.text.x = element_text(size = 12, color = "black"),
+      strip.text.y = element_text(size = 12, color = "black"),
+      strip.placement = "outside",) +
+   theme(strip.background=element_rect(color= "black", fill="gray85")) +
     
- geom_vline(aes(xintercept=as.POSIXct("2017-09-10")), 
-            col= "blue",linetype=4)
+ geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), 
+            col= "blue",linetype=4)+
 
-
+  geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), 
+             col= "green",linetype=4)
 
 
 
