@@ -10,15 +10,19 @@
 #
 
 
-QPAregression<- read.csv("data/Trajectories QPA.csv")
+QPAregression<- read.csv("data/Trajectories.csv")
 head(QPAregression)
 
 
 QPAregression$date<-as.POSIXct(QPAregression$date,"%Y-%m-%d",tz = "UTC")
 
+# Reorder names in a new variable
+QPAregression$variable_f = factor(QPAregression$variable, 
+      levels=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps"))
+
 # Changes names in Facet_grid
-variables <- c("Canopy cover", "Chlorophyll-a", "Leaf litter")
-names(variables) <- c("canopy_cover", "Chla", "Leaf_litter")
+variable_f <- c("Canopy cover", "Leaf litter", "Chlorophyll-a","Shrimps")
+names(variable_f) <- c("canopy_cover", "Leaf_litter", "Chla", "Shrimps")
 
 streams <- c("Prieta A", "Prieta B")
 names(streams) <- c("QPA", "QPB")
@@ -45,18 +49,17 @@ names(streams) <- c("QPA", "QPB")
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  facet_grid(vars(stream), vars(variable),
-    labeller = labeller(variable = variables, stream = streams)) +
+  facet_grid(vars(stream), vars(variable_f),
+    labeller = labeller(variable_f = variable_f, stream = streams)) +
     theme(
       strip.text.x = element_text(size = 12, color = "black"),
       strip.text.y = element_text(size = 12, color = "black"),
       strip.placement = "outside",) +
    theme(strip.background=element_rect(color= "black", fill="gray85")) +
     
- geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), 
+ geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
             col= "blue",linetype=4)+
-
-  geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), 
+  geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
              col= "green",linetype=4)
 
 
