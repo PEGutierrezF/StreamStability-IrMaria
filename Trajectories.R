@@ -21,10 +21,15 @@ names(variables) <- c("canopy_cover", "Chla", "Leaf_litter")
 streams <- c("Prieta A", "Prieta B")
 names(streams) <- c("QPA", "QPB")
 
- ggplot(QPAregression, aes(date,value)) + 
+
+dat.vline <- data.frame(xp = as.Date(c("2017-09-10", "2017-09-15", "2017-09-01")))
+
+
+
+  ggplot(QPAregression, aes(date,value)) + 
   geom_point() +
-  geom_smooth(se = T, size=2) + 
-  geom_hline(yintercept = 0, color="darkred") +
+  geom_smooth(se = T, size=1.7, color= "steelblue3") + 
+  geom_hline(yintercept = 0, color="gray20") +
   
   xlab('Year') + ylab("Change in magnitude") + 
   theme(axis.title.x = element_text(size = 16, angle = 0)) + # axis x
@@ -33,11 +38,7 @@ names(streams) <- c("QPA", "QPB")
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
   
   ylim(-3,3) + 
-  #  annotate("text", x = 5, y = 2.5, label = "Increase",colour = "black", size = 6,angle = 90) +
-  #  annotate("text", x = 5, y = -2.5, label = "Decrease",colour = "black", size = 6,angle = 90) +
-  
-  #theme(legend.title=element_blank())+
-  #theme(legend.text = element_text(size=20)) +
+
   theme(legend.position="none")+
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -46,13 +47,15 @@ names(streams) <- c("QPA", "QPB")
   
   theme(strip.text.x  = element_text(size = 14, colour = "black", angle = 0)) +
   theme(strip.background = element_rect(colour = "black", fill = "grey94")) +
-  
+   
   facet_grid(vars(stream), vars(variable),
     labeller = labeller(variable = variables, stream = streams)) +
     theme(
       strip.text.x = element_text(size = 12, color = "black", face = "bold"),
-      strip.text.y = element_text(size = 12, color = "black", face = "bold")
-    )
+      strip.text.y = element_text(size = 12, color = "black", face = "bold")) +
+   theme(strip.background=element_rect(fill="white")) +
+    
+ geom_vline(aes(xintercept=as.POSIXct("2017-09-10"), col = "blue"))
 
 
 
