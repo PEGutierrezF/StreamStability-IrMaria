@@ -55,7 +55,8 @@ dat.vline <- data.frame(xp = as.Date(c("2017-09-10", "2017-09-15", "2017-09-01")
       strip.text.y = element_text(size = 12, color = "black", face = "bold")) +
    theme(strip.background=element_rect(fill="white")) +
     
- geom_vline(aes(xintercept=as.POSIXct("2017-09-10"), col = "blue"))
+ geom_vline(aes(xintercept=as.POSIXct("2017-09-10")), 
+            col= "blue",linetype=4)
 
 
 
