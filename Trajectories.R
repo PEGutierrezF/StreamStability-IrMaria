@@ -15,12 +15,18 @@ head(QPAregression)
 
 QPAregression$date<-as.POSIXct(QPAregression$date,"%Y-%m-%d",tz = "UTC")
 
-ggplot(QPAregression, aes(date,value)) + 
+variables <- c("Canopy cover", "Chlorophyll-a", "Leaf Litter")
+names(variables) <- c("canopy_cover", "Chla", "Leaf_litter")
+
+streams <- c("Prieta A", "Prieta B")
+names(streams) <- c("QPA", "QPB")
+
+ ggplot(QPAregression, aes(date,value)) + 
   geom_point() +
-  geom_smooth(se = T, size=3) + 
+  geom_smooth(se = T, size=2) + 
   geom_hline(yintercept = 0, color="darkred") +
   
-  xlab('Sampling period (2017-2019)') + ylab("Change in magnitude") + 
+  xlab('Year') + ylab("Change in magnitude") + 
   theme(axis.title.x = element_text(size = 16, angle = 0)) + # axis x
   theme(axis.title.y = element_text(size = 16, angle = 90)) + # axis 7
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
@@ -41,7 +47,12 @@ ggplot(QPAregression, aes(date,value)) +
   theme(strip.text.x  = element_text(size = 14, colour = "black", angle = 0)) +
   theme(strip.background = element_rect(colour = "black", fill = "grey94")) +
   
-  facet_grid(vars(stream), vars(variable))
+  facet_grid(vars(stream), vars(variable),
+    labeller = labeller(variable = variables, stream = streams)) +
+    theme(
+      strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+      strip.text.y = element_text(size = 12, color = "black", face = "bold")
+    )
 
 
 
@@ -75,7 +86,7 @@ RegressionQPA <- ggplot(QPA_regression1, aes(id,
 
   geom_hline(yintercept = 0, color="darkred") +
 
-  xlab('Sampling period (2017-2019)') + ylab("Change in magnitude") + 
+  xlab('Year') + ylab("Change in magnitude") + 
   theme(axis.title.x = element_text(size = 16, angle = 0)) + # axis x
   theme(axis.title.y = element_text(size = 16, angle = 90)) + # axis 7
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
