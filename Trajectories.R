@@ -45,7 +45,7 @@ names(streams) <- c("QPA", "QPB")
 
   theme(legend.position="none")+
   
-  theme(panel.grid.major = element_line(colour = "gray90"), panel.grid.minor = element_blank(),
+  theme(panel.grid.major = element_line(colour = "gray95"), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
