@@ -15,11 +15,11 @@ LeafLitter
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-LeafLitter <- LeafLitter %>% select(TimeLeaf,QPALeaflitter,QPBLeaflitter )
+LeafLitter <- LeafLitter %>% select(events,QPALeaflitter,QPBLeaflitter )
 LeafLitter <- na.omit(LeafLitter)
 LeafLitter
 
-QPALeaf.mod  <- lm(QPALeaflitter ~ TimeLeaf, data=LeafLitter)
+QPALeaf.mod  <- lm(QPALeaflitter ~ events, data=LeafLitter)
 summary(QPALeaf.mod)
 
 LeafLitter$QPAresid<- QPALeaf.mod$resid
@@ -27,7 +27,7 @@ LeafLitter
 
 1/apply(LeafLitter, 2, sd)
 
-p1 <- ggplot(LeafLitter,aes(TimeLeaf ,
+p1 <- ggplot(LeafLitter,aes(events ,
                 y=QPALeaflitter))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
@@ -48,7 +48,7 @@ p1
 
   # Lm QPB Leaf Litter ------------------------------------------------------
 
-QPBLeaf.mod <- lm(QPBLeaflitter ~ TimeLeaf, data=LeafLitter)
+QPBLeaf.mod <- lm(QPBLeaflitter ~ events, data=LeafLitter)
 summary(QPBLeaf.mod)
 
 LeafLitter$QPBresid<- QPBLeaf.mod$resid
@@ -57,7 +57,7 @@ LeafLitter
 1/apply(LeafLitter, 2, sd)
 
 
-p2 <- ggplot(LeafLitter,aes(TimeLeaf ,
+p2 <- ggplot(LeafLitter,aes(events ,
                            y=QPBLeaflitter))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +

@@ -9,21 +9,16 @@
 #--------------------------------------------
 #
 
-library(modelr)
-library(ggplot2)
-library(dplyr)
-library(patchwork)
-
-chl_a<- read.csv("02 chl_a.csv")
+chl_a<- read.csv("data/chl_a.csv")
 chl_a
 
 
 # QPA CHLA ----------------------------------------------------------------
 
-chla <- chl_a %>% select(TimeCHLA ,QPACHLALog,QPBCHLALog)
+chla <- chl_a %>% select(events,QPACHLALog,QPBCHLALog)
 chla <- na.omit(chla)
 
-QPAChla.mod  <- lm(QPACHLALog~ TimeCHLA   , data=chla)
+QPAChla.mod  <- lm(QPACHLALog~ events   , data=chla)
 summary(QPAChla.mod)
 
 chla$QPAChlaresid<- QPAChla.mod$resid
@@ -31,7 +26,7 @@ chla
 
 1/apply(chla, 2, sd)
 
-c1 <- ggplot(chla, aes(TimeCHLA,
+c1 <- ggplot(chla, aes(events,
                             y=QPACHLALog))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
@@ -53,7 +48,7 @@ c1
 
 # QPB CHL-A ---------------------------------------------------------------
 
-QPBChla.mod  <- lm(QPBCHLALog~ TimeCHLA   , data=chla)
+QPBChla.mod  <- lm(QPBCHLALog~ events   , data=chla)
 summary(QPBChla.mod)
 
 chla$QPBChlaresid<- QPBChla.mod$resid
