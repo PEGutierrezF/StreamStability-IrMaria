@@ -25,7 +25,7 @@ levels(QPAregression$variable_f) <-
     "textstyle('Leaf litter')",
     "textstyle('Chlorophyll-')*italic('a')",
     "textstyle('Shrimps')",
-    "atop(textstyle('Macroinvertebrate'),textstyle('density'))")
+    "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))")
 
 # Changes names in Facet_grid ---- es una manera buena, pero no la voy a usar --- Habria que labeller(variable_f = variable_f
 #variable_f <- c("Canopy openness", "Leaf litter", "Chlorophyll-a","Shrimps","Macroinvertebrates")
@@ -60,8 +60,9 @@ names(streams) <- c("QPA", "QPB")
     theme(
       strip.text.x = element_text(size = 10, color = "black"),
       strip.text.y = element_text(size = 10, color = "black"),
-      strip.placement = "outside",) +
+      strip.placement = "outside") +
    theme(strip.background=element_rect(color= "black", fill="gray85")) +
+   theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) +
     
  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
             col= "red",linetype=4, alpha=0.9) +
