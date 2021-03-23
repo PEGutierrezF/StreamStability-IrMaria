@@ -18,15 +18,21 @@ QPAregression$date<-as.POSIXct(QPAregression$date,"%Y-%m-%d",tz = "UTC")
 
 # Reorder names in a new variable
 QPAregression$variable_f = factor(QPAregression$variable, 
-      levels=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps"))
+      levels=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
 
-# Changes names in Facet_grid
-variable_f <- c("Canopy openness", "Leaf litter", "Chlorophyll-a","Shrimps")
-names(variable_f) <- c("canopy_cover", "Leaf_litter", "Chla", "Shrimps")
+levels(QPAregression$variable_f) <- 
+  c("textstyle('Canopy openness')", 
+    "textstyle('Leaf litter')",
+    "textstyle('Chlorophyll-')*italic('a')",
+    "textstyle('Shrimps')",
+    "atop(textstyle('Macroinvertebrate'),textstyle('density'))")
+
+# Changes names in Facet_grid ---- es una manera buena, pero no la voy a usar --- Habria que labeller(variable_f = variable_f
+#variable_f <- c("Canopy openness", "Leaf litter", "Chlorophyll-a","Shrimps","Macroinvertebrates")
+#names(variable_f) <- c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates")
 
 streams <- c("Prieta A", "Prieta B")
 names(streams) <- c("QPA", "QPB")
-
 
 # General graph -----------------------------------------------------------
 
@@ -36,10 +42,10 @@ names(streams) <- c("QPA", "QPB")
   geom_hline(yintercept = 0, color="gray20") +
   
   xlab('Year') + ylab("Change in magnitude") + 
-  theme(axis.title.x = element_text(size = 16, angle = 0)) + # axis x
-  theme(axis.title.y = element_text(size = 16, angle = 90)) + # axis 7
-  theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5, color="black")) + #subaxis x
-  theme(axis.text.y=element_text(angle=0, size=12, vjust=0.5, color="black")) + #subaxis y
+  theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
+  theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis y
   
   ylim(-3,3) + 
 
@@ -50,7 +56,7 @@ names(streams) <- c("QPA", "QPB")
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
   facet_grid(vars(stream), vars(variable_f),
-    labeller = labeller(variable_f = variable_f, stream = streams)) +
+    labeller = labeller(variable_f = label_parsed, stream = streams)) +
     theme(
       strip.text.x = element_text(size = 10, color = "black"),
       strip.text.y = element_text(size = 10, color = "black"),
@@ -62,7 +68,7 @@ names(streams) <- c("QPA", "QPB")
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
              col= "blue",linetype=4, alpha=0.9) 
   
-  ggsave("Trajectories.jpeg",  path = "figures", width=8, height=6,dpi=600)
+  ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
 
 
