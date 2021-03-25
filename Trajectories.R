@@ -70,7 +70,7 @@ names(streams) <- c("QPA", "QPB")
              col= "blue",linetype=4, alpha=0.9) 
   
 
-ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
+ ggsave("TrajectoriesColors.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
 
 
@@ -85,7 +85,9 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
-grid.draw(g)
+grid.draw(g) +
+  ggsave("TrajectoriesColors.jpeg",  path = "figures", width=9, height=6,dpi=600)
+
 
 
 

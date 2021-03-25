@@ -12,6 +12,6 @@
 
 install.packages("ggpubr")
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
-               "reshape2", "ggpubr", "tidyverse")
+               "reshape2", "ggpubr", "tidyverse", "grid")
 lapply(libraries, require, character.only = TRUE)
 
