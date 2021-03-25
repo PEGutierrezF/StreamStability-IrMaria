@@ -69,7 +69,6 @@ names(streams) <- c("QPA", "QPB")
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
              col= "blue",linetype=4, alpha=0.9) 
   
-
  ggsave("TrajectoriesColors.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
 
@@ -86,9 +85,7 @@ for (i in stripr) {
   k <- k+1
 }
 grid.draw(g) +
-g+   ggsave("TrajectoriesColors.jpeg",  path = "figures", width=9, height=6,dpi=600)
-
-
+ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
 
 
 
