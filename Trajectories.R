@@ -36,7 +36,7 @@ names(streams) <- c("QPA", "QPB")
 
 # General graph -----------------------------------------------------------
 
-  ggplot(QPAregression, aes(date,value)) + 
+ p<- ggplot(QPAregression, aes(date,value)) + 
   geom_point() +
   geom_smooth(se = T, size=1.7, color= "steelblue3") + 
   geom_hline(yintercept = 0, color="gray20") +
@@ -69,8 +69,23 @@ names(streams) <- c("QPA", "QPB")
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
              col= "blue",linetype=4, alpha=0.9) 
   
-  ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
+ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
+
+
+
+# Individual strip color  -------------------------------------------------
+
+g <- ggplot_gtable(ggplot_build(p))
+stripr <- which(grepl('strip-t', g$layout$name)) # strip-t changes colors
+fills <- c("#fec44f","#a1d99b","#a1d99b","#6baed6", "#6baed6")
+k <- 1
+for (i in stripr) {
+  j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+  k <- k+1
+}
+grid.draw(g)
 
 
 
