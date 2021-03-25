@@ -86,7 +86,7 @@ for (i in stripr) {
   k <- k+1
 }
 grid.draw(g) +
-  ggsave("TrajectoriesColors.jpeg",  path = "figures", width=9, height=6,dpi=600)
+g+   ggsave("TrajectoriesColors.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
 
 
