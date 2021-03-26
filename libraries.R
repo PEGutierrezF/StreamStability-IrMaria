@@ -10,8 +10,9 @@
 #--------------------------------------------
 #
 
-install.packages("ggpubr")
+install.packages("fitdistrplus")
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
-               "reshape2", "ggpubr", "tidyverse", "grid")
+               "reshape2", "ggpubr", "tidyverse", "grid",
+               "fitdistrplus")
 lapply(libraries, require, character.only = TRUE)
 
