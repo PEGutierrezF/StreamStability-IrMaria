@@ -97,7 +97,7 @@ ccA <- QPAregression %>%
 ccA$date<-as.POSIXct(ccA$date,"%Y-%m-%d",tz = "UTC")
 descdist(ccA$value, discrete=FALSE, boot=500)
 
-cc.qpA.mod <- glm(value ~ date, data=ccA, family = gaussian)
+cc.qpA.mod <- lm(value ~date, data=ccA)
 summary(cc.qpA.mod)
 
 
@@ -108,8 +108,19 @@ ccB <- QPAregression %>%
 ccB$date<-as.POSIXct(ccB$date,"%Y-%m-%d",tz = "UTC")
 descdist(ccB$value, discrete=FALSE, boot=500)
 
-cc.qpB.mod <- glm(value ~ date, data=ccB, family = gaussian)
+cc.qpB.mod <- glm(value ~date, data=ccB, family = Gamma() )
 summary(cc.qpB.mod)
+
+
+# Leaf litter QPA ---------------------------------------------------------
+
+LLA <- QPAregression %>%
+  filter(stream =="QPA", variable =="Leaf_litter")
+LLA$date<-as.POSIXct(LLA$date,"%Y-%m-%d",tz = "UTC")
+descdist(LLA$value, discrete=FALSE, boot=500)
+
+ll.qpA.mod <- lm(value ~date, data=LLA)
+summary(ll.qpA.mod)
 
 
 
