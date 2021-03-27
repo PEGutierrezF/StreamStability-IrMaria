@@ -114,11 +114,10 @@ ggplot(ccA, aes(sam_event, value)) + geom_point() +
 
 ccB <- QPAregression %>%
   filter(stream =="QPB", variable =="canopy_cover")
-ccB$date<-as.POSIXct(ccB$date,"%Y-%m-%d",tz = "UTC")
-descdist(ccB$value, discrete=FALSE, boot=500)
+ccB$date <- as.integer(as.Date(ccB$date, format = "%Y-%m-%d"))
 
-cc.qpB.mod <- gam(value ~date, data=ccB, method = "REML")
-summary(cc.qpB.mod)
+cc.qp_B.mod <- gam(value ~s(date), data=ccB, method = "REML")
+summary(cc.qp_B.mod)
 
 
 # Leaf litter QPA ---------------------------------------------------------
