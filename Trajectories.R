@@ -38,7 +38,7 @@ names(streams) <- c("QPA", "QPB")
 
  p<- ggplot(QPAregression, aes(date,value)) + 
   geom_point() +
-  geom_smooth(se = T, size=1.7, color= "steelblue3") + 
+  geom_smooth(se = T, size=1.7, color= "steelblue3", method = "gam") + 
   geom_hline(yintercept = 0, color="gray20") +
   
   xlab('Year') + ylab("Change in magnitude") + 
@@ -93,12 +93,17 @@ ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
 # Canopy cover QPA --------------------------------------------------------
 
 ccA <- QPAregression %>%
-  filter(stream =="QPA", variable =="canopy_cover")
-ccA$date<-as.POSIXct(ccA$date,"%Y-%m-%d",tz = "UTC")
-descdist(ccA$value, discrete=FALSE, boot=500)
+  filter(stream =="QPA", variable =="canopy_cover") %>%
+  mutate(sam_event= seq_along(value))
 
-cc.qpA.mod <- lm(value ~date, data=ccA)
+#ccA$date<-as.POSIXct(ccA$date,"%Y-%m-%d",tz = "UTC")
+#descdist(ccA$value, discrete=FALSE, boot=500)
+
+cc.qpA.mod <- gam(value ~s(sam_event), data=ccA, method = "REML")
 summary(cc.qpA.mod)
+
+par(mfrow = c(2,2))
+gam.check(cc.qpA.mod)
 
 
 # Canopy cover QPB --------------------------------------------------------
@@ -108,7 +113,7 @@ ccB <- QPAregression %>%
 ccB$date<-as.POSIXct(ccB$date,"%Y-%m-%d",tz = "UTC")
 descdist(ccB$value, discrete=FALSE, boot=500)
 
-cc.qpB.mod <- glm(value ~date, data=ccB, family = Gamma() )
+cc.qpB.mod <- gam(value ~date, data=ccB, method = "REML")
 summary(cc.qpB.mod)
 
 
@@ -119,7 +124,7 @@ LLA <- QPAregression %>%
 LLA$date<-as.POSIXct(LLA$date,"%Y-%m-%d",tz = "UTC")
 descdist(LLA$value, discrete=FALSE, boot=500)
 
-ll.qpA.mod <- lm(value ~date, data=LLA)
+ll.qpA.mod <- gam(value ~date, data=LLA, method = "REML")
 summary(ll.qpA.mod)
 
 
