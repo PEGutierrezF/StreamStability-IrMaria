@@ -2,25 +2,25 @@
 
 #http://environmentalcomputing.net/intro-to-gams/
 
-#--------------------------------------------
-# QPA regression
-# 21 May 2020
-#PEGF
-#--------------------------------------------
-#
+# ---------------------------------------------
+# Trajectories analysis
+# 27 Mar 2021
+# Pablo E. Gutiérrez-Fonseca
+# ---------------------------------------------
+#  
 
 
-QPAregression<- read.csv("data/Trajectories.csv")
-head(QPAregression)
+Trajectories<- read.csv("data/Trajectories.csv")
+head(Trajectories)
 
 
-QPAregression$date<-as.POSIXct(QPAregression$date,"%Y-%m-%d",tz = "UTC")
+Trajectories$date<-as.POSIXct(Trajectories$date,"%Y-%m-%d",tz = "UTC")
 
 # Reorder names in a new variable
-QPAregression$variable_f = factor(QPAregression$variable, 
+Trajectories$variable_f = factor(Trajectories$variable, 
       levels=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
 
-levels(QPAregression$variable_f) <- 
+levels(Trajectories$variable_f) <- 
   c("textstyle('Canopy openness')", 
     "textstyle('Leaf litter')",
     "textstyle('Chlorophyll-')*italic('a')",
@@ -36,7 +36,7 @@ names(streams) <- c("QPA", "QPB")
 
 # General graph -----------------------------------------------------------
 
- p<- ggplot(QPAregression, aes(date,value)) + 
+ p<- ggplot(Trajectories, aes(date,value)) + 
   geom_point() +
   geom_smooth(se = T, size=1.7, color= "steelblue3", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
@@ -91,53 +91,98 @@ ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
 
 
 ###########################################################################
-# Generalised additive models (GAMs
+# Generalised additive models (GAMs)
 ###########################################################################
 
 
 # Canopy cover QPA --------------------------------------------------------
 
-ccA <- QPAregression %>%
-  filter(stream =="QPA", variable =="canopy_cover") %>%
-  mutate(sam_event= seq_along(value))
+cc_A <- Trajectories %>%
+  filter(stream =="QPA", variable =="canopy_cover") 
 
-cc.qpA.mod <- gam(value ~s(sam_event), data=ccA, method = "REML")
-summary(cc.qpA.mod)
+cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
+
+cc.qp_A.mod <- gam(value ~s(date), data=cc_A, method = "REML")
+summary(cc.qp_A.mod)
 
 par(mfrow = c(2,2))
 gam.check(cc.qpA.mod)
 
-ggplot(ccA, aes(sam_event, value)) + geom_point() + 
-  geom_smooth(method = "gam", formula = y ~s(x))
 
 # Canopy cover QPB --------------------------------------------------------
 
-ccB <- QPAregression %>%
+cc_B <- Trajectories %>%
   filter(stream =="QPB", variable =="canopy_cover")
-ccB$date <- as.integer(as.Date(ccB$date, format = "%Y-%m-%d"))
+cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-cc.qp_B.mod <- gam(value ~s(date), data=ccB, method = "REML")
+cc.qp_B.mod <- gam(value ~s(date), data=cc_B, method = "REML")
 summary(cc.qp_B.mod)
 
 
 # Leaf litter QPA ---------------------------------------------------------
 
-LLA <- QPAregression %>%
+LL_A <- Trajectories %>%
   filter(stream =="QPA", variable =="Leaf_litter")
 
-LLA$date <- as.integer(as.Date(LLA$date, format = "%Y-%m-%d"))
+LL_A$date <- as.integer(as.Date(LL_A$date, format = "%Y-%m-%d"))
 
-ll.qp_A.mod <- gam(value ~s(date), data=LLA, method = "REML")
+ll.qp_A.mod <- gam(value ~s(date), data=LL_A, method = "REML")
 summary(ll.qp_A.mod)
 
 
 # Leaf litter QPB ---------------------------------------------------------
 
-LLB <- QPAregression %>%
-  filter(stream =="QPA", variable =="Leaf_litter")
+LL_B <- Trajectories %>%
+  filter(stream =="QPB", variable =="Leaf_litter")
 
-LLB$date <- as.integer(as.Date(LLB$date, format = "%Y-%m-%d"))
+LL_B$date <- as.integer(as.Date(LL_B$date, format = "%Y-%m-%d"))
 
-ll.qp_B.mod <- gam(value ~s(date), data = LLB, method = "REML")
+ll.qp_B.mod <- gam(value ~s(date), data = LL_B, method = "REML")
 summary(ll.qp_B.mod)
 
+
+# Chlorophyll-a QPA -------------------------------------------------------
+
+
+ch_A <- Trajectories %>%
+  filter(stream =="QPA", variable =="Chla")
+
+ch_A$date <- as.integer(as.Date(ch_A$date, format = "%Y-%m-%d"))
+
+ch.qp_A.mod <- gam(value ~s(date), data = ch_A, method = "REML")
+summary(ch.qp_A.mod)
+
+
+# Chlorophyll-a QPB -------------------------------------------------------
+
+ch_B <- Trajectories %>%
+  filter(stream =="QPB", variable =="Chla")
+
+ch_B$date <- as.integer(as.Date(ch_B$date, format = "%Y-%m-%d"))
+
+ch.qp_B.mod <- gam(value ~s(date), data = ch_B, method = "REML")
+summary(ch.qp_B.mod)
+
+
+# Shrimps QPA -------------------------------------------------------
+
+
+shrimps_A <- Trajectories %>%
+  filter(stream =="QPA", variable =="Shrimps")
+
+shrimps_A$date <- as.integer(as.Date(shrimps_A$date, format = "%Y-%m-%d"))
+
+shrimps.qp_A.mod <- gam(value ~s(date), data = shrimps_A, method = "REML")
+summary(shrimps.qp_A.mod)
+
+
+# Shrimps QPB -------------------------------------------------------
+
+
+shrimps_B <- Trajectories %>%
+  filter(stream =="QPB", variable =="Shrimps")
+
+shrimps_B$date <- as.integer(as.Date(shrimps_B$date, format = "%Y-%m-%d"))
+
+shrimps.qp_B.mod <- gam(value ~s(date), data = shrimps_B, method = "REML")
+summary(shrimps.qp_B.mod)

@@ -17,6 +17,8 @@ libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
 lapply(libraries, require, character.only = TRUE)
 
 
+ggplot(ccA, aes(sam_event, value)) + geom_point() + 
+  geom_smooth(method = "gam", formula = y ~s(x))
 
 ccA$date<-as.POSIXct(ccA$date,"%Y-%m-%d",tz = "UTC")
 descdist(ccA$value, discrete=FALSE, boot=500)
