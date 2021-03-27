@@ -1,6 +1,6 @@
 
 
-
+#http://environmentalcomputing.net/intro-to-gams/
 
 #--------------------------------------------
 # QPA regression
@@ -38,7 +38,7 @@ names(streams) <- c("QPA", "QPB")
 
  p<- ggplot(QPAregression, aes(date,value)) + 
   geom_point() +
-  geom_smooth(se = T, size=1.7, color= "steelblue3", method = "gam") + 
+  geom_smooth(se = T, size=1.7, color= "steelblue3", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
   
   xlab('Year') + ylab("Change in magnitude") + 
@@ -70,7 +70,7 @@ names(streams) <- c("QPA", "QPB")
              col= "blue",linetype=4, alpha=0.9) 
 p
 
- ggsave("TrajectoriesColors.jpeg",  path = "figures", width=9, height=6,dpi=600)
+ ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
 
 
@@ -90,14 +90,16 @@ ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
 
 
 
+###########################################################################
+# Generalised additive models (GAMs
+###########################################################################
+
+
 # Canopy cover QPA --------------------------------------------------------
 
 ccA <- QPAregression %>%
   filter(stream =="QPA", variable =="canopy_cover") %>%
   mutate(sam_event= seq_along(value))
-
-#ccA$date<-as.POSIXct(ccA$date,"%Y-%m-%d",tz = "UTC")
-#descdist(ccA$value, discrete=FALSE, boot=500)
 
 cc.qpA.mod <- gam(value ~s(sam_event), data=ccA, method = "REML")
 summary(cc.qpA.mod)
@@ -105,6 +107,8 @@ summary(cc.qpA.mod)
 par(mfrow = c(2,2))
 gam.check(cc.qpA.mod)
 
+ggplot(ccA, aes(sam_event, value)) + geom_point() + 
+  geom_smooth(method = "gam", formula = y ~s(x))
 
 # Canopy cover QPB --------------------------------------------------------
 
@@ -121,12 +125,20 @@ summary(cc.qpB.mod)
 
 LLA <- QPAregression %>%
   filter(stream =="QPA", variable =="Leaf_litter")
-LLA$date<-as.POSIXct(LLA$date,"%Y-%m-%d",tz = "UTC")
-descdist(LLA$value, discrete=FALSE, boot=500)
 
-ll.qpA.mod <- gam(value ~date, data=LLA, method = "REML")
-summary(ll.qpA.mod)
+LLA$date <- as.integer(as.Date(LLA$date, format = "%Y-%m-%d"))
+
+ll.qp_A.mod <- gam(value ~s(date), data=LLA, method = "REML")
+summary(ll.qp_A.mod)
 
 
+# Leaf litter QPB ---------------------------------------------------------
 
+LLB <- QPAregression %>%
+  filter(stream =="QPA", variable =="Leaf_litter")
+
+LLB$date <- as.integer(as.Date(LLB$date, format = "%Y-%m-%d"))
+
+ll.qp_B.mod <- gam(value ~s(date), data = LLB, method = "REML")
+summary(ll.qp_B.mod)
 
