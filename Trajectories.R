@@ -158,11 +158,15 @@ ch_A$date <- as.integer(as.Date(ch_A$date, format = "%Y-%m-%d"))
 ch.qp_A.mod <- gam(value ~s(date), data = ch_A, method = "REML")
 summary(ch.qp_A.mod)
 
+# https://www.mainard.co.uk/post/why-mgcv-is-awesome/
 ch.qp_A.mod1 <- lm(value ~date, data = ch_A)
 summary(ch.qp_A.mod1)
 
 AIC(ch.qp_A.mod)
 AIC(ch.qp_A.mod1)
+anova(ch.qp_A.mod, ch.qp_A.mod1)
+# Anova function has performed an f-test here, 
+# and the GAM model is not significantly different that linear regression.
 
 # Chlorophyll-a QPB -------------------------------------------------------
 
