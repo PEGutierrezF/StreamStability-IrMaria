@@ -2,6 +2,7 @@
 
 #http://environmentalcomputing.net/intro-to-gams/
 # https://stats.stackexchange.com/questions/231399/how-to-determine-the-type-of-spline-in-gam
+# https://stats.stackexchange.com/questions/137109/selecting-knots-for-a-gam
 
 # ---------------------------------------------
 # Trajectories analysis
@@ -96,6 +97,7 @@ ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
 ###########################################################################
 
 # k = knots. 12 month per year or 24 sampling event per year. 
+# basis spline
 
 # Canopy cover QPA --------------------------------------------------------
 
@@ -104,12 +106,12 @@ cc_A <- Trajectories %>%
 
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
-cc.qp_A.mod <- gam(value ~s(date, bs="gp", k=12), data=cc_A, method = "REML")
+cc.qp_A.mod <- gam(value ~s(date, bs="cr", k= 4), data=cc_A, method = "REML")
 summary(cc.qp_A.mod)
-
-par(mfrow = c(2,2))
 gam.check(cc.qpA.mod)
 
+par(mfrow = c(2,2))
+?choose.k
 
 # Canopy cover QPB --------------------------------------------------------
 
@@ -117,9 +119,9 @@ cc_B <- Trajectories %>%
   filter(stream =="QPB", variable =="canopy_cover")
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-cc.qp_B.mod <- gam(value ~s(date, bs="gp", k=12), data=cc_B, method = "REML")
+cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=4), data=cc_B, method = "REML")
 summary(cc.qp_B.mod)
-
+gam.check(cc.qp_B.mod)
 
 # Leaf litter QPA ---------------------------------------------------------
 
@@ -128,7 +130,7 @@ LL_A <- Trajectories %>%
 
 LL_A$date <- as.integer(as.Date(LL_A$date, format = "%Y-%m-%d"))
 
-ll.qp_A.mod <- gam(value ~s(date, bs="gp", k=24), data=LL_A, method = "REML")
+ll.qp_A.mod <- gam(value ~s(date, bs="cr", k=4), data=LL_A, method = "REML")
 summary(ll.qp_A.mod)
 
 
@@ -139,7 +141,7 @@ LL_B <- Trajectories %>%
 
 LL_B$date <- as.integer(as.Date(LL_B$date, format = "%Y-%m-%d"))
 
-ll.qp_B.mod <- gam(value ~s(date, bs="gp", k=24), data = LL_B, method = "REML")
+ll.qp_B.mod <- gam(value ~s(date, bs="cr", k=4), data = LL_B, method = "REML")
 summary(ll.qp_B.mod)
 
 
@@ -151,7 +153,7 @@ ch_A <- Trajectories %>%
 
 ch_A$date <- as.integer(as.Date(ch_A$date, format = "%Y-%m-%d"))
 
-ch.qp_A.mod <- gam(value ~s(date, bs="gp", k=12), data = ch_A, method = "REML")
+ch.qp_A.mod <- gam(value ~s(date, bs="cr", k=4), data = ch_A, method = "REML")
 summary(ch.qp_A.mod)
 
 ch.qp_A.mod1 <- lm(value ~date, data = ch_A)
@@ -168,7 +170,7 @@ ch_B <- Trajectories %>%
 
 ch_B$date <- as.integer(as.Date(ch_B$date, format = "%Y-%m-%d"))
 
-ch.qp_B.mod <- gam(value ~s(date, bs="gp", k=12), data = ch_B, method = "REML")
+ch.qp_B.mod <- gam(value ~s(date, bs="cr", k=4), data = ch_B, method = "REML")
 summary(ch.qp_B.mod)
 
 
@@ -180,7 +182,7 @@ shrimps_A <- Trajectories %>%
 
 shrimps_A$date <- as.integer(as.Date(shrimps_A$date, format = "%Y-%m-%d"))
 
-shrimps.qp_A.mod <- gam(value ~s(date, bs="gp", k=12), data = shrimps_A, method = "REML")
+shrimps.qp_A.mod <- gam(value ~s(date, bs="cr", k=4), data = shrimps_A, method = "REML")
 summary(shrimps.qp_A.mod)
 
 
@@ -192,5 +194,5 @@ shrimps_B <- Trajectories %>%
 
 shrimps_B$date <- as.integer(as.Date(shrimps_B$date, format = "%Y-%m-%d"))
 
-shrimps.qp_B.mod <- gam(value ~s(date, bs="gp", k=12), data = shrimps_B, method = "REML")
+shrimps.qp_B.mod <- gam(value ~s(date, bs="cr", k=3), data = shrimps_B, method = "REML")
 summary(shrimps.qp_B.mod)
