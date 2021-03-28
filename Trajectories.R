@@ -1,6 +1,7 @@
 
 
 #http://environmentalcomputing.net/intro-to-gams/
+# https://stats.stackexchange.com/questions/231399/how-to-determine-the-type-of-spline-in-gam
 
 # ---------------------------------------------
 # Trajectories analysis
@@ -94,6 +95,7 @@ ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
 # Generalised additive models (GAMs)
 ###########################################################################
 
+# k = knots. 12 month per year or 24 sampling event per year. 
 
 # Canopy cover QPA --------------------------------------------------------
 
