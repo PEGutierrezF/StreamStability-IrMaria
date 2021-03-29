@@ -13,11 +13,14 @@
 #http://environmentalcomputing.net/intro-to-gams/
 # https://stats.stackexchange.com/questions/231399/how-to-determine-the-type-of-spline-in-gam
 # https://stats.stackexchange.com/questions/137109/selecting-knots-for-a-gam
-
+# https://stats.stackexchange.com/questions/243367/smoothing-methods-for-gam-in-mgcv-package
 
 # k = knots. 12 month per year or 24 sampling event per year. 
-# basis spline
-# https://stats.stackexchange.com/questions/243367/smoothing-methods-for-gam-in-mgcv-package
+# ?choose.k
+
+# bs= basis spline
+
+# best model: high R-sq, low AIC, low REML
 
 Trajectories<- read.csv("data/Trajectories.csv")
 head(Trajectories)
@@ -33,21 +36,20 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 cc.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_A, method = "REML") # best smooth
 summary(cc.qp_A.mod)
 gam.check(cc.qp_A.mod)
+AIC(cc.qp_A.mod)
 
 cc.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=5), data=cc_A, method = "REML")
 summary(cc.qp_A.mod1)
 gam.check(cc.qp_A.mod1)
+AIC(cc.qp_A.mod1)
 
 cc.qp_A.mod2 <- gam(value ~s(date, bs="ts", k=5), data=cc_A, method = "REML")
 summary(cc.qp_A.mod2)
 gam.check(cc.qp_A.mod2)
-
+AIC(cc.qp_A.mod2)
 
 
 par(mfrow = c(2,2))
-
-
-?choose.k
 
 # Canopy cover QPB --------------------------------------------------------
 
@@ -55,9 +57,20 @@ cc_B <- Trajectories %>%
   filter(stream =="QPB", variable =="canopy_cover")
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-cc.qp_B.mod <- gam(value ~s(date), data=cc_B, method = "REML")
+cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, method = "REML") # best smooth
 summary(cc.qp_B.mod)
 gam.check(cc.qp_B.mod)
+AIC(cc.qp_B.mod)
+
+cc.qp_B.mod1 <- gam(value ~s(date, bs="ps", k=5), data=cc_B, method = "REML")
+summary(cc.qp_B.mod1)
+gam.check(cc.qp_B.mod1)
+AIC(cc.qp_B.mod1)
+
+cc.qp_B.mod2 <- gam(value ~s(date, bs="ts", k=5), data=cc_B, method = "REML")
+summary(cc.qp_B.mod2)
+gam.check(cc.qp_B.mod2)
+AIC(cc.qp_B.mod2)
 
 # Leaf litter QPA ---------------------------------------------------------
 
