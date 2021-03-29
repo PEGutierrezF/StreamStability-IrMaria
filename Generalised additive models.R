@@ -93,6 +93,7 @@ summary(ll.qp_A.mod2)
 gam.check(ll.qp_A.mod2)
 
 AIC(ll.qp_A.mod, ll.qp_A.mod1, ll.qp_A.mod2)
+anova(ll.qp_A.mod, ll.qp_A.mod1, ll.qp_A.mod2, test="Chisq") # no hay diferencias entre los modelos
 
 
 # Leaf litter QPB ---------------------------------------------------------
