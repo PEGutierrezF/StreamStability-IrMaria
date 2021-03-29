@@ -36,18 +36,17 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 cc.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_A, method = "REML") # best smooth
 summary(cc.qp_A.mod)
 gam.check(cc.qp_A.mod)
-AIC(cc.qp_A.mod)
+
 
 cc.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=5), data=cc_A, method = "REML")
 summary(cc.qp_A.mod1)
 gam.check(cc.qp_A.mod1)
-AIC(cc.qp_A.mod1)
 
 cc.qp_A.mod2 <- gam(value ~s(date, bs="ts", k=5), data=cc_A, method = "REML")
 summary(cc.qp_A.mod2)
 gam.check(cc.qp_A.mod2)
-AIC(cc.qp_A.mod2)
 
+AIC(cc.qp_A.mod, cc.qp_A.mod1, cc.qp_A.mod2)
 
 par(mfrow = c(2,2))
 
@@ -60,17 +59,19 @@ cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, method = "REML") # best smooth
 summary(cc.qp_B.mod)
 gam.check(cc.qp_B.mod)
-AIC(cc.qp_B.mod)
+
 
 cc.qp_B.mod1 <- gam(value ~s(date, bs="ps", k=5), data=cc_B, method = "REML")
 summary(cc.qp_B.mod1)
 gam.check(cc.qp_B.mod1)
-AIC(cc.qp_B.mod1)
+
 
 cc.qp_B.mod2 <- gam(value ~s(date, bs="ts", k=5), data=cc_B, method = "REML")
 summary(cc.qp_B.mod2)
 gam.check(cc.qp_B.mod2)
-AIC(cc.qp_B.mod2)
+
+AIC(cc.qp_B.mod, cc.qp_B.mod1, cc.qp_B.mod2)
+
 
 # Leaf litter QPA ---------------------------------------------------------
 
@@ -79,9 +80,20 @@ LL_A <- Trajectories %>%
 
 LL_A$date <- as.integer(as.Date(LL_A$date, format = "%Y-%m-%d"))
 
-ll.qp_A.mod <- gam(value ~s(date), data=LL_A, method = "REML")
+ll.qp_A.mod <- gam(value ~s(date, bs="cr", k=10), data=LL_A, method = "REML")
 summary(ll.qp_A.mod)
 gam.check(ll.qp_A.mod)
+
+ll.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=10), data=LL_A, method = "REML")
+summary(ll.qp_A.mod1)
+gam.check(ll.qp_A.mod1)
+
+ll.qp_A.mod2 <- gam(value ~s(date, bs="ts", k=10), data=LL_A, method = "REML")
+summary(ll.qp_A.mod2)
+gam.check(ll.qp_A.mod2)
+
+AIC(ll.qp_A.mod, ll.qp_A.mod1, ll.qp_A.mod2)
+
 
 # Leaf litter QPB ---------------------------------------------------------
 
