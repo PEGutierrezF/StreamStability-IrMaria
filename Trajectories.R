@@ -37,7 +37,7 @@ names(streams) <- c("QPA", "QPB")
 # General graph -----------------------------------------------------------
 
  p<- ggplot(Trajectories, aes(date,value)) + 
-  geom_point() +
+  geom_point(shape = 21, fill = "gray95", color = "gray14", size = 3) +
   geom_smooth(se = T, size=1.7, color= "steelblue3", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
   

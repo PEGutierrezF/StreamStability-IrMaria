@@ -27,6 +27,7 @@ head(Trajectories)
 
 
 # Canopy cover QPA --------------------------------------------------------
+# Normal distribution of value
 
 cc_A <- Trajectories %>%
   filter(stream =="QPA", variable =="canopy_cover") 
@@ -52,11 +53,16 @@ par(mfrow = c(2,2))
 
 # Canopy cover QPB --------------------------------------------------------
 
+shapiro.test(cc_B$value)
+hist(cc_B$value)
+descdist(cc_B$value, discrete=FALSE, boot=500)
+
+
 cc_B <- Trajectories %>%
   filter(stream =="QPB", variable =="canopy_cover")
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, method = "REML") # best smooth
+cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, family= Gamma(), method = "REML") # best smooth
 summary(cc.qp_B.mod)
 gam.check(cc.qp_B.mod)
 
