@@ -128,8 +128,7 @@ summary(ch.qp_A.mod)
 ch.qp_A.mod1 <- lm(value ~date, data = ch_A)
 summary(ch.qp_A.mod1)
 
-AIC(ch.qp_A.mod)
-AIC(ch.qp_A.mod1)
+AIC(ch.qp_A.mod, ch.qp_A.mod1)
 anova(ch.qp_A.mod, ch.qp_A.mod1)
 # Anova function has performed an f-test here, 
 # and the GAM model is not significantly different that linear regression.
