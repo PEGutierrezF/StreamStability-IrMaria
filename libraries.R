@@ -10,7 +10,7 @@
 #--------------------------------------------
 #
 
-install.packages("fitdistrplus")
+
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "reshape2", "ggpubr", "tidyverse", "grid",
                "fitdistrplus", "mgcv")
