@@ -37,8 +37,8 @@ names(streams) <- c("QPA", "QPB")
 # General graph -----------------------------------------------------------
 
  p<- ggplot(Trajectories, aes(date,value)) + 
-  geom_point(shape = 21, fill = "gray95", color = "gray14", size = 3) +
-  geom_smooth(se = T, size=1.7, color= "steelblue3", method = "gam", formula = y ~s(x)) + 
+  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
+  geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
   
   xlab('Year') + ylab("Change in magnitude") + 
@@ -78,15 +78,14 @@ p
 
 g <- ggplot_gtable(ggplot_build(p))
 stripr <- which(grepl('strip-t', g$layout$name)) # strip-t changes colors
-fills <- c("#fec44f","#a1d99b","#a1d99b","#6baed6", "#6baed6")
+fills <- c("#fecc5c","#74c476","#74c476","#74a9cf", "#74a9cf") #colorblind safe
 k <- 1
 for (i in stripr) {
   j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
-grid.draw(g) +
-ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
+grid.draw(g) + ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
 
 
 
