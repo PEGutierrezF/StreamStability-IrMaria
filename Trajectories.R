@@ -68,9 +68,7 @@ names(streams) <- c("QPA", "QPB")
             col= "red",linetype=4, alpha=0.9) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
              col= "blue",linetype=4, alpha=0.9) 
-p
-
- ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
+p + ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
 
 
