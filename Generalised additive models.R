@@ -62,7 +62,7 @@ cc_B <- Trajectories %>%
   filter(stream =="QPB", variable =="canopy_cover")
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, family= Gamma(), method = "REML") # best smooth
+cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, family=Gamma(link=log), method = "REML") # best smooth
 summary(cc.qp_B.mod)
 gam.check(cc.qp_B.mod)
 

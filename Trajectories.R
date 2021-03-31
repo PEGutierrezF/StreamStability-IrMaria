@@ -91,3 +91,16 @@ grid.draw(g) + ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height
 
 
 
+labels <- data.frame(variable =c("canopy_cover","Leaf_litter","Chla","Shrimps","macroinvertebrates",
+                                 "canopy_cover","Leaf_litter","Chla","Shrimps","macroinvertebrates"),
+                     label=c("R1","R2","R3","R4","R5","R6","R7","R8","R9","R10"),
+                     stream= c("QPA","QPA","QPA","QPA","QPA",
+                               "QPB","QPB","QPB","QPB","QPB"))
+labels
+p +   geom_text(
+  size    = 5,
+  data    = labels,
+  mapping = aes(x = as.POSIXct("2017-09-6"), y = Inf, label = label),
+  hjust   = 1.05,
+  vjust   = 1.5
+)
