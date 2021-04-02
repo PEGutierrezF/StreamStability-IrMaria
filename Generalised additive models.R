@@ -32,12 +32,17 @@ head(Trajectories)
 cc_A <- Trajectories %>%
   filter(stream =="QPA", variable =="canopy_cover") 
 
+# Check for normality 
+shapiro.test(cc_A$value)
+hist(cc_A$value)
+descdist(cc_A$value, discrete=FALSE, boot=500)
+
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
+
 
 cc.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_A, method = "REML") # best smooth
 summary(cc.qp_A.mod)
 gam.check(cc.qp_A.mod)
-
 
 cc.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=5), data=cc_A, method = "REML")
 summary(cc.qp_A.mod1)
@@ -49,20 +54,22 @@ gam.check(cc.qp_A.mod2)
 
 AIC(cc.qp_A.mod, cc.qp_A.mod1, cc.qp_A.mod2)
 
-par(mfrow = c(2,2))
+#par(mfrow = c(2,2))
+
+
 
 # Canopy cover QPB --------------------------------------------------------
+
+cc_B <- Trajectories %>%
+  filter(stream =="QPB", variable =="canopy_cover")
 
 shapiro.test(cc_B$value)
 hist(cc_B$value)
 descdist(cc_B$value, discrete=FALSE, boot=500)
 
-
-cc_B <- Trajectories %>%
-  filter(stream =="QPB", variable =="canopy_cover")
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, family=Gamma(link=log), method = "REML") # best smooth
+cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, family = betar(link='logit'), method = "REML") # best smooth
 summary(cc.qp_B.mod)
 gam.check(cc.qp_B.mod)
 
@@ -83,6 +90,10 @@ AIC(cc.qp_B.mod, cc.qp_B.mod1, cc.qp_B.mod2)
 
 LL_A <- Trajectories %>%
   filter(stream =="QPA", variable =="Leaf_litter")
+
+shapiro.test(LL_A$value)
+hist(LL_A$value)
+descdist(LL_A$value, discrete=FALSE, boot=500)
 
 LL_A$date <- as.integer(as.Date(LL_A$date, format = "%Y-%m-%d"))
 
@@ -107,41 +118,72 @@ anova(ll.qp_A.mod, ll.qp_A.mod1, ll.qp_A.mod2, test="Chisq") # no hay diferencia
 LL_B <- Trajectories %>%
   filter(stream =="QPB", variable =="Leaf_litter")
 
+shapiro.test(LL_B$value)
+hist(LL_B$value)
+descdist(LL_B$value, discrete=FALSE, boot=500)
+
 LL_B$date <- as.integer(as.Date(LL_B$date, format = "%Y-%m-%d"))
 
-ll.qp_B.mod <- gam(value ~s(date), data = LL_B, method = "REML")
+ll.qp_B.mod <- gam(value ~s(date, bs="ps", k=10), data = LL_B, family=Gamma, method = "REML")
 summary(ll.qp_B.mod)
 
 
 # Chlorophyll-a QPA -------------------------------------------------------
 
-
 ch_A <- Trajectories %>%
   filter(stream =="QPA", variable =="Chla")
 
+shapiro.test(ch_A $value)
+hist(ch_A $value)
+descdist(ch_A $value, discrete=FALSE, boot=500)
+
 ch_A$date <- as.integer(as.Date(ch_A$date, format = "%Y-%m-%d"))
 
-ch.qp_A.mod <- gam(value ~s(date), data = ch_A, method = "REML")
+ch.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data = ch_A, method = "REML")
 summary(ch.qp_A.mod)
 
-# https://www.mainard.co.uk/post/why-mgcv-is-awesome/
-ch.qp_A.mod1 <- lm(value ~date, data = ch_A)
+ch.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=5), data=ch_A, method = "REML")
 summary(ch.qp_A.mod1)
+gam.check(ch.qp_A.mod1)
 
-AIC(ch.qp_A.mod, ch.qp_A.mod1)
-anova(ch.qp_A.mod, ch.qp_A.mod1)
+ch.qp_A.mod2 <- gam(value ~s(date, bs="ts", k=5), data=ch_A, method = "REML")
+summary(ch.qp_A.mod2)
+gam.check(ch.qp_A.mod2)
+
+AIC(ch.qp_A.mod, ch.qp_A.mod1, ch.qp_A.mod2)
+anova(ch.qp_A.mod, ch.qp_A.mod1, ch.qp_A.mod2, test="Chisq")
+
+
 # Anova function has performed an f-test here, 
 # and the GAM model is not significantly different that linear regression.
+
+
 
 # Chlorophyll-a QPB -------------------------------------------------------
 
 ch_B <- Trajectories %>%
   filter(stream =="QPB", variable =="Chla")
 
+shapiro.test(ch_B $value)
+hist(ch_B $value)
+descdist(ch_B $value, discrete=FALSE, boot=500)
+
 ch_B$date <- as.integer(as.Date(ch_B$date, format = "%Y-%m-%d"))
 
-ch.qp_B.mod <- gam(value ~s(date), data = ch_B, method = "REML")
+ch.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=ch_B, method = "REML")
 summary(ch.qp_B.mod)
+gam.check(ll.qp_A.mod)
+
+ch.qp_B.mod1 <- gam(value ~s(date, bs="ps", k=5), data=ch_B, method = "REML")
+summary(ch.qp_B.mod1)
+gam.check(ch.qp_B.mod1)
+
+ch.qp_B.mod2 <- gam(value ~s(date, bs="ts", k=5), data=ch_B, method = "REML")
+summary(ch.qp_B.mod2)
+gam.check(ch.qp_B.mod2)
+
+AIC(ch.qp_B.mod, ch.qp_B.mod1, ch.qp_B.mod2)
+anova(ch.qp_B.mod, ch.qp_B.mod1, ch.qp_B.mod2, test="Chisq")
 
 
 # Shrimps QPA -------------------------------------------------------
