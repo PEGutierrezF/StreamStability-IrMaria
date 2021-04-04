@@ -128,6 +128,17 @@ ll.qp_B.mod <- gam(value ~s(date, bs="cr", k=10), data = LL_B,
                    family=quasi(link = "identity", variance = "constant"), method = "REML")
 summary(ll.qp_B.mod)
 
+ll.qp_B.mod1 <- gam(value ~s(date, bs="ps", k=10), data = LL_B, 
+                   family=quasi(link = "identity", variance = "constant"), method = "REML")
+summary(ll.qp_B.mod1)
+
+ll.qp_B.mod2 <- gam(value ~s(date, bs="ts", k=10), data = LL_B, 
+                    family=quasi(link = "identity", variance = "constant"), method = "REML")
+summary(ll.qp_B.mod2)
+
+AIC(ll.qp_B.mod, ll.qp_B.mod1, ll.qp_B.mod2)
+
+
 
 # Chlorophyll-a QPA -------------------------------------------------------
 
