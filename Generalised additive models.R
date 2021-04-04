@@ -124,7 +124,8 @@ descdist(LL_B$value, discrete=FALSE, boot=500)
 
 LL_B$date <- as.integer(as.Date(LL_B$date, format = "%Y-%m-%d"))
 
-ll.qp_B.mod <- gam(value ~s(date, bs="ps", k=10), data = LL_B, family=Gamma, method = "REML")
+ll.qp_B.mod <- gam(value ~s(date, bs="cr", k=10), data = LL_B, 
+                   family=quasi(link = "identity", variance = "constant"), method = "REML")
 summary(ll.qp_B.mod)
 
 
