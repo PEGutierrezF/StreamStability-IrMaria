@@ -54,7 +54,6 @@ gam.check(cc.qp_A.mod2)
 
 AIC(cc.qp_A.mod, cc.qp_A.mod1, cc.qp_A.mod2)
 
-#par(mfrow = c(2,2))
 
 
 
@@ -69,21 +68,42 @@ descdist(cc_B$value, discrete=FALSE, boot=500)
 
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-cc.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_B, family = betar(link='logit'), method = "REML") # best smooth
-summary(cc.qp_B.mod)
-gam.check(cc.qp_B.mod)
+# Check Gaussiand vs Scat
+cc.qp_B.mod_G <- gam(value ~s(date, bs="cr", k=5), data=cc_B, method = "REML") # best smooth
+summary(cc.qp_B.mod_G)
+par(mfrow = c(2,2))
+gam.check(cc.qp_B.mod_G)
 
 
-cc.qp_B.mod1 <- gam(value ~s(date, bs="ps", k=5), data=cc_B, method = "REML")
-summary(cc.qp_B.mod1)
-gam.check(cc.qp_B.mod1)
+cc.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=5), data=cc_B, 
+                   family=scat(link="identity"), method = "REML") # best smooth
+summary(cc.qp_B.mod_S)
+par(mfrow = c(2,2))
+gam.check(cc.qp_B.mod_S)
+
+AIC(cc.qp_B.mod_G,cc.qp_B.mod_S)
 
 
-cc.qp_B.mod2 <- gam(value ~s(date, bs="ts", k=5), data=cc_B, method = "REML")
-summary(cc.qp_B.mod2)
-gam.check(cc.qp_B.mod2)
+# Best family family=scat()
+cc.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=5), 
+                   family=scat(link="identity"), data=cc_B, method = "REML") # best smooth
+summary(cc.qp_B.mod_S)
+par(mfrow = c(2,2))
+gam.check(cc.qp_B.mod_S)
 
-AIC(cc.qp_B.mod, cc.qp_B.mod1, cc.qp_B.mod2)
+
+
+cc.qp_B.mod_S1 <- gam(value ~s(date, bs="ps", k=5), 
+                    family=scat(link="identity"), data=cc_B, method = "REML")
+summary(cc.qp_B.mod_S1)
+gam.check(cc.qp_B.mod_S1)
+
+
+cc.qp_B.mod_S2 <- gam(value ~s(date, bs="ts", k=5), data=cc_B, method = "REML")
+summary(cc.qp_B.mod_S2)
+gam.check(cc.qp_B.mod_S2)
+
+AIC(cc.qp_B.mod, cc.qp_B.mod_S1, cc.qp_B.mod_S2)
 
 
 # Leaf litter QPA ---------------------------------------------------------
@@ -124,19 +144,36 @@ descdist(LL_B$value, discrete=FALSE, boot=500)
 
 LL_B$date <- as.integer(as.Date(LL_B$date, format = "%Y-%m-%d"))
 
-ll.qp_B.mod <- gam(value ~s(date, bs="cr", k=10), data = LL_B, 
-                   family=quasi(link = "identity", variance = "constant"), method = "REML")
-summary(ll.qp_B.mod)
 
-ll.qp_B.mod1 <- gam(value ~s(date, bs="ps", k=10), data = LL_B, 
-                   family=quasi(link = "identity", variance = "constant"), method = "REML")
-summary(ll.qp_B.mod1)
 
-ll.qp_B.mod2 <- gam(value ~s(date, bs="ts", k=10), data = LL_B, 
-                    family=quasi(link = "identity", variance = "constant"), method = "REML")
-summary(ll.qp_B.mod2)
+# Check Gaussiand vs Scat
+ll.qp_B.mod_G <- gam(value ~s(date, bs="cr", k=10), data=LL_B, method = "REML") # best smooth
+summary(ll.qp_B.mod_G)
+par(mfrow = c(2,2))
+gam.check(ll.qp_B.mod_G)
 
-AIC(ll.qp_B.mod, ll.qp_B.mod1, ll.qp_B.mod2)
+
+ll.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=10), data = LL_B, 
+                          family=scat(link="identity"), method = "REML")
+summary(ll.qp_B.mod_S)
+par(mfrow = c(2,2))
+gam.check(ll.qp_B.mod_S)
+
+AIC(ll.qp_B.mod_G,ll.qp_B.mod_S)
+
+
+# Best family family=scat()
+ll.qp_B.mod_S1 <- gam(value ~s(date, bs="ps", k=10), data = LL_B, 
+                    family=scat(link="identity"), method = "REML")
+summary(ll.qp_B.mod_S1)
+
+ll.qp_B.mod_S2 <- gam(value ~s(date, bs="ts", k=10), data = LL_B, 
+                    family=scat(link="identity"), method = "REML")
+summary(ll.qp_B.mod_S2)
+
+
+AIC(ll.qp_B.mod_S,ll.qp_B.mod_S1,ll.qp_B.mod_S2)
+
 
 
 
