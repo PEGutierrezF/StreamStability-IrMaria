@@ -81,6 +81,8 @@ summary(cc.qp_B.mod_S)
 par(mfrow = c(2,2))
 gam.check(cc.qp_B.mod_S)
 
+
+
 AIC(cc.qp_B.mod_G,cc.qp_B.mod_S)
 
 
