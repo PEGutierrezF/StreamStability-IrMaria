@@ -186,9 +186,10 @@ r6 <- ggplot(QPARvR,
                 y=Resilience)) +
   geom_point(aes(), size=5) +
   geom_vline(aes(xintercept = 0), color='darkgrey') +
-  geom_smooth(method=lm,se=TRUE,colour="black", size=0.5) +
+  geom_smooth(method=lm,se=F,colour="black", size=0.5) +
   geom_hline(aes(yintercept = 0), color='darkgrey') +
-  xlim(-1,1) 
+  xlim(-2,2) +
+  theme_classic()
 r6
 
 r6 + ggsave("MetricsQPARelationship.jpeg", width=6, height=6,dpi=600)
