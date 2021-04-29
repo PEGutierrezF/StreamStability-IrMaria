@@ -243,6 +243,10 @@ anova(ch.qp_B.mod, ch.qp_B.mod1, ch.qp_B.mod2, test="Chisq")
 shrimps_A <- Trajectories %>%
   filter(stream =="QPA", variable =="Shrimps")
 
+shapiro.test(shrimps_A$value)
+hist(shrimps_A$value)
+descdist(shrimps_A$value, discrete=FALSE, boot=500)
+
 shrimps_A$date <- as.integer(as.Date(shrimps_A$date, format = "%Y-%m-%d"))
 
 shrimps.qp_A.mod <- gam(value ~s(date), data = shrimps_A, method = "REML")
@@ -254,6 +258,10 @@ summary(shrimps.qp_A.mod)
 
 shrimps_B <- Trajectories %>%
   filter(stream =="QPB", variable =="Shrimps")
+
+shapiro.test(shrimps_B$value)
+hist(shrimps_B$value)
+descdist(shrimps_B$value, discrete=FALSE, boot=500)
 
 shrimps_B$date <- as.integer(as.Date(shrimps_B$date, format = "%Y-%m-%d"))
 
