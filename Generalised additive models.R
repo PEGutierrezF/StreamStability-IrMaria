@@ -15,11 +15,11 @@
 # https://stats.stackexchange.com/questions/137109/selecting-knots-for-a-gam
 # https://stats.stackexchange.com/questions/243367/smoothing-methods-for-gam-in-mgcv-package
 
+rm(list=ls())
+
 # k = knots. 12 month per year or 24 sampling event per year. 
 # ?choose.k
-
 # bs= basis spline
-
 # best model: high R-sq, low AIC, low REML
 
 Trajectories<- read.csv("data/Trajectories.csv")
@@ -40,7 +40,7 @@ descdist(cc_A$value, discrete=FALSE, boot=500)
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 
-cc.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_A, method = "REML") # best smooth
+cc.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_A, method = "REML") # best model
 summary(cc.qp_A.mod)
 gam.check(cc.qp_A.mod)
 
@@ -58,6 +58,7 @@ AIC(cc.qp_A.mod, cc.qp_A.mod1, cc.qp_A.mod2)
 
 
 # Canopy cover QPB --------------------------------------------------------
+rm(list=ls())
 
 cc_B <- Trajectories %>%
   filter(stream =="QPB", variable =="canopy_cover")
@@ -69,18 +70,17 @@ descdist(cc_B$value, discrete=FALSE, boot=500)
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
 # Check Gaussiand vs Scat
-cc.qp_B.mod_G <- gam(value ~s(date, bs="cr", k=5), data=cc_B, method = "REML") # best smooth
+cc.qp_B.mod_G <- gam(value ~s(date, bs="cr", k=5), data=cc_B, method = "REML") 
 summary(cc.qp_B.mod_G)
 par(mfrow = c(2,2))
 gam.check(cc.qp_B.mod_G)
 
 
 cc.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=5), data=cc_B, 
-                   family=scat(link="identity"), method = "REML") # best smooth
+                   family=scat(link="identity"), method = "REML") # best model
 summary(cc.qp_B.mod_S)
 par(mfrow = c(2,2))
 gam.check(cc.qp_B.mod_S)
-
 
 
 AIC(cc.qp_B.mod_G,cc.qp_B.mod_S)
@@ -88,7 +88,7 @@ AIC(cc.qp_B.mod_G,cc.qp_B.mod_S)
 
 # Best family family=scat()
 cc.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=5), 
-                   family=scat(link="identity"), data=cc_B, method = "REML") # best smooth
+                   family=scat(link="identity"), data=cc_B, method = "REML") # best model
 summary(cc.qp_B.mod_S)
 par(mfrow = c(2,2))
 gam.check(cc.qp_B.mod_S)
@@ -106,9 +106,15 @@ summary(cc.qp_B.mod_S2)
 gam.check(cc.qp_B.mod_S2)
 
 AIC(cc.qp_B.mod, cc.qp_B.mod_S1, cc.qp_B.mod_S2)
+summary(cc.qp_B.mod_S) # best model
+summary(cc.qp_B.mod_S1)
+summary(cc.qp_B.mod_S2)
 
 
 # Leaf litter QPA ---------------------------------------------------------
+
+rm(list=ls())
+Trajectories<- read.csv("data/Trajectories.csv")
 
 LL_A <- Trajectories %>%
   filter(stream =="QPA", variable =="Leaf_litter")
@@ -119,7 +125,7 @@ descdist(LL_A$value, discrete=FALSE, boot=500)
 
 LL_A$date <- as.integer(as.Date(LL_A$date, format = "%Y-%m-%d"))
 
-ll.qp_A.mod <- gam(value ~s(date, bs="cr", k=10), data=LL_A, method = "REML")
+ll.qp_A.mod <- gam(value ~s(date, bs="cr", k=10), data=LL_A, method = "REML") # best model
 summary(ll.qp_A.mod)
 gam.check(ll.qp_A.mod)
 
@@ -137,6 +143,9 @@ anova(ll.qp_A.mod, ll.qp_A.mod1, ll.qp_A.mod2, test="Chisq") # no hay diferencia
 
 # Leaf litter QPB ---------------------------------------------------------
 
+rm(list=ls())
+Trajectories<- read.csv("data/Trajectories.csv")
+
 LL_B <- Trajectories %>%
   filter(stream =="QPB", variable =="Leaf_litter")
 
@@ -147,16 +156,15 @@ descdist(LL_B$value, discrete=FALSE, boot=500)
 LL_B$date <- as.integer(as.Date(LL_B$date, format = "%Y-%m-%d"))
 
 
-
 # Check Gaussiand vs Scat
-ll.qp_B.mod_G <- gam(value ~s(date, bs="cr", k=10), data=LL_B, method = "REML") # best smooth
+ll.qp_B.mod_G <- gam(value ~s(date, bs="cr", k=10), data=LL_B, method = "REML") 
 summary(ll.qp_B.mod_G)
 par(mfrow = c(2,2))
 gam.check(ll.qp_B.mod_G)
 
 
-ll.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=10), data = LL_B, 
-                          family=scat(link="identity"), method = "REML")
+ll.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=10), data = LL_B, # best model
+                          family=scat(link="identity"), method = "REML") 
 summary(ll.qp_B.mod_S)
 par(mfrow = c(2,2))
 gam.check(ll.qp_B.mod_S)
@@ -165,7 +173,11 @@ AIC(ll.qp_B.mod_G,ll.qp_B.mod_S)
 
 
 # Best family family=scat()
-ll.qp_B.mod_S1 <- gam(value ~s(date, bs="ps", k=10), data = LL_B, 
+ll.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=10), data = LL_B, 
+                     family=scat(link="identity"), method = "REML") 
+summary(ll.qp_B.mod_S)
+
+ll.qp_B.mod_S1 <- gam(value ~s(date, bs="ps", k=10), data = LL_B, # best model
                     family=scat(link="identity"), method = "REML")
 summary(ll.qp_B.mod_S1)
 
@@ -180,6 +192,8 @@ AIC(ll.qp_B.mod_S,ll.qp_B.mod_S1,ll.qp_B.mod_S2)
 
 
 # Chlorophyll-a QPA -------------------------------------------------------
+rm(list=ls())
+Trajectories<- read.csv("data/Trajectories.csv")
 
 ch_A <- Trajectories %>%
   filter(stream =="QPA", variable =="Chla")
@@ -190,10 +204,10 @@ descdist(ch_A $value, discrete=FALSE, boot=500)
 
 ch_A$date <- as.integer(as.Date(ch_A$date, format = "%Y-%m-%d"))
 
-ch.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data = ch_A, method = "REML")
+ch.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data = ch_A, method = "REML") # best model
 summary(ch.qp_A.mod)
 
-ch.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=5), data=ch_A, method = "REML")
+ch.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=5), data=ch_A, method = "REML") 
 summary(ch.qp_A.mod1)
 gam.check(ch.qp_A.mod1)
 
@@ -211,6 +225,8 @@ anova(ch.qp_A.mod, ch.qp_A.mod1, ch.qp_A.mod2, test="Chisq")
 
 
 # Chlorophyll-a QPB -------------------------------------------------------
+rm(list=ls())
+Trajectories<- read.csv("data/Trajectories.csv")
 
 ch_B <- Trajectories %>%
   filter(stream =="QPB", variable =="Chla")
@@ -221,7 +237,7 @@ descdist(ch_B $value, discrete=FALSE, boot=500)
 
 ch_B$date <- as.integer(as.Date(ch_B$date, format = "%Y-%m-%d"))
 
-ch.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=ch_B, method = "REML")
+ch.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data=ch_B, method = "REML")  # best model
 summary(ch.qp_B.mod)
 gam.check(ll.qp_A.mod)
 
@@ -238,6 +254,8 @@ anova(ch.qp_B.mod, ch.qp_B.mod1, ch.qp_B.mod2, test="Chisq")
 
 
 # Shrimps QPA -------------------------------------------------------
+rm(list=ls())
+Trajectories<- read.csv("data/Trajectories.csv")
 
 
 shrimps_A <- Trajectories %>%
