@@ -267,12 +267,19 @@ descdist(shrimps_A$value, discrete=FALSE, boot=500)
 
 shrimps_A$date <- as.integer(as.Date(shrimps_A$date, format = "%Y-%m-%d"))
 
-shrimps.qp_A.mod <- gam(value ~s(date), data = shrimps_A, method = "REML")
+shrimps.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data = shrimps_A, method = "REML") # best model
 summary(shrimps.qp_A.mod)
+
+shrimps.qp_A.mod1 <- gam(value ~s(date, bs="ps", k=5), data = shrimps_A, method = "REML") 
+summary(shrimps.qp_A.mod1)
+
+shrimps.qp_A.mod2 <- gam(value ~s(date, bs="ts", k=5), data = shrimps_A, method = "REML")
+summary(shrimps.qp_A.mod2)
 
 
 # Shrimps QPB -------------------------------------------------------
-
+rm(list=ls())
+Trajectories<- read.csv("data/Trajectories.csv")
 
 shrimps_B <- Trajectories %>%
   filter(stream =="QPB", variable =="Shrimps")
@@ -283,5 +290,14 @@ descdist(shrimps_B$value, discrete=FALSE, boot=500)
 
 shrimps_B$date <- as.integer(as.Date(shrimps_B$date, format = "%Y-%m-%d"))
 
-shrimps.qp_B.mod <- gam(value ~s(date), data = shrimps_B, method = "REML")
+shrimps.qp_B.mod <- gam(value ~s(date, bs="cr", k=5), data = shrimps_B, method = "REML") # best model
 summary(shrimps.qp_B.mod)
+
+shrimps.qp_B.mod1 <- gam(value ~s(date, bs="ps", k=5), data = shrimps_B, method = "REML") 
+summary(shrimps.qp_B.mod1)
+
+shrimps.qp_B.mod2 <- gam(value ~s(date, bs="ts", k=5), data = shrimps_B, method = "REML")
+summary(shrimps.qp_B.mod2)
+
+
+AIC(shrimps.qp_B.mod,shrimps.qp_B.mod1,shrimps.qp_B.mod2)
