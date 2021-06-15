@@ -2,12 +2,13 @@
 
 
 
-#--------------------------------------------
-# Dot plot
-# 09 May 2020
-#PEGF
-#--------------------------------------------
-#
+# ---------------------------------------------
+# Ecosystem stability metrics
+# 14 Jun 2021
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
+#  
 
 library(modelr)
 library(ggplot2)

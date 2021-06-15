@@ -2,12 +2,13 @@
 
 
 
-#--------------------------------------------
-# Canopy cover
-# 08 May 2020
-#PEGF
-#--------------------------------------------
-#
+# ---------------------------------------------
+# Ecosystem stability - Canopy cover
+# 14 Jun 2021
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
+#  
 
 canopycover<- read.csv("data/Canopy.csv")
 canopycover
@@ -18,11 +19,11 @@ canopycover
 
 canopycover$date<-as.POSIXct(canopycover$date,"%Y-%m-%d",tz = "UTC")
 
-canopy <- canopycover %>% select(events, QPACanopyLog, QPBCanopyLog)
+canopy <- canopycover %>% dplyr::select(date, QPACanopyLog, QPBCanopyLog)
 canopy <- na.omit(canopy)
 canopy
 
-QPACanopy.mod  <- lm(QPACanopyLog ~ events, data=canopy)
+QPACanopy.mod  <- lm(QPACanopyLog ~ date, data=canopy)
 summary(QPACanopy.mod)
 
 canopy$QPACanopyresid<- QPACanopy.mod$resid
@@ -30,7 +31,7 @@ canopy
 
 1/apply(canopy, 2, sd)
 
-cc1 <- ggplot(canopy, aes(events,y=QPACanopyLog))+
+cc1 <- ggplot(canopy, aes(date,y=QPACanopyLog))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
@@ -53,7 +54,7 @@ cc1
 # Linear model Canopy QPB --------------------------------------
 ################################################################
 
-QPBCanopy.mod  <- lm(QPBCanopyLog~ events, data=canopy)
+QPBCanopy.mod  <- lm(QPBCanopyLog~ date, data=canopy)
 summary(QPBCanopy.mod)
 
 canopy$QPBCanopyresid<- QPBCanopy.mod$resid
@@ -61,7 +62,7 @@ canopy
 
 1/apply(canopy, 2, sd)
 
-cc2 <- ggplot(canopy, aes(TimeCanopy,
+cc2 <- ggplot(canopy, aes(date,
                           y=QPBCanopyLog))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +

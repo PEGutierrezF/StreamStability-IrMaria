@@ -2,11 +2,13 @@
 
 
 
-#--------------------------------------------
-# Linear model variables post huricanes
-# 02 May 2020
-#PEGF
-#--------------------------------------------
+
+# ---------------------------------------------
+# Ecosystem stability - Chlorophyll-a
+# 14 Jun 2021
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
 #
 
 LeafLitter<- read.csv("data/Leaflitter.csv")
