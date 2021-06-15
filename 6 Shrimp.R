@@ -10,34 +10,42 @@
 # ---------------------------------------------
 #
 
+
+
+rm(list=ls())
+
+
+
+
 Shrimp<- read.csv("data/Shrimps.csv")
 Shrimp
 
+Shrimp$dateLN<-as.POSIXct(Shrimp$dateLN,"%Y-%m-%d",tz = "UTC")
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-Shrimp <- Shrimp %>% select(events, QPAShrimpLog, QPBShrimpLog)
-Shrimp <- na.omit(Shrimp)
-Shrimp
+QPA_Shrimp <- Shrimp %>% dplyr::select(dateLN, QPAShrimpLog, QPBShrimpLog)
+QPA_Shrimp <- na.omit(QPA_Shrimp)
+QPA_Shrimp
 
-QPAShrimp.mod  <- lm(QPAShrimpLog ~ events, na.action=na.omit, data=Shrimp)
+QPAShrimp.mod  <- lm(QPAShrimpLog ~ dateLN, data=QPA_Shrimp)
 summary(QPAShrimp.mod)
 
-Shrimp$QPAresid<- QPAShrimp.mod$resid
-Shrimp
+QPA_Shrimp$QPAresid<- QPAShrimp.mod$resid
+QPA_Shrimp
 
-1/apply(Shrimp, 2, sd)
+1/apply(QPA_Shrimp, 2, sd)
 
 
 
 # Shrimp QPB --------------------------------------------------------------
 
 
-QPBShrimp.mod  <- lm(QPBShrimpLog ~ events, na.action=na.omit, data=Shrimp)
+QPBShrimp.mod  <- lm(QPBShrimpLog ~ dateLN, na.action=na.omit, data=QPA_Shrimp)
 summary(QPBShrimp.mod)
 
-Shrimp$QPBresid<- QPBShrimp.mod$resid
-Shrimp
+QPA_Shrimp$QPBresid<- QPBShrimp.mod$resid
+QPA_Shrimp
 
-1/apply(Shrimp, 2, sd)
+1/apply(QPA_Shrimp, 2, sd)
 
