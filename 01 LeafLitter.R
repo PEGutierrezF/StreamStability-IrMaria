@@ -4,24 +4,33 @@
 
 
 # ---------------------------------------------
-# Ecosystem stability - Chlorophyll-a
+# Ecosystem stability - Leaf litter
 # 14 Jun 2021
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
 # ---------------------------------------------
 #
 
+
+rm(list=ls())
+
+
+
+
 LeafLitter<- read.csv("data/Leaflitter.csv")
 LeafLitter
 
+LeafLitter$date<-as.POSIXct(LeafLitter$date,"%Y-%m-%d",tz = "UTC")
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-LeafLitter <- LeafLitter %>% select(events,QPALeaflitter,QPBLeaflitter )
+LeafLitter <- LeafLitter %>% dplyr::select(date,QPALeaflitter,QPBLeaflitter )
 LeafLitter <- na.omit(LeafLitter)
 LeafLitter
 
-QPALeaf.mod  <- lm(QPALeaflitter ~ events, data=LeafLitter)
+
+
+QPALeaf.mod  <- lm(QPALeaflitter ~ date, data=LeafLitter)
 summary(QPALeaf.mod)
 
 LeafLitter$QPAresid<- QPALeaf.mod$resid
@@ -50,7 +59,7 @@ p1
 
   # Lm QPB Leaf Litter ------------------------------------------------------
 
-QPBLeaf.mod <- lm(QPBLeaflitter ~ events, data=LeafLitter)
+QPBLeaf.mod <- lm(QPBLeaflitter ~ date, data=LeafLitter)
 summary(QPBLeaf.mod)
 
 LeafLitter$QPBresid<- QPBLeaf.mod$resid

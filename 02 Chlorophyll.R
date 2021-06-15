@@ -2,23 +2,32 @@
 
 
 
-#--------------------------------------------
-# Chlorophyll
-# 07 May 2020
-#PEGF
-#--------------------------------------------
+# ---------------------------------------------
+# Ecosystem stability - Chlorophyll-a
+# 14 Jun 2021
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
 #
+
+
+
+rm(list=ls())
+
+
+
 
 chl_a<- read.csv("data/chl_a.csv")
 chl_a
 
+chl_a$dateLN<-as.POSIXct(chl_a$dateLN,"%Y-%m-%d",tz = "UTC")
 
 # QPA CHLA ----------------------------------------------------------------
 
-chla <- chl_a %>% select(events,QPACHLALog,QPBCHLALog)
+chla <- chl_a %>% dplyr::select(dateLN,QPACHLALog,QPBCHLALog)
 chla <- na.omit(chla)
 
-QPAChla.mod  <- lm(QPACHLALog~ events   , data=chla)
+QPAChla.mod  <- lm(QPACHLALog~ dateLN, data=chla)
 summary(QPAChla.mod)
 
 chla$QPAChlaresid<- QPAChla.mod$resid
@@ -26,7 +35,7 @@ chla
 
 1/apply(chla, 2, sd)
 
-c1 <- ggplot(chla, aes(events,
+c1 <- ggplot(chla, aes(dateLN,
                             y=QPACHLALog))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
@@ -48,7 +57,7 @@ c1
 
 # QPB CHL-A ---------------------------------------------------------------
 
-QPBChla.mod  <- lm(QPBCHLALog~ events   , data=chla)
+QPBChla.mod  <- lm(QPBCHLALog~ dateLN, data=chla)
 summary(QPBChla.mod)
 
 chla$QPBChlaresid<- QPBChla.mod$resid

@@ -2,11 +2,12 @@
 
 
 
-#--------------------------------------------
-# Shrimp abundacen
-# 12 May 2020
-#PEGF
-#--------------------------------------------
+# ---------------------------------------------
+# Ecosystem stability - Shrimps
+# 14 Jun 2021
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
 #
 
 Shrimp<- read.csv("data/Shrimps.csv")
