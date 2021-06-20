@@ -48,7 +48,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  geom_richtext(data = labels, aes(x = as.POSIXct("2018-09-06"), y = -2.5, label = lab))+
+  geom_richtext(data = labels, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))+
     
   geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
             col= "red",linetype=4, alpha=0.9) +
@@ -66,7 +66,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
   theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm")))
 
 p
-p + ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
+p + ggsave("Trajectories.tiff",  path = "figures", width=9, height=6,dpi=300)
 
 
 
@@ -82,7 +82,7 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
- grid.draw(g) + ggsave("TrajectoriesC.tiff", g, path = "figures", width=9, height=6,dpi=600)
+ grid.draw(g) + ggsave("TrajectoriesC.tiff", g, path = "figures", width=9, height=6,dpi=300)
 
 
 # Table R-squared 
