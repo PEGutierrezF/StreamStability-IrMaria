@@ -4,10 +4,13 @@
 
 # ---------------------------------------------
 # Trajectories analysis
-# 27 Mar 2021
+# 19 Jun 2021
 # Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
 # ---------------------------------------------
 #  
+
+ 
 
 rm(list = ls())
 

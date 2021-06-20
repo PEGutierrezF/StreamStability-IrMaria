@@ -2,13 +2,14 @@
 
 
 
+# ---------------------------------------------
+# Upload libraries
+# 19 Jun 2021
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
+#  
 
-#--------------------------------------------
-# Idealizaed trajectories
-# 29 May 2020
-#PEGF
-#--------------------------------------------
-#
 
 
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
