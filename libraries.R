@@ -13,7 +13,7 @@
 
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "reshape2", "ggpubr", "tidyverse", "grid",
-               "fitdistrplus", "mgcv")
+               "fitdistrplus", "mgcv","cowplot")
 lapply(libraries, require, character.only = TRUE)
 
 

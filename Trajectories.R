@@ -9,6 +9,7 @@
 # ---------------------------------------------
 #  
 
+rm(list = ls())
 
 Trajectories<- read.csv("data/Trajectories.csv")
 head(Trajectories)
@@ -17,22 +18,14 @@ head(Trajectories)
 Trajectories$date<-as.POSIXct(Trajectories$date,"%Y-%m-%d",tz = "UTC")
 
 # Reorder names in a new variable
-Trajectories$variable_f = factor(Trajectories$variable, 
-      levels=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
 
-levels(Trajectories$variable_f) <- 
-  c("textstyle('Canopy openness')", 
-    "textstyle('Leaf litter')",
-    "textstyle('Chlorophyll-')*italic('a')",
-    "textstyle('Shrimps')",
-    "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))")
+variable_new <- c("canopy_cover"= "textstyle('Canopy openness')", 
+    "Leaf_litter"="textstyle('Leaf litter')",
+    "Chla"="textstyle('Chlorophyll-')*italic('a')",
+    "Shrimps"="textstyle('Shrimps')",
+    "macroinvertebrates"= "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))")
 
-# Changes names in Facet_grid ---- es una manera buena, pero no la voy a usar --- Habria que labeller(variable_f = variable_f
-#variable_f <- c("Canopy openness", "Leaf litter", "Chlorophyll-a","Shrimps","Macroinvertebrates")
-#names(variable_f) <- c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates")
-
-streams <- c("Prieta A", "Prieta B")
-names(streams) <- c("QPA", "QPB")
+streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 # General graph -----------------------------------------------------------
 
@@ -55,19 +48,23 @@ names(streams) <- c("QPA", "QPB")
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  facet_grid(vars(stream), vars(variable_f),
-    labeller = labeller(variable_f = label_parsed, stream = streams)) +
-    theme(
-      strip.text.x = element_text(size = 10, color = "black"),
-      strip.text.y = element_text(size = 10, color = "black"),
-      strip.placement = "outside") +
-   theme(strip.background=element_rect(color= "black", fill="gray85")) +
-   theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) +
+  geom_richtext(data = labels, aes(x = as.POSIXct("2018-09-06"), y = -2.5, label = lab))+
     
- geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
+  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
             col= "red",linetype=4, alpha=0.9) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
-             col= "blue",linetype=4, alpha=0.9) 
+             col= "blue",linetype=4, alpha=0.9) +
+  
+             facet_grid(stream ~ variable,
+                       labeller = labeller(variable = as_labeller(variable_new, label_parsed),
+                                stream  = streams_new)) +
+
+  theme(strip.text.x = element_text(size = 10, color = "black"),
+    strip.text.y = element_text(size = 10, color = "black"),
+    strip.placement = "outside") +
+  theme(strip.background=element_rect(color= "black", fill="gray85")) +
+  theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm")))
+
 p
 p + ggsave("Trajectories.jpeg",  path = "figures", width=9, height=6,dpi=600)
 
@@ -85,43 +82,14 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
-grid.draw(g) + ggsave("TrajectoriesC.jpeg", g, path = "figures", width=9, height=6,dpi=600)
+ grid.draw(g) + ggsave("TrajectoriesC.tiff", g, path = "figures", width=9, height=6,dpi=600)
 
 
-
-variable =c("canopy_cover","Leaf_litter","Chla","Shrimps","macroinvertebrates",
-              "canopy_cover","Leaf_litter","Chla","Shrimps","macroinvertebrates")
-
-
-variable_f =c("textstyle('Canopy openness')","textstyle('Canopy openness')",
-"textstyle('Leaf litter')","textstyle('Leaf litter')",
-"textstyle('Chlorophyll-')*italic('a')","textstyle('Chlorophyll-')*italic('a')",
-"textstyle('Shrimps')","textstyle('Shrimps')",
-"atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))",
-"atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))")
-
-label_parsed=c("Canopy openness", "Leaf litter", "Chlorophyll-a","Shrimps","Macroinvertebrates",
-  "Canopy openness", "Leaf litter", "Chlorophyll-a","Shrimps","Macroinvertebrates")
-
-Trajectories$variable_f = factor(Trajectories$variable, 
-                                 levels=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
-
-
-
-labels <- data.frame(variable_f=c("textstyle('Canopy openness')","textstyle('Canopy openness')",
-                                  "textstyle('Leaf litter')","textstyle('Leaf litter')",
-                                  "textstyle('Chlorophyll-')*italic('a')","textstyle('Chlorophyll-')*italic('a')",
-                                  "textstyle('Shrimps')","textstyle('Shrimps')",
-                                  "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))",
-                                  "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))"),
-                     
-                    label=c("R1","R2","R3","R4","R5","R6","R7","R8","R9","R10"),
-                     stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB"))
+# Table R-squared 
+ 
+labels <- data.frame(variable=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"),
+                    stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB"),
+                    lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.5,.5))))
 
 labels
-
-p + geom_label(data = labels,
-            aes(x = as.POSIXct("2019-09-06"),
-                          y = 2,
-                          label = label))
 
