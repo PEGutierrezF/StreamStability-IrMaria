@@ -28,6 +28,9 @@ variable_new <- c("canopy_cover"= "textstyle('Canopy openness')",
     "Shrimps"="textstyle('Shrimps')",
     "macroinvertebrates"= "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))")
 
+Trajectories$variable <- factor(Trajectories$variable,      # Reordering group factor levels
+                         levels = c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
+
 streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 # General graph -----------------------------------------------------------
@@ -51,16 +54,16 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  geom_richtext(data = labels, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))+
+#  geom_richtext(data = labels, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))+
     
   geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
             col= "red",linetype=4, alpha=0.9) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
              col= "blue",linetype=4, alpha=0.9) +
   
-             facet_grid(stream ~ variable,
-                       labeller = labeller(variable = as_labeller(variable_new, label_parsed),
-                                stream  = streams_new)) +
+  facet_grid(stream ~ variable,
+        labeller = labeller(variable = as_labeller(variable_new, label_parsed),
+        stream  = streams_new)) +
 
   theme(strip.text.x = element_text(size = 10, color = "black"),
     strip.text.y = element_text(size = 10, color = "black"),
@@ -90,9 +93,32 @@ for (i in stripr) {
 
 # Table R-squared 
  
-labels <- data.frame(variable=c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"),
-                    stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB"),
-                    lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.5,.5))))
+ 
+# en orden perdo igual data
+labels <- data.frame(variable_new= c("textstyle('Canopy openness')", 
+                                     "textstyle('Leaf litter')",
+                                      "textstyle('Chlorophyll-')*italic('a')",
+                                      "textstyle('Shrimps')",
+                                       "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))",
+                                     "textstyle('Canopy openness')", 
+                                     "textstyle('Leaf litter')",
+                                     "textstyle('Chlorophyll-')*italic('a')",
+                                     "textstyle('Shrimps')",
+                                     "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))"),
+                                      stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB"),
+                    lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.55,.60))))
 
 labels
+
+
+
+#bien pero en desorden
+
+labels2 <- data.frame(variable= c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates",
+                                     "canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"),
+                     stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB"),
+                     lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.55,.60))))
+
+labels2
+
 
