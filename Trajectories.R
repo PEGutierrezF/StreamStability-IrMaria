@@ -24,7 +24,7 @@ Trajectories$date<-as.POSIXct(Trajectories$date,"%Y-%m-%d",tz = "UTC")
 
 variable_new <- c("canopy_cover"= "textstyle('Canopy openness')", 
     "Leaf_litter"="textstyle('Leaf litter')",
-    "Chla"="textstyle('Chlorophyll-')*italic('a')",
+    "Chla"="textstyle('Epilithic algae')",  #Chlorophyll-')*italic('a')
     "Shrimps"="textstyle('Shrimps')",
     "macroinvertebrates"= "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))")
 
@@ -69,8 +69,10 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
     strip.text.y = element_text(size = 10, color = "black"),
     strip.placement = "outside") +
   theme(strip.background=element_rect(color= "black", fill="gray85")) +
-  theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm")))
+  theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) 
+
 p
+
 
 p + geom_richtext(data = labels2, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))
 
@@ -125,11 +127,5 @@ labels2 <- data.frame(variable= c("canopy_cover", "Leaf_litter", "Chla", "Shrimp
 labels2
 
 
-labels2$variable <- factor(labels2$variable,      # Reordering group factor levels
-                              levels = c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
 
-labels2 <- data.frame(lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.5))),
-                      variable= c("canopy_cover","Leaf_litter","Chla","Chla"),
-                      stream= c("QPA","QPA","QPB","QPA"))
-labels2
 
