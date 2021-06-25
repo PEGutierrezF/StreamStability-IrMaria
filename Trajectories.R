@@ -35,7 +35,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 # General graph -----------------------------------------------------------
 
- p<- ggplot(Trajectories, aes(date,value)) + 
+ p<- ggplot(Trajectories, aes(date, value)) + 
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
@@ -54,7 +54,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-#  geom_richtext(data = labels, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))+
+  
     
   geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
             col= "red",linetype=4, alpha=0.9) +
@@ -70,8 +70,11 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
     strip.placement = "outside") +
   theme(strip.background=element_rect(color= "black", fill="gray85")) +
   theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm")))
-
 p
+
+p + geom_richtext(data = labels2, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))
+
+#
 p + ggsave("Trajectories.tiff",  path = "figures", width=9, height=6,dpi=300)
 
 
@@ -121,4 +124,12 @@ labels2 <- data.frame(variable= c("canopy_cover", "Leaf_litter", "Chla", "Shrimp
 
 labels2
 
+
+labels2$variable <- factor(labels2$variable,      # Reordering group factor levels
+                              levels = c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
+
+labels2 <- data.frame(lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.5))),
+                      variable= c("canopy_cover","Leaf_litter","Chla","Chla"),
+                      stream= c("QPA","QPA","QPB","QPA"))
+labels2
 
