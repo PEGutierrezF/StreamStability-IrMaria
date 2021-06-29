@@ -121,11 +121,18 @@ labels
 
 labels2 <- data.frame(variable= c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates",
                                      "canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"),
-                     stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB"),
+                     stream= c("QPA","QPA","QPA","QPA","QPA","QPB","QPB","QPB","QPB","QPB"),
                      lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.55,.60))))
 
 labels2
 
 
+tips$day_new <- factor(tips$day,levels = c("Sun"="Sunday",
+                            "Sat"="Saturday",
+                            "Fri"="Friday",
+                            "Thur"="Thursday"))
+                                           
+ggplot(tips, aes(x=total_bill, y=tip/total_bill)) + geom_point(shape=1)+
+  facet_grid(sex ~ day_new)
 
 
