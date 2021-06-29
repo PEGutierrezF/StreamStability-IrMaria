@@ -136,3 +136,28 @@ ggplot(tips, aes(x=total_bill, y=tip/total_bill)) + geom_point(shape=1)+
   facet_grid(sex ~ day_new)
 
 
+
+
+tag_facet <- function(p, open = "(", close = ")", tag_pool = letters, x = -Inf, y = Inf, 
+                      hjust = -0.5, vjust = 1.5, fontface = 2, family = "", ...) {
+  gb <- ggplot_build(p)
+  lay <- gb$layout$layout
+  tags <- cbind(lay, label = paste0(open, tag_pool[lay$PANEL], close), x = x, y = y)
+  p + geom_text(data = tags, aes_string(x = "x", y = "y", label = "label"), ..., hjust = hjust, 
+                vjust = vjust, fontface = fontface, family = family, inherit.aes = FALSE) 
+}
+
+lb1 <- bquote(X-Axis^superscript)
+lb1
+
+my_tag <- c(lb1, "R","R","R","R","R","R","R","R=","R","R")
+my_tag
+tag_facet(p, 
+          x =  as.POSIXct("2017-12-01"), y = -3, 
+          vjust = -1, hjust = -0.25,
+          open = "", close = "",
+          fontface = 3,
+          size = 4,
+          family = "serif",
+          tag_pool = my_tag)
+
