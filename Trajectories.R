@@ -73,8 +73,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 p
 
-
-p + geom_richtext(data = labels2, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))
+p + geom_richtext(data = labels, aes(label = lab), x = as.POSIXct("2018-12-01"), y = -2.5)
 
 #
 p + ggsave("Trajectories.tiff",  path = "figures", width=9, height=6,dpi=300)
@@ -100,40 +99,26 @@ for (i in stripr) {
  
  
 # en orden perdo igual data
-labels <- data.frame(variable_new= c("textstyle('Canopy openness')", 
-                                     "textstyle('Leaf litter')",
-                                      "textstyle('Chlorophyll-')*italic('a')",
-                                      "textstyle('Shrimps')",
-                                       "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))",
-                                     "textstyle('Canopy openness')", 
-                                     "textstyle('Leaf litter')",
-                                     "textstyle('Chlorophyll-')*italic('a')",
-                                     "textstyle('Shrimps')",
-                                     "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))"),
-                                      stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB"),
-                    lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.55,.60))))
+labels <- data.frame(#variable_new= c("textstyle('Canopy openness')", 
+                      #               "textstyle('Leaf litter')",
+                       #               "textstyle('Chlorophyll-')*italic('a')",
+                        #              "textstyle('Shrimps')",
+                         #              "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))",
+                          #           "textstyle('Canopy openness')", 
+                           #          "textstyle('Leaf litter')",
+                            #         "textstyle('Chlorophyll-')*italic('a')",
+                             #        "textstyle('Shrimps')",
+                              #       "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))"),
+                                     stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPB","QPB"),
+                    lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.55,.60))),
+                    code=1:10)
 
 labels
 
 
-
-#bien pero en desorden
-
-labels2 <- data.frame(variable= c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates",
-                                     "canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"),
-                     stream= c("QPA","QPA","QPA","QPA","QPA","QPB","QPB","QPB","QPB","QPB"),
-                     lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.55,.60))))
-
-labels2
+p + geom_richtext(data = labels, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))
 
 
-tips$day_new <- factor(tips$day,levels = c("Sun"="Sunday",
-                            "Sat"="Saturday",
-                            "Fri"="Friday",
-                            "Thur"="Thursday"))
-                                           
-ggplot(tips, aes(x=total_bill, y=tip/total_bill)) + geom_point(shape=1)+
-  facet_grid(sex ~ day_new)
 
 
 
@@ -147,17 +132,18 @@ tag_facet <- function(p, open = "(", close = ")", tag_pool = letters, x = -Inf, 
                 vjust = vjust, fontface = fontface, family = family, inherit.aes = FALSE) 
 }
 
-lb1 <- bquote(X-Axis^superscript)
-lb1
-
-my_tag <- c(lb1, "R","R","R","R","R","R","R","R=","R","R")
+new <- "R^2"
+my_tag <- c(new, "R","R","R","R","R","R","R","R=","R","R")
 my_tag
-tag_facet(p, 
+
+egg::tag_facet(p, 
           x =  as.POSIXct("2017-12-01"), y = -3, 
           vjust = -1, hjust = -0.25,
           open = "", close = "",
           fontface = 3,
           size = 4,
           family = "serif",
-          tag_pool = my_tag)
+          tag_pool = new)
+
+
 
