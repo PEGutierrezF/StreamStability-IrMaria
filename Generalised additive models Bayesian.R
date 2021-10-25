@@ -19,3 +19,6 @@ m2 <- brm(bf(value ~ s(date)),
           iter = 4000, warmup = 1000, thin = 10, refresh = 0,
           control = list(adapt_delta = 0.99))
 
+msms <- marginal_smooths(m2)
+plot(msms)
+pp_check(m2)
