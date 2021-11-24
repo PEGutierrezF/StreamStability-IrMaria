@@ -14,7 +14,7 @@
 
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "reshape2", "ggpubr", "tidyverse", "grid",
-               "fitdistrplus", "mgcv","ggtext")
+               "fitdistrplus", "mgcv","ggtext", 'brms')
 lapply(libraries, require, character.only = TRUE)
 
 
