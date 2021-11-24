@@ -12,10 +12,26 @@
 
 # https://fromthebottomoftheheap.net/2018/04/21/fitting-gams-with-brms/
 
+rm(list=ls())
+
+# k = knots. 12 month per year or 24 sampling event per year. 
+# ?choose.k
+# bs= basis spline
+# best model: high R-sq, low AIC, low REML
+
+Trajectories<- read.csv("data/Trajectories.csv")
+head(Trajectories)
+
+
+# Canopy cover QPA --------------------------------------------------------
+# Normal distribution of value
+
+cc_A <- Trajectories %>%
+  filter(stream =="QPA", variable =="canopy_cover") 
+
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
-cc.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_A, method = "REML") 
-
+# Bayesian model
 cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
           data = cc_A, family = gaussian(), cores = 1, seed = 17,
           iter = 4000, warmup = 2000, thin = 10, refresh = 0,
