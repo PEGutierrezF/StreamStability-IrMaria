@@ -42,3 +42,28 @@ summary(cc.qp_A.Bayes_mod)
 msms <- marginal_smooths(cc.qp_A.Bayes_mod)
 plot(msms)
 pp_check(cc.qp_A.Bayes_mod)
+
+
+
+
+# Canopy cover QPB --------------------------------------------------------
+
+cc_B <- Trajectories %>%
+  filter(stream =="QPB", variable =="canopy_cover")
+
+descdist(cc_B$value, discrete=FALSE, boot=500)
+
+cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
+
+# Bayesian model
+cc.qp_B.Bayes_mod <- brm(bf(value ~ s(date)),
+                         data = cc_B, family = gaussian(), cores = 1, seed = 17,
+                         iter = 4000, warmup = 2000, thin = 10, refresh = 0,
+                         control = list(adapt_delta = 0.99))
+
+summary(cc.qp_B.Bayes_mod)
+
+msms_CC_QPB <- marginal_smooths(cc.qp_B.Bayes_mod)
+plot(msms_CC_QPB)
+pp_check(cc.qp_B.Bayes_mod)
+
