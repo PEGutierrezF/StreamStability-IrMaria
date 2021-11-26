@@ -14,10 +14,7 @@
 
 rm(list=ls())
 
-# k = knots. 12 month per year or 24 sampling event per year. 
-# ?choose.k
-# bs= basis spline
-# best model: high R-sq, low AIC, low REML
+# Note that we use the bf() argument to specify this nonlinear model. 
 
 Trajectories<- read.csv("data/Trajectories.csv")
 head(Trajectories)
