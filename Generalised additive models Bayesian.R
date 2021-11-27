@@ -30,14 +30,16 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 # Bayesian model
 cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
-          data = cc_A, family = gaussian(), cores = 1, seed = 17,
-          iter = 4000, warmup = 2000, thin = 10, refresh = 0,
-          control = list(adapt_delta = 0.99))
+          data = cc_A, family = gaussian(), cores = 1, seed = 14,
+          iter = 30000, warmup = 28000, thin = 1, refresh = 0,
+          control = list(adapt_delta = 0.99),
+          prior = prior(normal(0, 5), class = "b"))
 
 summary(cc.qp_A.Bayes_mod)
 
 msms <- marginal_smooths(cc.qp_A.Bayes_mod)
 plot(msms)
+plot(cc.qp_A.Bayes_mod)
 pp_check(cc.qp_A.Bayes_mod)
 
 
