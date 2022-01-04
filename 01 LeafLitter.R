@@ -28,8 +28,6 @@ LeafLitter <- LeafLitter %>% dplyr::select(date,QPALeaflitter,QPBLeaflitter )
 LeafLitter <- na.omit(LeafLitter)
 LeafLitter
 
-
-
 QPALeaf.mod  <- lm(QPALeaflitter ~ date, data=LeafLitter)
 summary(QPALeaf.mod)
 
