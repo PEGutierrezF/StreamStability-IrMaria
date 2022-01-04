@@ -18,23 +18,24 @@ rm(list=ls())
 
 
 data <- read.csv("data/all_data.csv")
-head(data)
-# Lm QPA Leaf Litter ------------------------------------------------------
 
 leaflitter <- data%>%dplyr::select(date_ll, QPA_leaflitter, QPB_leaflitter)
+
 
 leaflitter$date_ll <- as.POSIXct(leaflitter$date_ll,"%Y-%m-%d",tz = "UTC")
 leaflitter <- na.omit(leaflitter)
 
+# Lm QPA Leaf Litter ------------------------------------------------------
+
 QPAleaf.mod  <- lm(QPA_leaflitter ~ date_ll, data=leaflitter)
-summary(QPALeaf.mod)
+summary(QPAleaf.mod)
 
-LeafLitter$QPAresid<- QPALeaf.mod$resid
-LeafLitter
+leaflitter$QPAresid<- QPAleaf.mod $resid
+leaflitter
 
-1/apply(LeafLitter, 2, sd)
+1/apply(leaflitter, 2, sd) #2 mean apply to columns
 
-p1 <- ggplot(LeafLitter,aes(x= date, y=QPALeaflitter))+
+p1 <- ggplot(leaflitter,aes(x= date_ll, y=QPA_leaflitter)) +
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
@@ -52,18 +53,21 @@ p1 <- ggplot(LeafLitter,aes(x= date, y=QPALeaflitter))+
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 p1
 
-  # Lm QPB Leaf Litter ------------------------------------------------------
+# Lm QPB Leaf Litter ------------------------------------------------------
 
-QPBLeaf.mod <- lm(QPBLeaflitter ~ date, data=LeafLitter)
-summary(QPBLeaf.mod)
+QPBleaf.mod <- lm(QPB_leaflitter ~ date_ll, data=leaflitter)
+summary(QPBleaf.mod)
 
-LeafLitter$QPBresid<- QPBLeaf.mod$resid
-LeafLitter
+leaflitter$QPBresid<- QPBleaf.mod$resid
+leaflitter
 
-1/apply(LeafLitter, 2, sd)
+1/apply(leaflitter, 2, sd)
 
 
-p2 <- ggplot(LeafLitter,aes(date, y=QPBLeaflitter))+
+
+# Plot --------------------------------------------------------------------
+
+p2 <- ggplot(leaflitter,aes(x= date_ll, y=QPB_leaflitter))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
