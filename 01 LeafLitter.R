@@ -17,18 +17,16 @@ rm(list=ls())
 
 
 
-LeafLitter<- read.csv("data/Leaflitter.csv")
-LeafLitter
-
-LeafLitter$date<-as.POSIXct(LeafLitter$date,"%Y-%m-%d",tz = "UTC")
-
+data <- read.csv("data/all_data.csv")
+head(data)
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-LeafLitter <- LeafLitter %>% dplyr::select(date,QPALeaflitter,QPBLeaflitter )
-LeafLitter <- na.omit(LeafLitter)
-LeafLitter
+leaflitter <- data%>%dplyr::select(date_ll, QPA_leaflitter, QPB_leaflitter)
 
-QPALeaf.mod  <- lm(QPALeaflitter ~ date, data=LeafLitter)
+leaflitter$date_ll <- as.POSIXct(leaflitter$date_ll,"%Y-%m-%d",tz = "UTC")
+leaflitter <- na.omit(leaflitter)
+
+QPAleaf.mod  <- lm(QPA_leaflitter ~ date_ll, data=leaflitter)
 summary(QPALeaf.mod)
 
 LeafLitter$QPAresid<- QPALeaf.mod$resid
