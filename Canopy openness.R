@@ -2,90 +2,82 @@
 
 
 
-
 # ---------------------------------------------
-# Ecosystem stability - Leaf litter
+# Ecosystem stability - Canopy cover
 # 14 Jun 2021
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
 # ---------------------------------------------
-#
+#  
 
+canopycover<- read.csv("data/all_data.csv")
+head(canopycover)
 
-rm(list=ls())
+canopy <- canopycover %>% dplyr::select(date_co, QPA_canopy, QPB_canopy)
+canopy$date_co<-as.POSIXct(canopy$date_co,"%Y-%m-%d",tz = "UTC")
+canopy <- na.omit(canopy)
 
+################################################################
+# Linear model Canopy QPA --------------------------------------
+################################################################
 
+QPA.canopy.mod  <- lm(QPA_canopy ~ date_co, data=canopy)
+summary(QPA.canopy.mod)
 
+canopy$QPACanopyresid<- QPA.canopy.mod$resid
+canopy
 
-data <- read.csv("data/all_data.csv")
+1/apply(canopy, 2, sd)
 
-leaflitter <- data%>%dplyr::select(date_ll, QPA_leaflitter, QPB_leaflitter)
-
-
-leaflitter$date_ll <- as.POSIXct(leaflitter$date_ll,"%Y-%m-%d",tz = "UTC")
-leaflitter <- na.omit(leaflitter)
-
-# Lm QPA Leaf Litter ------------------------------------------------------
-
-QPAleaf.mod  <- lm(QPA_leaflitter ~ date_ll, data=leaflitter)
-summary(QPAleaf.mod)
-
-leaflitter$QPAresid<- QPAleaf.mod $resid
-leaflitter
-
-1/apply(leaflitter, 2, sd) #2 mean apply to columns
-
-p1 <- ggplot(leaflitter,aes(x= date_ll, y=QPA_leaflitter)) +
+cc1 <- ggplot(canopy, aes(x=date_co, y=QPA_canopy)) +
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
   xlab('') + ylab("Residuals") + # axis x
-  
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
-
+  
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
-
+  
   ylim(-3,3) +
   
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
-p1
-
-# Lm QPB Leaf Litter ------------------------------------------------------
-
-QPBleaf.mod <- lm(QPB_leaflitter ~ date_ll, data=leaflitter)
-summary(QPBleaf.mod)
-
-leaflitter$QPBresid<- QPBleaf.mod$resid
-leaflitter
-
-1/apply(leaflitter, 2, sd)
+cc1
 
 
 
-# Plot --------------------------------------------------------------------
+################################################################
+# Linear model Canopy QPB --------------------------------------
+################################################################
 
-p2 <- ggplot(leaflitter,aes(x= date_ll, y=QPB_leaflitter))+
+QPB.canopy.mod  <- lm(QPB_canopy~ date_co, data=canopy)
+summary(QPB.canopy.mod)
+
+canopy$QPBCanopyresid<- QPB.canopy.mod$resid
+canopy
+
+1/apply(canopy, 2, sd)
+
+cc2 <- ggplot(canopy, aes(x=date_co, y=QPB_canopy))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
-  xlab('Sampling period')+ ylab("Residuals") +
-  theme(axis.title.x = element_text(size = 18, angle = 00)) + # axis x
+  xlab('Sampling period') + ylab("Residuals") + # axis x
   theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  theme(axis.title.x = element_text(size = 18, angle = 0)) +
   
   theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
-
-ylim(-3,3) +
+  
+  ylim(-3,3) +
+  
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
-p2
+cc2
 
-leaf <- p1 / p2
-leaf
-leaf + ggsave("Regression Leaf litter.jpeg", path = "figures", width=6, height=10,dpi=600)
-
+canopyreg <- cc1 / cc2
+canopyreg + ggsave("Regression Canopy.jpeg", path = "figures", width=6, height=10,dpi=600)
 
