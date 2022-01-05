@@ -17,26 +17,28 @@ rm(list=ls())
 
 
 
-chl_a<- read.csv("data/chl_a.csv")
-chl_a
+chlorophyll.a <- read.csv("data/all_data.csv")
+head(chlorophyll.a)
 
-chl_a$dateLN<-as.POSIXct(chl_a$dateLN,"%Y-%m-%d",tz = "UTC")
-
-# QPA CHLA ----------------------------------------------------------------
-
-chla <- chl_a %>% dplyr::select(dateLN,QPACHLALog,QPBCHLALog)
+chla <- chlorophyll.a %>% dplyr::select(date_chla, QPA_chla, QPB_chla)
+chla$date_chla <- as.POSIXct(chla$date_chla,"%Y-%m-%d",tz = "UTC")
 chla <- na.omit(chla)
 
-QPAChla.mod  <- lm(QPACHLALog~ dateLN, data=chla)
-summary(QPAChla.mod)
 
-chla$QPAChlaresid<- QPAChla.mod$resid
+################################################################
+# Linear model Chlorophyll-a Prieta A --------------------------
+################################################################
+
+
+QPA.chla.mod  <- lm(QPA_chla~ date_chla, data=chla)
+summary(QPA.chla.mod)
+
+chla$QPAChlaresid<- QPA.chla.mod$resid
 chla
 
 1/apply(chla, 2, sd)
 
-c1 <- ggplot(chla, aes(dateLN,
-                            y=QPACHLALog))+
+c1 <- ggplot(chla, aes(date_chla, y=QPA_chla))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
@@ -55,7 +57,10 @@ c1
 
 
 
-# QPB CHL-A ---------------------------------------------------------------
+################################################################
+# Linear model Chlorophyll-a Prieta B --------------------------
+################################################################
+
 
 QPBChla.mod  <- lm(QPBCHLALog~ dateLN, data=chla)
 summary(QPBChla.mod)
