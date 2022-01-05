@@ -17,6 +17,7 @@
 
 rm(list=ls())
 
+# s = represent smooth function
 # k = knots. 12 month per year or 24 sampling event per year. 
 # ?choose.k
 # bs= basis spline
