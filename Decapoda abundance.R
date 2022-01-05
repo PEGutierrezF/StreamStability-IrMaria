@@ -3,7 +3,7 @@
 
 
 # ---------------------------------------------
-# Ecosystem stability - Shrimps
+# Ecosystem stability - Decapoda Abundance
 # 14 Jun 2021
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
@@ -24,7 +24,10 @@ shrimp <- decapod %>% dplyr::select(date_shrimp, QPA_shrimp, QPB_shrimp)
 shrimp$date_shrimp <- as.POSIXct(shrimp$date_shrimp,"%Y-%m-%d",tz = "UTC")
 shrimp <- na.omit(shrimp)
 
-# Lm QPA Leaf Litter ------------------------------------------------------
+
+################################################################
+# Linear model Decapoda abundance Prieta A ---------------------
+################################################################
 
 QPA.shrimp.mod  <- lm(QPA_shrimp ~ date_shrimp, data=shrimp)
 summary(QPA.shrimp.mod)
@@ -52,7 +55,11 @@ qpa.s <- ggplot(shrimp, aes(date_shrimp, y=QPA_shrimp))+
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 qpa.s
 
-# Shrimp QPB --------------------------------------------------------------
+
+
+################################################################
+# Linear model Decapoda abundance Prieta B ---------------------
+################################################################
 
 
 QPB.shrimp.mod  <- lm(QPB_shrimp ~ date_shrimp, data=shrimp)

@@ -10,14 +10,24 @@
 #
 
 
-library(modelr)
-library(ggplot2)
-library(dplyr)
-library(patchwork)
 
-Macroinvertebrates<- read.csv("6 Macroinvertebrates.csv")
-Macroinvertebrates
 
+rm(list=ls())
+
+
+
+
+macroinvertebrates <- read.csv("data/all_data.csv")
+head(macroinvertebrates)
+
+macroiv <- macroinvertebrates %>% dplyr::select(date_shrimp, QPA_shrimp, QPB_shrimp)
+macroiv$date_shrimp <- as.POSIXct(macroiv$date_shrimp,"%Y-%m-%d",tz = "UTC")
+macroiv <- na.omit(macroiv)
+
+
+################################################################
+# Linear model Macroinvertebrate abundance Prieta A ---------------------
+################################################################
 
 # Lm QPA Macroinvertebrates ------------------------------------------------------
 
