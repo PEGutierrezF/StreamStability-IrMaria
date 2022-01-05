@@ -10,6 +10,13 @@
 # ---------------------------------------------
 #  
 
+
+
+rm(list=ls())
+
+
+
+
 canopycover<- read.csv("data/all_data.csv")
 head(canopycover)
 
