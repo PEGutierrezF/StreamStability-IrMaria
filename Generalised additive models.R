@@ -19,6 +19,7 @@ rm(list=ls())
 
 # s = represent smooth function
 # k = knots. 12 month per year or 24 sampling event per year. 
+# method = "REML" = REML is not the default method.  So, we need to add
 # ?choose.k
 # bs= basis spline
 # best model: high R-sq, low AIC, low REML
