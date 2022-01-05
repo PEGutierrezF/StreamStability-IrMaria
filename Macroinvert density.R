@@ -2,13 +2,13 @@
 
 
 
-#--------------------------------------------
-# Macroinvertebrates
-# 27 May 2020
-#PEGF
-#--------------------------------------------
-#
-
+# ---------------------------------------------
+# Ecosystem stability - Macroinvertebrate density
+# 05 Jan 2022
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
+#  
 
 
 
@@ -26,7 +26,7 @@ macroiv <- na.omit(macroiv)
 
 
 ################################################################
-# Linear model Macroinvertebrate abundance Prieta A ---------------------
+# Linear model Macroinvertebrate abundance Prieta A -----------
 ################################################################
 
 QPA.macroinv.mod  <- lm(QPA_miv ~ date_macroiv, data=macroiv)
@@ -55,7 +55,10 @@ qpa.miv <- ggplot(macroiv, aes(date_macroiv, y=QPA_miv))+
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 qpa.miv
 
-# LM QPB Macroinvertebrates  ----------------------------------------------
+
+################################################################
+# Linear model Macroinvertebrate abundance Prieta B ------------
+################################################################
 
 
 QPB.macroinv.mod  <- lm(QPB_miv ~ date_macroiv, data=macroiv)

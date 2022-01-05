@@ -4,10 +4,12 @@
 
 # ---------------------------------------------
 # Generalised additive models (GAMs)
-# 28 Mar 2021
+# 05 Jan 2022
 # Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
 # ---------------------------------------------
-#  
+
+ 
 
 
 #http://environmentalcomputing.net/intro-to-gams/
