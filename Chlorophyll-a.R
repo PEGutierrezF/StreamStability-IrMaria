@@ -89,5 +89,5 @@ c2 <- ggplot(chla, aes(date_chla, y=QPB_chla))+
 c2
 
 chlag <- c1 / c2
-chlag + ggsave("Chlorophyll-a.jpeg", width=6, height=10,dpi=600)
+chlag + ggsave("Regression chlorophyll-a.jpeg",  path = "figures", width=6, height=10,dpi=600)
 

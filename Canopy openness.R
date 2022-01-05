@@ -86,5 +86,5 @@ cc2 <- ggplot(canopy, aes(x=date_co, y=QPB_canopy))+
 cc2
 
 canopyreg <- cc1 / cc2
-canopyreg + ggsave("Regression Canopy.jpeg", path = "figures", width=6, height=10,dpi=600)
+canopyreg + ggsave("Regression Canopy openness.jpeg", path = "figures", width=6, height=10,dpi=600)
 

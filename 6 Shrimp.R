@@ -17,35 +17,70 @@ rm(list=ls())
 
 
 
-Shrimp<- read.csv("data/Shrimps.csv")
-Shrimp
+decapod <- read.csv("data/all_data.csv")
+head(decapod)
 
-Shrimp$dateLN<-as.POSIXct(Shrimp$dateLN,"%Y-%m-%d",tz = "UTC")
+shrimp <- decapod %>% dplyr::select(date_shrimp, QPA_shrimp, QPB_shrimp)
+shrimp$date_shrimp <- as.POSIXct(shrimp$date_shrimp,"%Y-%m-%d",tz = "UTC")
+shrimp <- na.omit(shrimp)
 
 # Lm QPA Leaf Litter ------------------------------------------------------
 
-QPA_Shrimp <- Shrimp %>% dplyr::select(dateLN, QPAShrimpLog, QPBShrimpLog)
-QPA_Shrimp <- na.omit(QPA_Shrimp)
-QPA_Shrimp
+QPA.shrimp.mod  <- lm(QPA_shrimp ~ date_shrimp, data=shrimp)
+summary(QPA.shrimp.mod)
 
-QPAShrimp.mod  <- lm(QPAShrimpLog ~ dateLN, data=QPA_Shrimp)
-summary(QPAShrimp.mod)
+shrimp$QPAresid<- QPA.shrimp.mod$resid
+shrimp
 
-QPA_Shrimp$QPAresid<- QPAShrimp.mod$resid
-QPA_Shrimp
-
-1/apply(QPA_Shrimp, 2, sd)
+1/apply(shrimp, 2, sd)
 
 
+qpa.s <- ggplot(shrimp, aes(date_shrimp, y=QPA_shrimp))+
+  geom_point(size = 3) + 
+  geom_smooth(method=lm,se=FALSE) +
+  
+  xlab('') + ylab("Residuals") + # axis x
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-2,2) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+qpa.s
 
 # Shrimp QPB --------------------------------------------------------------
 
 
-QPBShrimp.mod  <- lm(QPBShrimpLog ~ dateLN, na.action=na.omit, data=QPA_Shrimp)
-summary(QPBShrimp.mod)
+QPB.shrimp.mod  <- lm(QPB_shrimp ~ date_shrimp, data=shrimp)
+summary(QPB.shrimp.mod)
 
-QPA_Shrimp$QPBresid<- QPBShrimp.mod$resid
-QPA_Shrimp
+shrimp$QPBresid<- QPB.shrimp.mod$resid
+shrimp
 
-1/apply(QPA_Shrimp, 2, sd)
+1/apply(shrimp, 2, sd)
+
+qpb.s <- ggplot(shrimp, aes(date_shrimp, y=QPB_shrimp))+
+  geom_point(size = 3) + 
+  geom_smooth(method=lm,se=FALSE) +
+  
+  xlab('') + ylab("Residuals") + # axis x
+  theme(axis.title.y = element_text(size = 18, angle = 90)) +
+  
+  theme(axis.text.x=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=14, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-2,2) +
+  
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+qpb.s
+
+
+plot.shrimp <- qpa.s / qpb.s
+plot.shrimp + ggsave("Regression decapod abundance.jpeg",  path = "figures", width=6, height=10,dpi=600)
 
