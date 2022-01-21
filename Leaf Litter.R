@@ -2,7 +2,6 @@
 
 
 
-
 # ---------------------------------------------
 # Ecosystem stability - Leaf litter
 # 14 Jun 2021
@@ -10,6 +9,7 @@
 # pabloe.gutierrezfonseca@gmail.com
 # ---------------------------------------------
 #
+
 
 
 rm(list=ls())
