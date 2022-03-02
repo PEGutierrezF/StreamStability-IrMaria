@@ -43,7 +43,6 @@ descdist(cc_A$value, discrete=FALSE, boot=500)
 
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
-
 cc.qp_A.mod <- gam(value ~s(date, bs="cr", k=5), data=cc_A, method = "REML") # best model
 summary(cc.qp_A.mod)
 gam.check(cc.qp_A.mod)

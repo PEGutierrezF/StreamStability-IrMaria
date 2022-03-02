@@ -31,13 +31,9 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 # Bayesian model
 
-get_prior(data = cc_A,
-          family = gaussian,
-          value ~ 1 + s(date))
-
 cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
           data = cc_A, family = gaussian(), cores = 1, seed = 14,
-          iter = 30000, warmup = 28000, thin = 1, refresh = 0,
+          warmup = 28000, iter = 30000, thin = 1, refresh = 0,
           control = list(adapt_delta = 0.99),
           prior = prior(normal(0, 0.1), class = "b"))
 
