@@ -17,7 +17,7 @@ rm(list=ls())
 
 # Note that we use the bf() argument to specify this nonlinear model. 
 
-Trajectories<- read.csv("data/Trajectories.csv")
+Trajectories <- read.csv("data/Trajectories.csv")
 head(Trajectories)
 
 
@@ -71,4 +71,5 @@ summary(cc.qp_B.Bayes_mod)
 msms_CC_QPB <- marginal_smooths(cc.qp_B.Bayes_mod)
 plot(msms_CC_QPB)
 pp_check(cc.qp_B.Bayes_mod)
+
 
