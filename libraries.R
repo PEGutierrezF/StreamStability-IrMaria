@@ -19,7 +19,7 @@ install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption
 
 
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
-               "reshape2", "ggpubr", "tidyverse", "grid",
+               "reshape2", "ggpubr", "tidyverse", "grid","lubridate",
                "fitdistrplus", "mgcv","ggtext", 'brms')
 lapply(libraries, require, character.only = TRUE)
 

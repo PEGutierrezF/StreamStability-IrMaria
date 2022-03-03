@@ -21,6 +21,8 @@ Trajectories <- read.csv("data/Trajectories.csv")
 head(Trajectories)
 
 
+
+
 # Canopy cover QPA --------------------------------------------------------
 # Normal distribution of value
 
@@ -41,11 +43,22 @@ cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
           prior = priors1)
 
 summary(cc.qp_A.Bayes_mod)
+plot(conditional_effects(cc.qp_A.Bayes_mod), points = TRUE)
 
-msms <- marginal_smooths(cc.qp_A.Bayes_mod)
+msms <- conditional_smooths(cc.qp_A.Bayes_mod)
 plot(msms)
+
+
 plot(cc.qp_A.Bayes_mod)
 pp_check(cc.qp_A.Bayes_mod)
+
+stanplot(cc.qp_A.Bayes_mod, 
+         type = "areas",
+         prob = 0.95)
+
+gam.vcomp(cc.qp_A.mod1, rescale = FALSE)
+
+
 
 
 
@@ -72,4 +85,5 @@ summary(cc.qp_B.Bayes_mod)
 msms_CC_QPB <- marginal_smooths(cc.qp_B.Bayes_mod)
 plot(msms_CC_QPB)
 pp_check(cc.qp_B.Bayes_mod)
+
 
