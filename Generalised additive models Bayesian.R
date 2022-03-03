@@ -36,8 +36,8 @@ priors1
 
 cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
           data = cc_A, family = gaussian(), cores = 1, seed = 14,
-          warmup = 800, iter = 1000, thin = 1, refresh = 0,
-        #  control = list(adapt_delta = 0.99),
+          warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+          control = list(adapt_delta = 0.99),
           prior = priors1)
 
 summary(cc.qp_A.Bayes_mod)
