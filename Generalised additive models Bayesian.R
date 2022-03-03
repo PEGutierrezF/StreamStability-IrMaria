@@ -52,10 +52,14 @@ plot(msms)
 plot(cc.qp_A.Bayes_mod)
 pp_check(cc.qp_A.Bayes_mod)
 
-stanplot(cc.qp_A.Bayes_mod, 
+mcmc_plot(cc.qp_A.Bayes_mod, 
          type = "areas",
          prob = 0.95)
 
+# How does this model compare with the one fitted 
+# using gam()? We can use the gam.vcomp() function 
+# to compute the variance component representation 
+# of the smooth estimated via gam().
 gam.vcomp(cc.qp_A.mod1, rescale = FALSE)
 
 
