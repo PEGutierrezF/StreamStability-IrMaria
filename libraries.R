@@ -19,3 +19,9 @@ lapply(libraries, require, character.only = TRUE)
 
 
 
+remove.packages(c("StanHeaders", "rstan"))
+install.packages("StanHeaders", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+
+
+

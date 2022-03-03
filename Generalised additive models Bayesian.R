@@ -36,8 +36,8 @@ priors1
 
 cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
           data = cc_A, family = gaussian(), cores = 1, seed = 14,
-          warmup = 2000, iter = 4000, thin = 1, refresh = 0,
-          control = list(adapt_delta = 0.99),
+          warmup = 800, iter = 1000, thin = 1, refresh = 0,
+        #  control = list(adapt_delta = 0.99),
           prior = priors1)
 
 summary(cc.qp_A.Bayes_mod)
@@ -72,5 +72,4 @@ summary(cc.qp_B.Bayes_mod)
 msms_CC_QPB <- marginal_smooths(cc.qp_B.Bayes_mod)
 plot(msms_CC_QPB)
 pp_check(cc.qp_B.Bayes_mod)
-
 
