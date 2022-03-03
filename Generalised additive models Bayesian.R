@@ -30,12 +30,15 @@ cc_A <- Trajectories %>%
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 # Bayesian model
+priors1 = get_prior(value ~ s(date),
+                data = cc_A, family = gaussian())
+priors1
 
 cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
           data = cc_A, family = gaussian(), cores = 1, seed = 14,
-          warmup = 28000, iter = 30000, thin = 1, refresh = 0,
+          warmup = 2000, iter = 4000, thin = 1, refresh = 0,
           control = list(adapt_delta = 0.99),
-          prior = prior(normal(0, 0.1), class = "b"))
+          prior = priors1)
 
 summary(cc.qp_A.Bayes_mod)
 
@@ -57,6 +60,8 @@ descdist(cc_B$value, discrete=FALSE, boot=500)
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
 # Bayesian model
+#examine the prior options and the brms default
+
 cc.qp_B.Bayes_mod <- brm(bf(value ~ s(date)),
                          data = cc_B, family = gaussian(), cores = 1, seed = 17,
                          iter = 4000, warmup = 2000, thin = 10, refresh = 0,

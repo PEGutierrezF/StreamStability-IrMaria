@@ -12,7 +12,7 @@
  
 
 
-#http://environmentalcomputing.net/intro-to-gams/
+# http://environmentalcomputing.net/intro-to-gams/
 # https://stats.stackexchange.com/questions/231399/how-to-determine-the-type-of-spline-in-gam
 # https://stats.stackexchange.com/questions/137109/selecting-knots-for-a-gam
 # https://stats.stackexchange.com/questions/243367/smoothing-methods-for-gam-in-mgcv-package
