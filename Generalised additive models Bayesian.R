@@ -42,20 +42,20 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 # Model 1 "cr" --------------------------------------------------------------
 
-priors.cc_A = get_prior(value ~ s(date, bs="cr", k=5),
+priors.cc_A.cr = get_prior(value ~ s(date, bs="cr", k=5),
                 data = cc_A, family = gaussian())
-priors.cc_A
+priors.cc_A.cr
 
-cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cr", k=5)),
+cc.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k=5)),
           data = cc_A, family = gaussian(), cores = 1, seed = 14,
           warmup = 8000, iter = 10000, thin = 1, refresh = 0,
           control = list(adapt_delta = 0.99),
-          prior = priors.cc_A)
+          prior = priors.cc_A.cr)
 
-summary(cc.qp_A.Bayes_mod)
-plot(cc.qp_A.Bayes_mod)
-plot(conditional_effects(cc.qp_A.Bayes_mod), points = TRUE)
-msms <- conditional_smooths(cc.qp_A.Bayes_mod)
+summary(cc.qp_A.Bayes.cr)
+plot(cc.qp_A.Bayes.cr)
+plot(conditional_effects(cc.qp_A.Bayes.cr), points = TRUE)
+msms <- conditional_smooths(cc.qp_A.Bayes.cr)
 plot(msms)
 
 # Model 2 "ps" -----------------------------------------------------------------
@@ -75,7 +75,7 @@ plot(conditional_effects(cc.qp_A.Bayes.ps), points = TRUE)
 
 
 
-# Model 2 "ts" -----------------------------------------------------------------
+# Model 3 "ts" -----------------------------------------------------------------
 
 priors.cc_A.ts = get_prior(value ~ s(date, bs="ts", k=5),
                            data = cc_A, family = gaussian())
@@ -122,14 +122,19 @@ gam.vcomp(cc.qp_A.mod1, rescale = FALSE)
 # thanks to a newly-developed method from Andrew Gelman, 
 #Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
 # http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
-bayes_R2(cc.qp_A.Bayes_mod)
+bayes_R2(cc.qp_A.Bayes.cr)
 bayes_R2(cc.qp_A.Bayes.ps)
 bayes_R2(cc.qp_A.Bayes.ts)
 # r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
 # Bayes R2 quantifies the expected fit or variance explained by a model
 
-loo(cc.qp_A.Bayes.bs, cc.qp_A.Bayes.ps, cc.qp_A.Bayes.ts)
+loo(cc.qp_A.Bayes.cr, cc.qp_A.Bayes.ps, cc.qp_A.Bayes.ts)
 
+waic.bs <- waic(cc.qp_A.Bayes.cr)
+waic.ps <- waic(cc.qp_A.Bayes.ps)
+waic.ts <- waic(cc.qp_A.Bayes.ts)
+
+loo_compare(waic.bs, waic.ps, waic.ts)  
 
 # Canopy cover QPB --------------------------------------------------------
 
