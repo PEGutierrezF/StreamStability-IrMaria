@@ -39,12 +39,14 @@ cc_A <- Trajectories %>%
 
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
-# Bayesian model
-priors.cc_A = get_prior(value ~ s(date),
+
+# Model 1 "cr" --------------------------------------------------------------
+
+priors.cc_A = get_prior(value ~ s(date, bs="cr", k=5),
                 data = cc_A, family = gaussian())
 priors.cc_A
 
-cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
+cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cr", k=5)),
           data = cc_A, family = gaussian(), cores = 1, seed = 14,
           warmup = 8000, iter = 10000, thin = 1, refresh = 0,
           control = list(adapt_delta = 0.99),
@@ -53,18 +55,40 @@ cc.qp_A.Bayes_mod <- brm(bf(value ~ s(date)),
 summary(cc.qp_A.Bayes_mod)
 plot(cc.qp_A.Bayes_mod)
 plot(conditional_effects(cc.qp_A.Bayes_mod), points = TRUE)
-
-# https://tem11010.github.io/regression_brms/
-# We can also get an R-squared estimate for our model, 
-# thanks to a newly-developed method from Andrew Gelman, 
-#Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
-# http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
-bayes_R2(cc.qp_A.Bayes_mod)
-# r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
-
-
 msms <- conditional_smooths(cc.qp_A.Bayes_mod)
 plot(msms)
+
+# Model 2 "ps" -----------------------------------------------------------------
+
+priors.cc_A.ps = get_prior(value ~ s(date, bs="ps", k=5),
+                        data = cc_A, family = gaussian())
+
+cc.qp_A.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k=5)),
+                               data = cc_A, family = gaussian(), cores = 1, seed = 14,
+                               warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+                               control = list(adapt_delta = 0.99),
+                               prior = priors.cc_A.ps)
+
+summary(cc.qp_A.Bayes.ps)
+plot(cc.qp_A.Bayes.ps)
+plot(conditional_effects(cc.qp_A.Bayes.ps), points = TRUE)
+
+
+
+# Model 2 "ts" -----------------------------------------------------------------
+
+priors.cc_A.ts = get_prior(value ~ s(date, bs="ts", k=5),
+                           data = cc_A, family = gaussian())
+
+cc.qp_A.Bayes.ts <- brms::brm(bf(value ~ s(date, bs="ts", k=5)),
+                              data = cc_A, family = gaussian(), cores = 1, seed = 14,
+                              warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+                              control = list(adapt_delta = 0.99),
+                              prior = priors.cc_A.ts)
+
+summary(cc.qp_A.Bayes.ts)
+plot(cc.qp_A.Bayes.ts)
+plot(conditional_effects(cc.qp_A.Bayes.ts), points = TRUE)
 
 
 
@@ -75,7 +99,7 @@ plot(msms)
 # graphical way to evaluate your model.
 # Here, 'nsamples' refers to the number of draws from the posterior 
 #distribution to use to calculate yrep values.
-pp_check(cc.qp_A.Bayes_mod, nsamples = 100)
+pp_check(cc.qp_A.Bayes_mod, ndraws = 100)
 
 
 mcmc_plot(cc.qp_A.Bayes_mod, 
@@ -90,6 +114,21 @@ mcmc_plot(cc.qp_A.Bayes_mod,
 gam.vcomp(cc.qp_A.mod1, rescale = FALSE)
 
 
+# Evaluate models 
+
+
+# https://tem11010.github.io/regression_brms/
+# We can also get an R-squared estimate for our model, 
+# thanks to a newly-developed method from Andrew Gelman, 
+#Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
+# http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
+bayes_R2(cc.qp_A.Bayes_mod)
+bayes_R2(cc.qp_A.Bayes.ps)
+bayes_R2(cc.qp_A.Bayes.ts)
+# r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
+# Bayes R2 quantifies the expected fit or variance explained by a model
+
+loo(cc.qp_A.Bayes.bs, cc.qp_A.Bayes.ps, cc.qp_A.Bayes.ts)
 
 
 # Canopy cover QPB --------------------------------------------------------
