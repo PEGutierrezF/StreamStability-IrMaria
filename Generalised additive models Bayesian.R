@@ -58,6 +58,12 @@ plot(conditional_effects(cc.qp_A.Bayes.cr), points = TRUE)
 msms <- conditional_smooths(cc.qp_A.Bayes.cr)
 plot(msms)
 
+pp_check(cc.qp_A.Bayes.cr, ndraws = 100)
+
+mcmc_plot(cc.qp_A.Bayes.cr, 
+          type = "areas",
+          prob = 0.95)
+
 # Model 2 "ps" -----------------------------------------------------------------
 
 priors.cc_A.ps = get_prior(value ~ s(date, bs="ps", k=5),
@@ -73,7 +79,11 @@ summary(cc.qp_A.Bayes.ps)
 plot(cc.qp_A.Bayes.ps)
 plot(conditional_effects(cc.qp_A.Bayes.ps), points = TRUE)
 
+pp_check(cc.qp_A.Bayes.ps, ndraws = 100)
 
+mcmc_plot(cc.qp_A.Bayes.ps, 
+          type = "areas",
+          prob = 0.95)
 
 # Model 3 "ts" -----------------------------------------------------------------
 
@@ -90,6 +100,11 @@ summary(cc.qp_A.Bayes.ts)
 plot(cc.qp_A.Bayes.ts)
 plot(conditional_effects(cc.qp_A.Bayes.ts), points = TRUE)
 
+pp_check(cc.qp_A.Bayes.ts, ndraws = 100)
+
+mcmc_plot(cc.qp_A.Bayes.ts, 
+          type = "areas",
+          prob = 0.95)
 
 
 # https://tem11010.github.io/regression_brms/
@@ -107,15 +122,8 @@ mcmc_plot(cc.qp_A.Bayes_mod,
          prob = 0.95)
 
 
-# How does this model compare with the one fitted 
-# using gam()? We can use the gam.vcomp() function 
-# to compute the variance component representation 
-# of the smooth estimated via gam().
-gam.vcomp(cc.qp_A.mod1, rescale = FALSE)
 
-
-# Evaluate models 
-
+# Evaluate models ---------------------------------------------------------
 
 # https://tem11010.github.io/regression_brms/
 # We can also get an R-squared estimate for our model, 
@@ -135,6 +143,11 @@ waic.ps <- waic(cc.qp_A.Bayes.ps)
 waic.ts <- waic(cc.qp_A.Bayes.ts)
 
 loo_compare(waic.bs, waic.ps, waic.ts)  
+
+
+
+
+
 
 # Canopy cover QPB --------------------------------------------------------
 
