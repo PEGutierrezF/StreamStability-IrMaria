@@ -16,6 +16,12 @@
 
 rm(list=ls())
 
+# Hay que ver el Smooth Terms: ->   sds(sdate_1) -> 
+# sds(stimes_1) is the variance parameter, which has the effect of controlling 
+# the wiggliness of the smooth - the larger this value the more wiggly the smooth.
+
+
+
 # Note that we use the bf() argument to specify this nonlinear model. 
 
 Trajectories <- read.csv("data/Trajectories.csv")
@@ -54,6 +60,7 @@ plot(conditional_effects(cc.qp_A.Bayes_mod), points = TRUE)
 #Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
 # http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
 bayes_R2(cc.qp_A.Bayes_mod)
+# r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
 
 
 msms <- conditional_smooths(cc.qp_A.Bayes_mod)
@@ -75,11 +82,13 @@ mcmc_plot(cc.qp_A.Bayes_mod,
          type = "areas",
          prob = 0.95)
 
+
 # How does this model compare with the one fitted 
 # using gam()? We can use the gam.vcomp() function 
 # to compute the variance component representation 
 # of the smooth estimated via gam().
 gam.vcomp(cc.qp_A.mod1, rescale = FALSE)
+
 
 
 
