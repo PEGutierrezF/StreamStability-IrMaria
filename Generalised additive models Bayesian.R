@@ -54,6 +54,33 @@ cc_A <- Trajectories %>%
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 
+
+# Model 2 "cr" ------------------------------------------------------------
+knots <- list( c(1, 12)) 
+
+priors.cc_A.cc = get_prior(value ~ s(date, bs="cc", k = 12),
+                           data = cc_A, family = gaussian())
+priors.cc_A.cc
+
+cc.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 12)),
+                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.cc_A.cc)
+
+summary(cc.qp_A.Bayes.cc)
+plot(cc.qp_A.Bayes.cc)
+
+plot(conditional_effects(cc.qp_A.Bayes.cc), points = TRUE)
+msms <- conditional_smooths(cc.qp_A.Bayes.cc)
+plot(msms)
+
+pp_check(cc.qp_A.Bayes.cc, ndraws = 100)
+
+mcmc_plot(cc.qp_A.Bayes.cc, 
+          type = "areas",
+          prob = 0.95)
+
 # Model 1 "cr" --------------------------------------------------------------
 
 knots <- list( c(1, 12)) 
@@ -81,7 +108,8 @@ mcmc_plot(cc.qp_A.Bayes.cr,
           type = "areas",
           prob = 0.95)
 
-# Model 2 "ps" -----------------------------------------------------------------
+
+# Model 3 "ps" -----------------------------------------------------------------
 
 priors.cc_A.ps = get_prior(value ~ s(date, bs="ps", k=5),
                         data = cc_A, family = gaussian())
@@ -102,7 +130,7 @@ mcmc_plot(cc.qp_A.Bayes.ps,
           type = "areas",
           prob = 0.95)
 
-# Model 3 "ts" -----------------------------------------------------------------
+# Model 4 "ts" -----------------------------------------------------------------
 
 priors.cc_A.ts = get_prior(value ~ s(date, bs="ts", k=5),
                            data = cc_A, family = gaussian())
@@ -131,7 +159,7 @@ mcmc_plot(cc.qp_A.Bayes.ts,
 # graphical way to evaluate your model.
 # Here, 'nsamples' refers to the number of draws from the posterior 
 #distribution to use to calculate yrep values.
-pp_check(cc.qp_A.Bayes_mod, ndraws = 100)
+pp_check(cc.qp_A.Bayes.cc, ndraws = 100)
 
 
 mcmc_plot(cc.qp_A.Bayes_mod, 
@@ -155,11 +183,11 @@ bayes_R2(cc.qp_A.Bayes.ts)
 
 loo(cc.qp_A.Bayes.cr, cc.qp_A.Bayes.ps, cc.qp_A.Bayes.ts)
 
-waic.bs <- waic(cc.qp_A.Bayes.cr)
-waic.ps <- waic(cc.qp_A.Bayes.ps)
+waic.cr <- waic(cc.qp_A.Bayes.cr)
+waic.cc <- waic(cc.qp_A.Bayes.cc)
 waic.ts <- waic(cc.qp_A.Bayes.ts)
 
-loo_compare(waic.bs, waic.ps, waic.ts)  
+loo_compare(waic.cc, waic.cr)  
 
 
 
