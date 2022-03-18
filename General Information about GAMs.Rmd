@@ -17,16 +17,26 @@ gam(value ~s(date,...
 
 
 ### Define knots (Both GAMs)
-k = knots. 12 month per year or 24 sampling event per year. 
-Seleccione 12 por Simpson, del siguiente enlace
+k = knots. 12 month per year or 24 sampling event per year.\
+Seleccione 12 por Simpson, del siguiente enlace:\
 https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
 
 
 ### bs= basis spline (Both GAMs)
-bs= basis spline
-Smooth classes are invoked directly by s terms
+bs= basis spline.\
+Smooth classes are invoked directly by s terms.\
 https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
 
+```{r, eval=FALSE}
+brms::brm(bf(value ~ s(date, bs="cs"...))
+```
+#### Cubic regression splines & A cyclic cubic regression spline\
+bs="cr". These have a cubic spline basis defined by a modest sized set of knots spread evenly through the covariate values.\
+bs="cs" specifies a shrinkage version of "cr".\
+bs="cc" specifies a cyclic cubic regression splines. i.e. a penalized cubic regression splines whose ends match, up to second derivative.\
+
+#### P-splines
+bs="ps". 
 
 ### bf (Bayesian GAMs)
 Note that we use the bf() argument to specify this nonlinear model. 
