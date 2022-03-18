@@ -55,18 +55,18 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 
 
-# Model 2 "cr" ------------------------------------------------------------
+# Model 1 "cc" ------------------------------------------------------------
 knots <- list( c(1, 12)) 
 
-priors.cc_A.cc = get_prior(value ~ s(date, bs="cc", k = 12),
+priors.cc_A.cs = get_prior(value ~ s(date, bs="cs", k = 12),
                            data = cc_A, family = gaussian())
-priors.cc_A.cc
+priors.cc_A.cs
 
-cc.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 12)),
+cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 12)),
                               knots = knots, data = cc_A, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                               refresh = 0, control = list(adapt_delta = 0.99),
-                              prior = priors.cc_A.cc)
+                              prior = priors.cc_A.cs)
 
 summary(cc.qp_A.Bayes.cc)
 plot(cc.qp_A.Bayes.cc)
@@ -81,7 +81,7 @@ mcmc_plot(cc.qp_A.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-# Model 1 "cr" --------------------------------------------------------------
+# Model 2 "cr" --------------------------------------------------------------
 
 knots <- list( c(1, 12)) 
 
@@ -109,16 +109,44 @@ mcmc_plot(cc.qp_A.Bayes.cr,
           prob = 0.95)
 
 
-# Model 3 "ps" -----------------------------------------------------------------
+# Model 3 "cs" --------------------------------------------------------------
 
-priors.cc_A.ps = get_prior(value ~ s(date, bs="ps", k=5),
-                        data = cc_A, family = gaussian())
+knots <- list( c(1, 12)) 
 
-cc.qp_A.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k=5)),
-                               data = cc_A, family = gaussian(), cores = 1, seed = 14,
-                               warmup = 8000, iter = 10000, thin = 1, refresh = 0,
-                               control = list(adapt_delta = 0.99),
-                               prior = priors.cc_A.ps)
+priors.cc_A.cs = get_prior(value ~ s(date, bs="cs", k = 12),
+                           data = cc_A, family = gaussian())
+priors.cc_A.cs
+
+cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 12)),
+                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.cc_A.cs)
+
+summary(cc.qp_A.Bayes.cs)
+plot(cc.qp_A.Bayes.cs)
+
+plot(conditional_effects(cc.qp_A.Bayes.cs), points = TRUE)
+msms <- conditional_smooths(cc.qp_A.Bayes.cs)
+plot(msms)
+
+pp_check(cc.qp_A.Bayes.cs, ndraws = 100)
+
+mcmc_plot(cc.qp_A.Bayes.cs, 
+          type = "areas",
+          prob = 0.95)
+
+
+# Model 4 "ps" -----------------------------------------------------------------
+
+priors.cc_A.ps = get_prior(value ~ s(date, bs="ps", k=12),
+                           data = cc_A, family = gaussian())
+
+cc.qp_A.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k=12)),
+                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+                              seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+                              control = list(adapt_delta = 0.99),
+                              prior = priors.cc_A.ps)
 
 summary(cc.qp_A.Bayes.ps)
 plot(cc.qp_A.Bayes.ps)
@@ -130,24 +158,24 @@ mcmc_plot(cc.qp_A.Bayes.ps,
           type = "areas",
           prob = 0.95)
 
-# Model 4 "ts" -----------------------------------------------------------------
+# Model 5 "cp" -----------------------------------------------------------------
 
-priors.cc_A.ts = get_prior(value ~ s(date, bs="ts", k=5),
+priors.cc_A.cp = get_prior(value ~ s(date, bs="cp", k=12),
                            data = cc_A, family = gaussian())
 
-cc.qp_A.Bayes.ts <- brms::brm(bf(value ~ s(date, bs="ts", k=5)),
-                              data = cc_A, family = gaussian(), cores = 1, seed = 14,
-                              warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+cc.qp_A.Bayes.cp <- brms::brm(bf(value ~ s(date, bs="cp", k=12)),
+                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+                              seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
                               control = list(adapt_delta = 0.99),
-                              prior = priors.cc_A.ts)
+                              prior = priors.cc_A.cp)
 
-summary(cc.qp_A.Bayes.ts)
-plot(cc.qp_A.Bayes.ts)
-plot(conditional_effects(cc.qp_A.Bayes.ts), points = TRUE)
+summary(cc.qp_A.Bayes.cp)
+plot(cc.qp_A.Bayes.cp)
+plot(conditional_effects(cc.qp_A.Bayes.cp), points = TRUE)
 
-pp_check(cc.qp_A.Bayes.ts, ndraws = 100)
+pp_check(cc.qp_A.Bayes.cp, ndraws = 100)
 
-mcmc_plot(cc.qp_A.Bayes.ts, 
+mcmc_plot(cc.qp_A.Bayes.cp, 
           type = "areas",
           prob = 0.95)
 
@@ -163,8 +191,8 @@ pp_check(cc.qp_A.Bayes.cc, ndraws = 100)
 
 
 mcmc_plot(cc.qp_A.Bayes_mod, 
-         type = "areas",
-         prob = 0.95)
+          type = "areas",
+          prob = 0.95)
 
 
 
@@ -175,22 +203,25 @@ mcmc_plot(cc.qp_A.Bayes_mod,
 # thanks to a newly-developed method from Andrew Gelman, 
 #Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
 # http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
+bayes_R2(cc.qp_A.Bayes.cc)
 bayes_R2(cc.qp_A.Bayes.cr)
+bayes_R2(cc.qp_A.Bayes.cs)
 bayes_R2(cc.qp_A.Bayes.ps)
-bayes_R2(cc.qp_A.Bayes.ts)
+bayes_R2(cc.qp_A.Bayes.cp)
 # r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
 # Bayes R2 quantifies the expected fit or variance explained by a model
 
-loo(cc.qp_A.Bayes.cr, cc.qp_A.Bayes.ps, cc.qp_A.Bayes.ts)
+loo(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr, 
+    cc.qp_A.Bayes.cs, cc.qp_A.Bayes.ps, 
+    cc.qp_A.Bayes.cp)
 
-waic.cr <- waic(cc.qp_A.Bayes.cr)
 waic.cc <- waic(cc.qp_A.Bayes.cc)
-waic.ts <- waic(cc.qp_A.Bayes.ts)
+waic.cr <- waic(cc.qp_A.Bayes.cr)
+waic.cs <- waic(cc.qp_A.Bayes.cs)
+waic.ps <- waic(cc.qp_A.Bayes.ps)
+waic.cp <- waic(cc.qp_A.Bayes.cp)
 
-loo_compare(waic.cc, waic.cr)  
-
-
-
+loo_compare(waic.cc, waic.cr,waic.cs,waic.ps,waic.cp)  
 
 
 
