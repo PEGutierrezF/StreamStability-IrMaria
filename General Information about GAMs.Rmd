@@ -6,11 +6,7 @@ output:
   pdf_document: default
 ---
 
-
-Hay que ver el Smooth Terms: ->   sds(sdate_1) -> 
-sds(stimes_1) is the variance parameter, which has the effect of controlling 
-the wiggliness of the smooth - the larger this value the more wiggly the smooth.
-https://fromthebottomoftheheap.net/2018/04/21/fitting-gams-with-brms/
+## Model construction 
 
 s = represent smooth function
 
@@ -26,6 +22,17 @@ https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
 
 ### bf
 Note that we use the bf() argument to specify this nonlinear model. 
+
+
+## Output
+
+Hay que ver el Smooth Terms: ->   sds(sdate_1) -> 
+sds(stimes_1) is the variance parameter, which has the effect of controlling 
+the wiggliness of the smooth - the larger this value the more wiggly the smooth.
+https://fromthebottomoftheheap.net/2018/04/21/fitting-gams-with-brms/
+
+
+## Check models
 
 ### pp_check()
 https://tem11010.github.io/regression_brms/
