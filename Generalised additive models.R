@@ -20,7 +20,12 @@
 rm(list=ls())
 
 # s = represent smooth function
+
 # k = knots. 12 month per year or 24 sampling event per year. 
+# Seleccione 12 por Simpson, del siguiente enlace
+# https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
+
+  
 # method = "REML" = REML is not the default method.  So, we need to add
 # ?choose.k
 

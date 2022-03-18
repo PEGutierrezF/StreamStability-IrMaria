@@ -20,7 +20,18 @@ rm(list=ls())
 # sds(stimes_1) is the variance parameter, which has the effect of controlling 
 # the wiggliness of the smooth - the larger this value the more wiggly the smooth.
 
+# s = represent smooth function
 
+# k = knots. 12 month per year or 24 sampling event per year. 
+# Seleccione 12 por Simpson, del siguiente enlace
+# https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
+
+# bs= basis spline
+# Smooth classes are invoked directly by s terms
+# https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
+
+# nmonth por por Simpson, del siguiente enlace
+# https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
 
 # Note that we use the bf() argument to specify this nonlinear model. 
 
@@ -42,21 +53,34 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 # Model 1 "cr" --------------------------------------------------------------
 
-knots <- list(dk$data = c(1, 12))
+knots <- list( c(1, 12))
+
+priors.cc_A.cc = get_prior(value ~ s(nmonth, bs="cc", k = 12),
+                           data = cc_A, family = gaussian())
+priors.cc_A.cc
+
+
+cc.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(nmonth, bs="cc", k = 12)),
+                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0,control = list(adapt_delta = 0.99),
+                              prior = priors.cc_A.cc)
+summary(cc.qp_A.Bayes.cc)
+plot(cc.qp_A.Bayes.cc)
 
 priors.cc_A.cr = get_prior(value ~ s(date, bs="cr", k = 12),
-                data = cc_A, knots = knots, family = gaussian())
+                           data = cc_A, family = gaussian())
 priors.cc_A.cr
 
-
-cc.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr",k = 5)), knots =knots,
-          data = cc_A, family = gaussian(), cores = 1, seed = 14,
-          warmup = 8000, iter = 10000, thin = 1, refresh = 0,
-          control = list(adapt_delta = 0.99),
-          prior = priors.cc_A.cr)
+cc.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k = 12)),
+                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0,control = list(adapt_delta = 0.99),
+                              prior = priors.cc_A.cr)
 
 summary(cc.qp_A.Bayes.cr)
 plot(cc.qp_A.Bayes.cr)
+
 plot(conditional_effects(cc.qp_A.Bayes.cr), points = TRUE)
 msms <- conditional_smooths(cc.qp_A.Bayes.cr)
 plot(msms)
