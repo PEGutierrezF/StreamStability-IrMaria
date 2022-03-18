@@ -1,0 +1,42 @@
+---
+title: "General information about GAMs"
+author: "Pablo E. Gutiérrez-Fonseca"
+date: "3/18/2022"
+output:
+  pdf_document: default
+---
+
+
+Hay que ver el Smooth Terms: ->   sds(sdate_1) -> 
+sds(stimes_1) is the variance parameter, which has the effect of controlling 
+the wiggliness of the smooth - the larger this value the more wiggly the smooth.
+https://fromthebottomoftheheap.net/2018/04/21/fitting-gams-with-brms/
+
+s = represent smooth function
+
+### Define knots
+k = knots. 12 month per year or 24 sampling event per year. 
+Seleccione 12 por Simpson, del siguiente enlace
+https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
+
+### bs= basis spline
+bs= basis spline
+Smooth classes are invoked directly by s terms
+https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
+
+### bf
+Note that we use the bf() argument to specify this nonlinear model. 
+
+### pp_check()
+https://tem11010.github.io/regression_brms/
+The pp_check allows for graphical posterior predictive checking. 
+We can generate figures to compare the observed data to simulated 
+data from the posterior predictive distribution. This is a great 
+graphical way to evaluate your model.
+
+Here, nsamples refers to the number of draws from the posterior 
+distribution to use to calculate yrep values.
+
+```{r, eval=FALSE}
+pp_check(model, nsamples=100)
+```

@@ -16,26 +16,6 @@
 
 rm(list=ls())
 
-# Hay que ver el Smooth Terms: ->   sds(sdate_1) -> 
-# sds(stimes_1) is the variance parameter, which has the effect of controlling 
-# the wiggliness of the smooth - the larger this value the more wiggly the smooth.
-
-# s = represent smooth function
-
-# k = knots. 12 month per year or 24 sampling event per year. 
-# Seleccione 12 por Simpson, del siguiente enlace
-# https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
-
-# bs= basis spline
-# Smooth classes are invoked directly by s terms
-# https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
-
-# nmonth por por Simpson, del siguiente enlace
-# https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
-
-# Note that we use the bf() argument to specify this nonlinear model. 
-
-
 
 
 Trajectories <- read.csv("data/Trajectories.csv")
@@ -176,21 +156,6 @@ plot(conditional_effects(cc.qp_A.Bayes.cp), points = TRUE)
 pp_check(cc.qp_A.Bayes.cp, ndraws = 100)
 
 mcmc_plot(cc.qp_A.Bayes.cp, 
-          type = "areas",
-          prob = 0.95)
-
-
-# https://tem11010.github.io/regression_brms/
-# The pp_check allows for graphical posterior predictive checking. 
-# We can generate figures to compare the observed data to simulated 
-# data from the posterior predictive distribution. This is a great 
-# graphical way to evaluate your model.
-# Here, 'nsamples' refers to the number of draws from the posterior 
-#distribution to use to calculate yrep values.
-pp_check(cc.qp_A.Bayes.cc, ndraws = 100)
-
-
-mcmc_plot(cc.qp_A.Bayes_mod, 
           type = "areas",
           prob = 0.95)
 
