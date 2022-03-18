@@ -29,10 +29,6 @@ rm(list=ls())
 # method = "REML" = REML is not the default method.  So, we need to add
 # ?choose.k
 
-# bs= basis spline
-# Smooth classes are invoked directly by s terms
-# https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
-
 # best model: high R-sq, low AIC, low REML
 
 Trajectories<- read.csv("data/Trajectories.csv")

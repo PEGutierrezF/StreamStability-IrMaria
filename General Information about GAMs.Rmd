@@ -8,19 +8,27 @@ output:
 
 ## Model construction 
 
+### s (Both GAMs)
 s = represent smooth function
+```{r, eval=FALSE}
+gam(value ~s(date,...
+             
+```
 
-### Define knots
+
+### Define knots (Both GAMs)
 k = knots. 12 month per year or 24 sampling event per year. 
 Seleccione 12 por Simpson, del siguiente enlace
 https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
 
-### bs= basis spline
+
+### bs= basis spline (Both GAMs)
 bs= basis spline
 Smooth classes are invoked directly by s terms
 https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
 
-### bf
+
+### bf (Bayesian GAMs)
 Note that we use the bf() argument to specify this nonlinear model. 
 
 
@@ -47,3 +55,21 @@ distribution to use to calculate yrep values.
 ```{r, eval=FALSE}
 pp_check(model, nsamples=100)
 ```
+
+
+### bayes_r2
+
+Bayes R2 quantifies the expected fit or variance explained by a model
+
+We can also get an R-squared estimate for our model, 
+thanks to a newly-developed method from Andrew Gelman, 
+Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
+http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
+https://tem11010.github.io/regression_brms/
+
+r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
+
+```{r, eval=FALSE}
+bayes_R2(model)
+```
+

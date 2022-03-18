@@ -163,18 +163,12 @@ mcmc_plot(cc.qp_A.Bayes.cp,
 
 # Evaluate models ---------------------------------------------------------
 
-# https://tem11010.github.io/regression_brms/
-# We can also get an R-squared estimate for our model, 
-# thanks to a newly-developed method from Andrew Gelman, 
-#Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
-# http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
 bayes_R2(cc.qp_A.Bayes.cc)
 bayes_R2(cc.qp_A.Bayes.cr)
 bayes_R2(cc.qp_A.Bayes.cs)
 bayes_R2(cc.qp_A.Bayes.ps)
 bayes_R2(cc.qp_A.Bayes.cp)
-# r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
-# Bayes R2 quantifies the expected fit or variance explained by a model
+
 
 loo(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr, 
     cc.qp_A.Bayes.cs, cc.qp_A.Bayes.ps, 
