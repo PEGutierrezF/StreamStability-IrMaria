@@ -42,11 +42,11 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 # Model 1 "cr" --------------------------------------------------------------
 
-priors.cc_A.cr = get_prior(value ~ s(date, bs="cr", k=5),
+priors.cc_A.cr = get_prior(value ~ s(date, bs="cr",k = -1),
                 data = cc_A, family = gaussian())
 priors.cc_A.cr
 
-cc.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k=5)),
+cc.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr",k = -1)),
           data = cc_A, family = gaussian(), cores = 1, seed = 14,
           warmup = 8000, iter = 10000, thin = 1, refresh = 0,
           control = list(adapt_delta = 0.99),
