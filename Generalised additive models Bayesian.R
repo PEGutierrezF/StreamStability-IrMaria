@@ -35,6 +35,9 @@ rm(list=ls())
 
 # Note that we use the bf() argument to specify this nonlinear model. 
 
+
+
+
 Trajectories <- read.csv("data/Trajectories.csv")
 head(Trajectories)
 
@@ -53,20 +56,7 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 # Model 1 "cr" --------------------------------------------------------------
 
-knots <- list( c(1, 12))
-
-priors.cc_A.cc = get_prior(value ~ s(nmonth, bs="cc", k = 12),
-                           data = cc_A, family = gaussian())
-priors.cc_A.cc
-
-
-cc.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(nmonth, bs="cc", k = 12)),
-                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
-                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
-                              refresh = 0,control = list(adapt_delta = 0.99),
-                              prior = priors.cc_A.cc)
-summary(cc.qp_A.Bayes.cc)
-plot(cc.qp_A.Bayes.cc)
+knots <- list( c(1, 12)) 
 
 priors.cc_A.cr = get_prior(value ~ s(date, bs="cr", k = 12),
                            data = cc_A, family = gaussian())
@@ -75,7 +65,7 @@ priors.cc_A.cr
 cc.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k = 12)),
                               knots = knots, data = cc_A, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
-                              refresh = 0,control = list(adapt_delta = 0.99),
+                              refresh = 0, control = list(adapt_delta = 0.99),
                               prior = priors.cc_A.cr)
 
 summary(cc.qp_A.Bayes.cr)
