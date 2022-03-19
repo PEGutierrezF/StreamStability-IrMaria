@@ -38,15 +38,15 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 # Model 1 "cc" ------------------------------------------------------------
 knots <- list( c(1, 12)) 
 
-priors.cc_A.cs = get_prior(value ~ s(date, bs="cs", k = 12),
+priors.cc_A.cc = get_prior(value ~ s(date, bs="cc", k = 12),
                            data = cc_A, family = gaussian())
-priors.cc_A.cs
+priors.cc_A.cc
 
-cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 12)),
+cc.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 12)),
                               knots = knots, data = cc_A, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                               refresh = 0, control = list(adapt_delta = 0.99),
-                              prior = priors.cc_A.cs)
+                              prior = priors.cc_A.cc)
 
 summary(cc.qp_A.Bayes.cc)
 
@@ -57,9 +57,9 @@ plot(conditional_effects(cc.qp_A.Bayes.cc), points = TRUE)
 msms <- conditional_smooths(cc.qp_A.Bayes.cc)
 plot(msms)
 
-pp_check(cc.qp_A.Bayes.cc, ndraws = 100)
+pp_check(cc.qp_A.Bayes.cs, ndraws = 100)
 
-mcmc_plot(cc.qp_A.Bayes.cc, 
+mcmc_plot(cc.qp_A.Bayes.cs, 
           type = "areas",
           prob = 0.95)
 
@@ -186,8 +186,12 @@ waic.cs <- waic(cc.qp_A.Bayes.cs)
 waic.ps <- waic(cc.qp_A.Bayes.ps)
 waic.cp <- waic(cc.qp_A.Bayes.cp)
 
-loo_compare(waic.cc, waic.cr,waic.cs,waic.ps,waic.cp)  
+loo_compare(waic.cc, waic.cr, waic.cs, waic.ps, waic.cp)  
 
+
+model_weights(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr, 
+    cc.qp_A.Bayes.cs, cc.qp_A.Bayes.ps, 
+    cc.qp_A.Bayes.cp, weights = "loo")
 
 
 ###########################################################################

@@ -65,7 +65,7 @@ pp_check(model, nsamples=100)
 ```
 
 
-### bayes_r2
+### **bayes_r2**
 
 Bayes R2 quantifies the expected fit or variance explained by a model
 
@@ -81,3 +81,25 @@ r2(cc.qp_A.Bayes_mod) Existe esta otra, pero usare la de Gelman
 bayes_R2(model)
 ```
 
+### **loo_compare()**
+
+The loo_compare() output rank orders the models such that the best fitting model appears on top. All models receive a difference score relative to the best model.
+https://bookdown.org/ajkurz/DBDA_recoded/model-comparison-and-hierarchical-modeling.html
+
+
+### **brms::model_weights()**
+
+I don't know that I'd call these weights probabilities, but they do sum to one.
+https://bookdown.org/ajkurz/DBDA_recoded/model-comparison-and-hierarchical-modeling.html
+
+
+
+### **AIC**
+
+AIC and DIC are not recommended in particular not with Bayesian models. So it is not necessarily surprising that the results differ (buerkner).\
+
+https://discourse.mc-stan.org/t/waic-aicc-and-dic-differences-in-a-bernoulli-glmm-in-brms-vs-glmmtmb/5966
+
+Gelman, A., Hwang, J., & Vehtari, A. (2014). Understanding predictive information criteria for Bayesian models. Statistics and computing, 24 (6), 997-1016.
+
+Vehtari, A., Gelman, A., & Gabry, J. (2017). Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC. Statistics and Computing , 27 (5), 1413-1432.
