@@ -49,6 +49,8 @@ cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 12)),
                               prior = priors.cc_A.cs)
 
 summary(cc.qp_A.Bayes.cc)
+
+
 plot(cc.qp_A.Bayes.cc)
 
 plot(conditional_effects(cc.qp_A.Bayes.cc), points = TRUE)
@@ -105,6 +107,10 @@ cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 12)),
 
 summary(cc.qp_A.Bayes.cs)
 plot(cc.qp_A.Bayes.cs)
+
+cc.qp_A.Bayes.cs%>%
+  plot(combo = c("hist", "trace"), widths = c(1, 1.5),
+    theme = theme_bw(base_size = 16))
 
 plot(conditional_effects(cc.qp_A.Bayes.cs), points = TRUE)
 msms <- conditional_smooths(cc.qp_A.Bayes.cs)
