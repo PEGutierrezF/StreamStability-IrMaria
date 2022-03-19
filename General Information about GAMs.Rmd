@@ -6,23 +6,22 @@ output:
   pdf_document: default
 ---
 
-## Model construction 
+## **Model construction** 
 
-### s (Both GAMs)
+### **s (Both GAMs)**
 s = represent smooth function
 ```{r, eval=FALSE}
 gam(value ~s(date,...
-             
 ```
 
 
-### Define knots (Both GAMs)
+### **Define knots (Both GAMs)**
 k = knots. 12 month per year or 24 sampling event per year.\
 Seleccione 12 por Simpson, del siguiente enlace:\
 https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
 
 
-### bs= basis spline (Both GAMs)
+### **bs= basis spline (Both GAMs)**
 bs= basis spline.\
 Smooth classes are invoked directly by s terms.\
 https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
@@ -30,19 +29,21 @@ https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
 ```{r, eval=FALSE}
 brms::brm(bf(value ~ s(date, bs="cs"...))
 ```
-#### Cubic regression splines & A cyclic cubic regression spline\
+
+#### **Cubic regression splines & A cyclic cubic regression spline.**\
 bs="cr". These have a cubic spline basis defined by a modest sized set of knots spread evenly through the covariate values.\
 bs="cs" specifies a shrinkage version of "cr".\
 bs="cc" specifies a cyclic cubic regression splines. i.e. a penalized cubic regression splines whose ends match, up to second derivative.\
 
-#### P-splines
-bs="ps". 
 
-### bf (Bayesian GAMs)
-Note that we use the bf() argument to specify this nonlinear model. 
+#### **P-splines**\
+bs="ps".
+
+#### **bf (Bayesian GAMs)**
+Note that we use the bf() argument to specify this nonlinear model.
 
 
-## Output
+## **Output**
 
 Hay que ver el Smooth Terms: ->   sds(sdate_1) -> 
 sds(stimes_1) is the variance parameter, which has the effect of controlling 
@@ -50,17 +51,14 @@ the wiggliness of the smooth - the larger this value the more wiggly the smooth.
 https://fromthebottomoftheheap.net/2018/04/21/fitting-gams-with-brms/
 
 
-## Check models
+## **Check models**
 
 ### pp_check()
+The pp_check allows for graphical posterior predictive checking. We can generate figures to compare the observed data to simulated data from the posterior predictive distribution. This is a great 
+graphical way to evaluate your model.\
 https://tem11010.github.io/regression_brms/
-The pp_check allows for graphical posterior predictive checking. 
-We can generate figures to compare the observed data to simulated 
-data from the posterior predictive distribution. This is a great 
-graphical way to evaluate your model.
 
-Here, nsamples refers to the number of draws from the posterior 
-distribution to use to calculate yrep values.
+Here, nsamples refers to the number of draws from the posterior distribution to use to calculate yrep values.
 
 ```{r, eval=FALSE}
 pp_check(model, nsamples=100)
