@@ -53,7 +53,7 @@ https://fromthebottomoftheheap.net/2018/04/21/fitting-gams-with-brms/
 
 ## **Check models**
 
-### pp_check()
+### **pp_check()**
 The pp_check allows for graphical posterior predictive checking. We can generate figures to compare the observed data to simulated data from the posterior predictive distribution. This is a great 
 graphical way to evaluate your model.\
 https://tem11010.github.io/regression_brms/
@@ -83,12 +83,16 @@ bayes_R2(model)
 
 ### **loo_compare()**
 
+function en el paquete brm
+
 The loo_compare() output rank orders the models such that the best fitting model appears on top. All models receive a difference score relative to the best model.\
 https://bookdown.org/ajkurz/DBDA_recoded/model-comparison-and-hierarchical-modeling.html
 
 
 Note that the best model is always on top, and the comparison is already on the difference score. Following a two standard error heuristic (but see here), since the difference in the elpd scores is more than twice its standard error, we would choose the power law model as the better model. But wait - what do these warnings mean? Let's look at the output of the loo function for the exponential law (suppressing the warning):\
 https://www.r-bloggers.com/2019/05/bayesian-modeling-using-stan-a-case-study/
+
+
 
 ### **brms::model_weights()**
 
