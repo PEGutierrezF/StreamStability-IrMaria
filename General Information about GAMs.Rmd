@@ -30,7 +30,7 @@ https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html
 brms::brm(bf(value ~ s(date, bs="cs"...))
 ```
 
-#### **Cubic regression splines & A cyclic cubic regression spline.**\
+#### **Cubic regression splines & A cyclic cubic regression spline**\
 bs="cr". These have a cubic spline basis defined by a modest sized set of knots spread evenly through the covariate values.\
 bs="cs" specifies a shrinkage version of "cr".\
 bs="cc" specifies a cyclic cubic regression splines. i.e. a penalized cubic regression splines whose ends match, up to second derivative.\
@@ -71,7 +71,7 @@ Bayes R2 quantifies the expected fit or variance explained by a model
 
 We can also get an R-squared estimate for our model, 
 thanks to a newly-developed method from Andrew Gelman, 
-Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here.
+Ben Goodrich, Jonah Gabry and Imad Ali, with an explanation here:\
 http://www.stat.columbia.edu/~gelman/research/unpublished/bayes_R2.pdf
 https://tem11010.github.io/regression_brms/
 
@@ -83,13 +83,16 @@ bayes_R2(model)
 
 ### **loo_compare()**
 
-The loo_compare() output rank orders the models such that the best fitting model appears on top. All models receive a difference score relative to the best model.
+The loo_compare() output rank orders the models such that the best fitting model appears on top. All models receive a difference score relative to the best model.\
 https://bookdown.org/ajkurz/DBDA_recoded/model-comparison-and-hierarchical-modeling.html
 
 
+Note that the best model is always on top, and the comparison is already on the difference score. Following a two standard error heuristic (but see here), since the difference in the elpd scores is more than twice its standard error, we would choose the power law model as the better model. But wait - what do these warnings mean? Let's look at the output of the loo function for the exponential law (suppressing the warning):\
+https://www.r-bloggers.com/2019/05/bayesian-modeling-using-stan-a-case-study/
+
 ### **brms::model_weights()**
 
-I don't know that I'd call these weights probabilities, but they do sum to one.
+I don't know that I'd call these weights probabilities, but they do sum to one.\
 https://bookdown.org/ajkurz/DBDA_recoded/model-comparison-and-hierarchical-modeling.html
 
 

@@ -176,17 +176,13 @@ bayes_R2(cc.qp_A.Bayes.ps)
 bayes_R2(cc.qp_A.Bayes.cp)
 
 
-loo(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr, 
-    cc.qp_A.Bayes.cs, cc.qp_A.Bayes.ps, 
-    cc.qp_A.Bayes.cp)
+loo.cc <- loo(cc.qp_A.Bayes.cc)
+loo.cr <- loo(cc.qp_A.Bayes.cr)
+loo.cs <- loo(cc.qp_A.Bayes.cs)
+loo.ps <- loo(cc.qp_A.Bayes.ps)
+loo.cp <- loo(cc.qp_A.Bayes.cp)
 
-waic.cc <- waic(cc.qp_A.Bayes.cc)
-waic.cr <- waic(cc.qp_A.Bayes.cr)
-waic.cs <- waic(cc.qp_A.Bayes.cs)
-waic.ps <- waic(cc.qp_A.Bayes.ps)
-waic.cp <- waic(cc.qp_A.Bayes.cp)
-
-loo_compare(waic.cc, waic.cr, waic.cs, waic.ps, waic.cp)  
+loo_compare(loo.cc, loo.cr, loo.cs, loo.ps, loo.cp)  
 
 
 model_weights(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr, 
