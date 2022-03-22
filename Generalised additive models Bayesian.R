@@ -187,7 +187,7 @@ loo_compare(loo.cc, loo.cr, loo.cs, loo.ps, loo.cp)
 
 model_weights(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr, 
     cc.qp_A.Bayes.cs, cc.qp_A.Bayes.ps, 
-    cc.qp_A.Bayes.cp, weights = "waic") #loo
+    cc.qp_A.Bayes.cp, weights = "loo") #loo
 
 
 ###########################################################################
