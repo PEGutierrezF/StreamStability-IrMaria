@@ -110,7 +110,7 @@ plot(cc.qp_A.Bayes.cs)
 
 cc.qp_A.Bayes.cs%>%
   plot(combo = c("hist", "trace"), widths = c(1, 1.5),
-    theme = theme_bw(base_size = 16))
+       theme = theme_bw(base_size = 16))
 
 plot(conditional_effects(cc.qp_A.Bayes.cs), points = TRUE)
 msms <- conditional_smooths(cc.qp_A.Bayes.cs)
@@ -186,8 +186,8 @@ loo_compare(loo.cc, loo.cr, loo.cs, loo.ps, loo.cp)
 
 
 model_weights(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr, 
-    cc.qp_A.Bayes.cs, cc.qp_A.Bayes.ps, 
-    cc.qp_A.Bayes.cp, weights = "loo") #loo
+              cc.qp_A.Bayes.cs, cc.qp_A.Bayes.ps, 
+              cc.qp_A.Bayes.cp, weights = "loo") #loo
 
 
 ###########################################################################
