@@ -190,6 +190,8 @@ model_weights(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr,
               cc.qp_A.Bayes.cp, weights = "loo") #loo
 
 
+
+
 ###########################################################################
 # Canopy cover Prieta B --------------------------------------------------------
 # Normal distribution of value
