@@ -25,8 +25,8 @@ head(Trajectories)
 
 ###########################################################################
 # Canopy cover Prieta A --------------------------------------------------------
-# Normal distribution of value
 ###########################################################################
+# Normal distribution of value
 
 cc_A <- Trajectories %>%
   filter(stream =="QPA", variable =="canopy_cover") 
