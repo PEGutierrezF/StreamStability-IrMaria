@@ -36,20 +36,20 @@ cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 
 # Model 1 "cc" ------------------------------------------------------------
-knots <- list( c(1, 12)) 
 
 priors.cc_A.cc = get_prior(value ~ s(date, bs="cc", k = 5),
                            data = cc_A, family = gaussian())
 priors.cc_A.cc
 
 cc.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 5)),
-                              knots=knots, data = cc_A, family = gaussian(), cores = 1, 
+                              data = cc_A, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                               refresh = 0, control = list(adapt_delta = 0.99),
                               prior = priors.cc_A.cc)
 
 summary(cc.qp_A.Bayes.cc)
 cc.qp_A.Bayes.cc$fit
+
 
 plot(cc.qp_A.Bayes.cc)
 
@@ -65,7 +65,6 @@ mcmc_plot(cc.qp_A.Bayes.cs,
 
 # Model 2 "cr" --------------------------------------------------------------
 
-knots <- list( c(1, 12)) 
 
 priors.cc_A.cr = get_prior(value ~ s(date, bs="cr", k = 5),
                            data = cc_A, family = gaussian())
@@ -93,13 +92,11 @@ mcmc_plot(cc.qp_A.Bayes.cr,
 
 # Model 3 "cs" --------------------------------------------------------------
 
-knots <- list( c(1, 12)) 
-
-priors.cc_A.cs = get_prior(value ~ s(date, bs="cs", k = 12),
+priors.cc_A.cs = get_prior(value ~ s(date, bs="cs", k = 5),
                            data = cc_A, family = gaussian())
 priors.cc_A.cs
 
-cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 12)),
+cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 5)),
                               knots = knots, data = cc_A, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                               refresh = 0, control = list(adapt_delta = 0.99),
@@ -126,11 +123,11 @@ mcmc_plot(cc.qp_A.Bayes.cs,
 
 # Model 4 "ps" -----------------------------------------------------------------
 
-priors.cc_A.ps = get_prior(value ~ s(date, bs="ps", k=12),
+priors.cc_A.ps = get_prior(value ~ s(date, bs="ps", k=5),
                            data = cc_A, family = gaussian())
 
-cc.qp_A.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k=12)),
-                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+cc.qp_A.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k=5)),
+                              data = cc_A, family = gaussian(), cores = 1, 
                               seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
                               control = list(adapt_delta = 0.99),
                               prior = priors.cc_A.ps)
@@ -147,11 +144,11 @@ mcmc_plot(cc.qp_A.Bayes.ps,
 
 # Model 5 "cp" -----------------------------------------------------------------
 
-priors.cc_A.cp = get_prior(value ~ s(date, bs="cp", k=12),
+priors.cc_A.cp = get_prior(value ~ s(date, bs="cp", k=5),
                            data = cc_A, family = gaussian())
 
-cc.qp_A.Bayes.cp <- brms::brm(bf(value ~ s(date, bs="cp", k=12)),
-                              knots = knots, data = cc_A, family = gaussian(), cores = 1, 
+cc.qp_A.Bayes.cp <- brms::brm(bf(value ~ s(date, bs="cp", k=5)),
+                              data = cc_A, family = gaussian(), cores = 1, 
                               seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
                               control = list(adapt_delta = 0.99),
                               prior = priors.cc_A.cp)
