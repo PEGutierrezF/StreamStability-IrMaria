@@ -105,6 +105,7 @@ cc.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 12)),
                               refresh = 0, control = list(adapt_delta = 0.99),
                               prior = priors.cc_A.cs)
 
+
 summary(cc.qp_A.Bayes.cs)
 plot(cc.qp_A.Bayes.cs)
 
