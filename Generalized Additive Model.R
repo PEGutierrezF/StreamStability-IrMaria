@@ -9,7 +9,7 @@
 # pabloe.gutierrezfonseca@gmail.com
 # ---------------------------------------------
 
- 
+
 
 
 # http://environmentalcomputing.net/intro-to-gams/
@@ -25,7 +25,7 @@ rm(list=ls())
 # Seleccione 12 por Simpson, del siguiente enlace
 # https://fromthebottomoftheheap.net/2014/05/09/modelling-seasonal-data-with-gam/
 
-  
+
 # method = "REML" = REML is not the default method.  So, we need to add
 # ?choose.k
 
@@ -86,7 +86,7 @@ gam.check(cc.qp_B.mod_G)
 
 
 cc.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=5), data=cc_B, 
-                   family=scat(link="identity"), method = "REML") # best model
+                     family=scat(link="identity"), method = "REML") # best model
 summary(cc.qp_B.mod_S)
 par(mfrow = c(2,2))
 gam.check(cc.qp_B.mod_S)
@@ -97,7 +97,7 @@ AIC(cc.qp_B.mod_G,cc.qp_B.mod_S)
 
 # Best family family=scat()
 cc.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=5), 
-                   family=scat(link="identity"), data=cc_B, method = "REML") # best model
+                     family=scat(link="identity"), data=cc_B, method = "REML") # best model
 summary(cc.qp_B.mod_S)
 par(mfrow = c(2,2))
 gam.check(cc.qp_B.mod_S)
@@ -105,7 +105,7 @@ gam.check(cc.qp_B.mod_S)
 
 
 cc.qp_B.mod_S1 <- gam(value ~s(date, bs="ps", k=5), 
-                    family=scat(link="identity"), data=cc_B, method = "REML")
+                      family=scat(link="identity"), data=cc_B, method = "REML")
 summary(cc.qp_B.mod_S1)
 gam.check(cc.qp_B.mod_S1)
 
@@ -173,7 +173,7 @@ gam.check(ll.qp_B.mod_G)
 
 
 ll.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=10), data = LL_B, # best model
-                          family=scat(link="identity"), method = "REML") 
+                     family=scat(link="identity"), method = "REML") 
 summary(ll.qp_B.mod_S)
 par(mfrow = c(2,2))
 gam.check(ll.qp_B.mod_S)
@@ -187,11 +187,11 @@ ll.qp_B.mod_S <- gam(value ~s(date, bs="cr", k=10), data = LL_B,
 summary(ll.qp_B.mod_S)
 
 ll.qp_B.mod_S1 <- gam(value ~s(date, bs="ps", k=10), data = LL_B, # best model
-                    family=scat(link="identity"), method = "REML")
+                      family=scat(link="identity"), method = "REML")
 summary(ll.qp_B.mod_S1)
 
 ll.qp_B.mod_S2 <- gam(value ~s(date, bs="ts", k=10), data = LL_B, 
-                    family=scat(link="identity"), method = "REML")
+                      family=scat(link="identity"), method = "REML")
 summary(ll.qp_B.mod_S2)
 
 
