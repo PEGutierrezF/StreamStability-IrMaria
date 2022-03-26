@@ -196,7 +196,6 @@ model_weights(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr,
 
 ###########################################################################
 # Canopy cover Prieta B --------------------------------------------------------
-# Normal distribution of value
 ###########################################################################
 
 cc_B <- Trajectories %>%
@@ -205,7 +204,6 @@ cc_B <- Trajectories %>%
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
 
-############################ Best model -> cc #############################
 # Model 1 Prieta_B "cc" ------------------------------------------------------------
 
 priors.cc_B.cc = get_prior(value ~ s(date, bs="cc", k = 5),
@@ -364,5 +362,177 @@ model_weights(cc.qp_B.Bayes.cc, cc.qp_B.Bayes.cr,
               cc.qp_B.Bayes.cp, weights = "loo") #loo
 
 
+
+###########################################################################
+# Leaf litter Prieta A --------------------------------------------------------
+###########################################################################
+
+rm(list=ls())
+Trajectories<- read.csv("data/Trajectories.csv")
+
+ll.A <- Trajectories %>%
+  filter(stream =="QPA", variable =="Leaf_litter")
+
+ll.A$date <- as.integer(as.Date(ll.A$date, format = "%Y-%m-%d"))
+descdist(ll.A$value, discrete=FALSE, boot=500)
+
+
+
+# Model 1 Leaf litter Prieta A "cc" -----------------------------------------------
+
+priors.ll_A.cc = get_prior(value ~ s(date, bs="cc", k = 8),
+                           data = ll.A, family = gaussian())
+priors.ll_A.cc
+
+ll.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 8)),
+                              data = ll.A, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.ll_A.cc)
+
+summary(ll.qp_A.Bayes.cc)
+
+posterior_summary(ll.qp_A.Bayes.cc)
+ll.qp_A.Bayes.cc$fit
+
+prior_summary(ll.qp_A.Bayes.cc)
+get_posterior_beliefs_about_hypotheses(ll.qp_A.Bayes.cc)
+
+plot(ll.qp_A.Bayes.cc)
+
+plot(conditional_effects(ll.qp_A.Bayes.cc), points = TRUE)
+msms <- conditional_smooths(ll.qp_A.Bayes.cc)
+plot(msms)
+
+pp_check(ll.qp_A.Bayes.cc, ndraws = 100)
+
+mcmc_plot(ll.qp_A.Bayes.cc, 
+          type = "areas",
+          prob = 0.95)
+
+
+# Model 2 Leaf litter Prieta A "cr" ----------------------------------------
+
+
+priors.ll_A.cr = get_prior(value ~ s(date, bs="cr", k = 8),
+                           data = ll.A, family = gaussian())
+priors.ll_A.cr
+
+ll.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k = 8)),
+                              data = ll.A, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.ll_A.cr)
+
+summary(cc.qp_B.Bayes.cr)
+plot(cc.qp_B.Bayes.cr)
+
+plot(conditional_effects(cc.qp_B.Bayes.cr), points = TRUE)
+msms <- conditional_smooths(cc.qp_B.Bayes.cr)
+plot(msms)
+
+pp_check(cc.qp_B.Bayes.cr, ndraws = 100)
+
+mcmc_plot(cc.qp_B.Bayes.cr, 
+          type = "areas",
+          prob = 0.95)
+
+
+# Model 3 Leaf litter Prieta A "cs" -----------------------------------------------------
+
+priors.ll_A.cs = get_prior(value ~ s(date, bs="cs", k = 8),
+                           data = ll.A, family = gaussian())
+priors.ll_A.cs
+
+ll.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 8)),
+                              data = ll.A, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.ll_A.cs)
+
+
+summary(ll.qp_A.Bayes.cs)
+plot(ll.qp_A.Bayes.cs)
+
+ll.qp_A.Bayes.cs%>%
+  plot(combo = c("hist", "trace"), widths = c(1, 1.5),
+       theme = theme_bw(base_size = 16))
+
+plot(conditional_effects(ll.qp_A.Bayes.cs), points = TRUE)
+msms <- conditional_smooths(ll.qp_A.Bayes.cs)
+plot(msms)
+
+pp_check(ll.qp_A.Bayes.cs, ndraws = 100)
+
+mcmc_plot(ll.qp_A.Bayes.cs, 
+          type = "areas",
+          prob = 0.95)
+
+
+# Model 4 Leaf litter Prieta A "ps" -----------------------------------------------------
+
+priors.ll_A.ps = get_prior(value ~ s(date, bs="ps", k = 8),
+                           data = ll.A, family = gaussian())
+
+ll.qp_A.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k = 8)),
+                              data = ll.A, family = gaussian(), cores = 1, 
+                              seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+                              control = list(adapt_delta = 0.99),
+                              prior = priors.ll_A.ps)
+
+summary(ll.qp_A.Bayes.ps)
+plot(ll.qp_A.Bayes.ps)
+plot(conditional_effects(ll.qp_A.Bayes.ps), points = TRUE)
+
+pp_check(ll.qp_A.Bayes.ps, ndraws = 100)
+
+mcmc_plot(ll.qp_A.Bayes.ps, 
+          type = "areas",
+          prob = 0.95)
+
+# Model 5 Leaf litter Prieta A "cp" --------------------------------------------------------
+
+priors.ll_A.cp = get_prior(value ~ s(date, bs="cp", k = 8),
+                           data = ll.A, family = gaussian())
+
+ll.qp_A.Bayes.cp <- brms::brm(bf(value ~ s(date, bs="cp", k=8)),
+                              data = ll.A, family = gaussian(), cores = 1, 
+                              seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+                              control = list(adapt_delta = 0.99),
+                              prior = priors.ll_A.cp)
+
+summary(ll.qp_A.Bayes.cp)
+plot(ll.qp_A.Bayes.cp)
+plot(conditional_effects(ll.qp_A.Bayes.cp), points = TRUE)
+
+pp_check(ll.qp_A.Bayes.cp, ndraws = 100)
+
+mcmc_plot(ll.qp_A.Bayes.cp, 
+          type = "areas",
+          prob = 0.95)
+
+
+
+# Evaluate models ---------------------------------------------------------
+
+bayes_R2(ll.qp_A.Bayes.cc)
+bayes_R2(ll.qp_A.Bayes.cr)
+bayes_R2(ll.qp_A.Bayes.cs)
+bayes_R2(ll.qp_A.Bayes.ps)
+bayes_R2(ll.qp_A.Bayes.cp)
+
+
+loo.cc <- loo(ll.qp_A.Bayes.cc)
+loo.cr <- loo(ll.qp_A.Bayes.cr)
+loo.cs <- loo(ll.qp_A.Bayes.cs)
+loo.ps <- loo(ll.qp_A.Bayes.ps)
+loo.cp <- loo(ll.qp_A.Bayes.cp)
+
+loo_compare(loo.cc, loo.cr, loo.cs, loo.ps, loo.cp)  
+
+
+model_weights(ll.qp_A.Bayes.cc, ll.qp_A.Bayes.cr, 
+              ll.qp_A.Bayes.cs, ll.qp_A.Bayes.ps, 
+              ll.qp_A.Bayes.cp, weights = "loo") #loo
 
 
