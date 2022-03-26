@@ -34,7 +34,7 @@ cc_A <- Trajectories %>%
 cc_A$date <- as.integer(as.Date(cc_A$date, format = "%Y-%m-%d"))
 
 
-
+############################ Best model -> cc #############################
 # Model 1 "cc" ------------------------------------------------------------
 
 priors.cc_A.cc = get_prior(value ~ s(date, bs="cc", k = 5),
@@ -48,8 +48,12 @@ cc.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 5)),
                               prior = priors.cc_A.cc)
 
 summary(cc.qp_A.Bayes.cc)
+
+posterior_summary(cc.qp_A.Bayes.cc)
 cc.qp_A.Bayes.cc$fit
 
+prior_summary(cc.qp_A.Bayes.cc)
+get_posterior_beliefs_about_hypotheses(cc.qp_A.Bayes.cc)
 
 plot(cc.qp_A.Bayes.cc)
 
@@ -57,9 +61,9 @@ plot(conditional_effects(cc.qp_A.Bayes.cc), points = TRUE)
 msms <- conditional_smooths(cc.qp_A.Bayes.cc)
 plot(msms)
 
-pp_check(cc.qp_A.Bayes.cs, ndraws = 100)
+pp_check(cc.qp_A.Bayes.cc, ndraws = 100)
 
-mcmc_plot(cc.qp_A.Bayes.cs, 
+mcmc_plot(cc.qp_A.Bayes.cc, 
           type = "areas",
           prob = 0.95)
 
@@ -202,18 +206,164 @@ descdist(cc_B$value, discrete=FALSE, boot=500)
 
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
-# Bayesian model
-#examine the prior options and the brms default
 
-cc.qp_B.Bayes_mod <- brm(bf(value ~ s(date)),
-                         data = cc_B, family = gaussian(), cores = 1, seed = 17,
-                         iter = 4000, warmup = 2000, thin = 10, refresh = 0,
-                         control = list(adapt_delta = 0.99))
+############################ Best model -> cc #############################
+# Model 1 "cc" ------------------------------------------------------------
 
-summary(cc.qp_B.Bayes_mod)
+priors.cc_B.cc = get_prior(value ~ s(date, bs="cc", k = 5),
+                           data = cc_B, family = gaussian())
+priors.cc_B.cc
 
-msms_CC_QPB <- marginal_smooths(cc.qp_B.Bayes_mod)
-plot(msms_CC_QPB)
-pp_check(cc.qp_B.Bayes_mod)
+cc.qp_B.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 5)),
+                              data = cc_B, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.cc_B.cc)
+
+summary(cc.qp_B.Bayes.cc)
+
+posterior_summary(cc.qp_B.Bayes.cc)
+cc.qp_B.Bayes.cc$fit
+
+prior_summary(cc.qp_B.Bayes.cc)
+get_posterior_beliefs_about_hypotheses(cc.qp_B.Bayes.cc)
+
+plot(cc.qp_B.Bayes.cc)
+
+plot(conditional_effects(cc.qp_B.Bayes.cc), points = TRUE)
+msms <- conditional_smooths(cc.qp_B.Bayes.cc)
+plot(msms)
+
+pp_check(cc.qp_B.Bayes.cc, ndraws = 100)
+
+mcmc_plot(cc.qp_B.Bayes.cc, 
+          type = "areas",
+          prob = 0.95)
+
+# Model 2 "cr" --------------------------------------------------------------
+
+
+priors.cc_B.cr = get_prior(value ~ s(date, bs="cr", k = 5),
+                           data = cc_B, family = gaussian())
+priors.cc_B.cr
+
+cc.qp_B.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k = 5)),
+                              knots = knots, data = cc_B, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.cc_B.cr)
+
+summary(cc.qp_B.Bayes.cr)
+plot(cc.qp_B.Bayes.cr)
+
+plot(conditional_effects(cc.qp_B.Bayes.cr), points = TRUE)
+msms <- conditional_smooths(cc.qp_B.Bayes.cr)
+plot(msms)
+
+pp_check(cc.qp_B.Bayes.cr, ndraws = 100)
+
+mcmc_plot(cc.qp_B.Bayes.cr, 
+          type = "areas",
+          prob = 0.95)
+
+
+# Model 3 "cs" --------------------------------------------------------------
+
+priors.cc_B.cs = get_prior(value ~ s(date, bs="cs", k = 5),
+                           data = cc_B, family = gaussian())
+priors.cc_B.cs
+
+cc.qp_B.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 5)),
+                              knots = knots, data = cc_B, family = gaussian(), cores = 1, 
+                              seed = 14, warmup = 8000, iter = 10000, thin = 1, 
+                              refresh = 0, control = list(adapt_delta = 0.99),
+                              prior = priors.cc_B.cs)
+
+
+summary(cc.qp_B.Bayes.cs)
+plot(cc.qp_B.Bayes.cs)
+
+cc.qp_B.Bayes.cs%>%
+  plot(combo = c("hist", "trace"), widths = c(1, 1.5),
+       theme = theme_bw(base_size = 16))
+
+plot(conditional_effects(cc.qp_B.Bayes.cs), points = TRUE)
+msms <- conditional_smooths(cc.qp_B.Bayes.cs)
+plot(msms)
+
+pp_check(cc.qp_B.Bayes.cs, ndraws = 100)
+
+mcmc_plot(cc.qp_B.Bayes.cs, 
+          type = "areas",
+          prob = 0.95)
+
+
+# Model 4 "ps" -----------------------------------------------------------------
+
+priors.cc_B.ps = get_prior(value ~ s(date, bs="ps", k=5),
+                           data = cc_B, family = gaussian())
+
+cc.qp_B.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k=5)),
+                              data = cc_B, family = gaussian(), cores = 1, 
+                              seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+                              control = list(adapt_delta = 0.99),
+                              prior = priors.cc_B.ps)
+
+summary(cc.qp_B.Bayes.ps)
+plot(cc.qp_B.Bayes.ps)
+plot(conditional_effects(cc.qp_B.Bayes.ps), points = TRUE)
+
+pp_check(cc.qp_B.Bayes.ps, ndraws = 100)
+
+mcmc_plot(cc.qp_B.Bayes.ps, 
+          type = "areas",
+          prob = 0.95)
+
+# Model 5 "cp" -----------------------------------------------------------------
+
+priors.cc_B.cp = get_prior(value ~ s(date, bs="cp", k=5),
+                           data = cc_B, family = gaussian())
+
+cc.qp_B.Bayes.cp <- brms::brm(bf(value ~ s(date, bs="cp", k=5)),
+                              data = cc_B, family = gaussian(), cores = 1, 
+                              seed = 14,warmup = 8000, iter = 10000, thin = 1, refresh = 0,
+                              control = list(adapt_delta = 0.99),
+                              prior = priors.cc_B.cp)
+
+summary(cc.qp_B.Bayes.cp)
+plot(cc.qp_B.Bayes.cp)
+plot(conditional_effects(cc.qp_B.Bayes.cp), points = TRUE)
+
+pp_check(cc.qp_A.Bayes.cp, ndraws = 100)
+
+mcmc_plot(cc.qp_B.Bayes.cp, 
+          type = "areas",
+          prob = 0.95)
+
+
+
+# Evaluate models ---------------------------------------------------------
+
+bayes_R2(cc.qp_B.Bayes.cc)
+bayes_R2(cc.qp_B.Bayes.cr)
+bayes_R2(cc.qp_B.Bayes.cs)
+bayes_R2(cc.qp_B.Bayes.ps)
+bayes_R2(cc.qp_B.Bayes.cp)
+
+
+loo.cc <- loo(cc.qp_B.Bayes.cc)
+loo.cr <- loo(cc.qp_B.Bayes.cr)
+loo.cs <- loo(cc.qp_B.Bayes.cs)
+loo.ps <- loo(cc.qp_B.Bayes.ps)
+loo.cp <- loo(cc.qp_B.Bayes.cp)
+
+loo_compare(loo.cc, loo.cr, loo.cs, loo.ps, loo.cp)  
+
+
+model_weights(cc.qp_B.Bayes.cc, cc.qp_B.Bayes.cr, 
+              cc.qp_B.Bayes.cs, cc.qp_B.Bayes.ps, 
+              cc.qp_B.Bayes.cp, weights = "loo") #loo
+
+
 
 
