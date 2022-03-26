@@ -202,13 +202,11 @@ model_weights(cc.qp_A.Bayes.cc, cc.qp_A.Bayes.cr,
 cc_B <- Trajectories %>%
   filter(stream =="QPB", variable =="canopy_cover")
 
-descdist(cc_B$value, discrete=FALSE, boot=500)
-
 cc_B$date <- as.integer(as.Date(cc_B$date, format = "%Y-%m-%d"))
 
 
 ############################ Best model -> cc #############################
-# Model 1 "cc" ------------------------------------------------------------
+# Model 1 Prieta_B "cc" ------------------------------------------------------------
 
 priors.cc_B.cc = get_prior(value ~ s(date, bs="cc", k = 5),
                            data = cc_B, family = gaussian())
@@ -240,7 +238,8 @@ mcmc_plot(cc.qp_B.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-# Model 2 "cr" --------------------------------------------------------------
+############################ Best model -> cr #############################
+# Model 2 Prieta_B "cr" ---------------------------------------------------
 
 
 priors.cc_B.cr = get_prior(value ~ s(date, bs="cr", k = 5),
@@ -248,7 +247,7 @@ priors.cc_B.cr = get_prior(value ~ s(date, bs="cr", k = 5),
 priors.cc_B.cr
 
 cc.qp_B.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k = 5)),
-                              knots = knots, data = cc_B, family = gaussian(), cores = 1, 
+                              data = cc_B, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                               refresh = 0, control = list(adapt_delta = 0.99),
                               prior = priors.cc_B.cr)
@@ -267,14 +266,14 @@ mcmc_plot(cc.qp_B.Bayes.cr,
           prob = 0.95)
 
 
-# Model 3 "cs" --------------------------------------------------------------
+# Model 3 Canopy cover Prieta_B "cs" -----------------------------------------------------
 
 priors.cc_B.cs = get_prior(value ~ s(date, bs="cs", k = 5),
                            data = cc_B, family = gaussian())
 priors.cc_B.cs
 
 cc.qp_B.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 5)),
-                              knots = knots, data = cc_B, family = gaussian(), cores = 1, 
+                              data = cc_B, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                               refresh = 0, control = list(adapt_delta = 0.99),
                               prior = priors.cc_B.cs)
@@ -298,7 +297,7 @@ mcmc_plot(cc.qp_B.Bayes.cs,
           prob = 0.95)
 
 
-# Model 4 "ps" -----------------------------------------------------------------
+# Model 4 Canopy cover Prieta_B "ps" -----------------------------------------------------
 
 priors.cc_B.ps = get_prior(value ~ s(date, bs="ps", k=5),
                            data = cc_B, family = gaussian())
@@ -319,7 +318,7 @@ mcmc_plot(cc.qp_B.Bayes.ps,
           type = "areas",
           prob = 0.95)
 
-# Model 5 "cp" -----------------------------------------------------------------
+# Model 5 Canopy cover Prieta_B "cp" --------------------------------------------------------
 
 priors.cc_B.cp = get_prior(value ~ s(date, bs="cp", k=5),
                            data = cc_B, family = gaussian())
