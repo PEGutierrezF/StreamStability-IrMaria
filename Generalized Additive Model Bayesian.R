@@ -1070,6 +1070,7 @@ miv.A$date <- as.integer(as.Date(miv.A$date, format = "%Y-%m-%d"))
 descdist(miv.A$value, discrete=FALSE, boot=500)
 hist(miv.A$value)
 
+############################ Best model -> cc #####################################
 # Model 1 Macroinvertebrates Prieta A "cc" -----------------------------------------------
 
 priors.miv_A.cc = get_prior(value ~ s(date, bs="cc", k = 5),
@@ -1101,14 +1102,14 @@ mcmc_plot(miv.qp_A.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-############################ Best model -> cr #####################################
+
 # Model 2 Macroinvertebrates Prieta A "cr" ----------------------------------------
 
 priors.miv_A.cr = get_prior(value ~ s(date, bs="cr", k = 5),
                             data = miv.A, family = gaussian())
 
 miv.qp_A.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k = 5)),
-                                data = ch.A, family = gaussian(), cores = 1, 
+                                data = miv.A, family = gaussian(), cores = 1, 
                                 seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                                 refresh = 0, control = list(adapt_delta = 0.99),
                                 prior = priors.miv_A.cr)
@@ -1274,14 +1275,14 @@ mcmc_plot(miv.qp_B.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-############################ Best model -> cr #####################################
+
 # Model 2 Macroinvertebrates Prieta B "cr" ----------------------------------------
 
 priors.miv_B.cr = get_prior(value ~ s(date, bs="cr", k = 5),
                             data = miv.B, family = gaussian())
 
 miv.qp_B.Bayes.cr <- brms::brm(bf(value ~ s(date, bs="cr", k = 5)),
-                               data = ch.B, family = gaussian(), cores = 1, 
+                               data = miv.B, family = gaussian(), cores = 1, 
                                seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                                refresh = 0, control = list(adapt_delta = 0.99),
                                prior = priors.miv_B.cr)
@@ -1299,11 +1300,11 @@ mcmc_plot(miv.qp_B.Bayes.cr,
           type = "areas",
           prob = 0.95)
 
-
+############################ Best model -> cs #####################################
 # Model 3 Macroinvertebrates Prieta B "cs" -----------------------------------------------------
 
-priors.miv_A.cs = get_prior(value ~ s(date, bs="cs", k = 5),
-                            data = miv.A, family = gaussian())
+priors.miv_B.cs = get_prior(value ~ s(date, bs="cs", k = 5),
+                            data = miv.B, family = gaussian())
 
 miv.qp_B.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 5)),
                                data = miv.B, family = gaussian(), cores = 1, 
@@ -1446,7 +1447,7 @@ mcmc_plot(shr.qp_A.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-############################ Best model -> cr #####################################
+
 # Model 2 Shrimp Prieta A "cr" ----------------------------------------
 
 priors.shr_A.cr = get_prior(value ~ s(date, bs="cr", k = 5),
@@ -1485,6 +1486,9 @@ shr.qp_A.Bayes.cs <- brms::brm(bf(value ~ s(date, bs="cs", k = 5)),
 
 
 summary(shr.qp_A.Bayes.cs)
+shr.qp_A.Bayes.cs$fit
+
+
 plot(shr.qp_A.Bayes.cs)
 
 shr.qp_A.Bayes.cs%>%
@@ -1501,7 +1505,7 @@ mcmc_plot(shr.qp_A.Bayes.cs,
           type = "areas",
           prob = 0.95)
 
-
+############################ Best model -> ps #####################################
 # Model 4 Shrimp Prieta A "ps" -----------------------------------------------------
 
 priors.shr_A.ps = get_prior(value ~ s(date, bs="ps", k = 8),
@@ -1514,6 +1518,9 @@ shr.qp_A.Bayes.ps <- brms::brm(bf(value ~ s(date, bs="ps", k = 8)),
                                prior = priors.shr_A.ps)
 
 summary(shr.qp_A.Bayes.ps)
+shr.qp_A.Bayes.ps$fit
+
+
 plot(shr.qp_A.Bayes.ps)
 plot(conditional_effects(shr.qp_A.Bayes.ps), points = TRUE)
 
@@ -1598,7 +1605,7 @@ shr.qp_B.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 5)),
                                data = shr.B, family = gaussian(), cores = 1, 
                                seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                                refresh = 0, control = list(adapt_delta = 0.99),
-                               prior = priors.SHR_B.cc)
+                               prior = priors.shr_B.cc)
 
 summary(shr.qp_B.Bayes.cc)
 
@@ -1620,7 +1627,7 @@ mcmc_plot(shr.qp_B.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-############################ Best model -> cr #####################################
+
 # Model 2 Shrimp Prieta B "cr" ----------------------------------------
 
 priors.shr_B.cr = get_prior(value ~ s(date, bs="cr", k = 5),
@@ -1697,8 +1704,8 @@ mcmc_plot(shr.qp_B.Bayes.ps,
           type = "areas",
           prob = 0.95)
 
-
-  # Model 5 Shrimp Prieta B "cp" --------------------------------------------------------
+############################ Best model -> cp #####################################
+# Model 5 Shrimp Prieta B "cp" --------------------------------------------------------
 
 priors.shr_B.cp = get_prior(value ~ s(date, bs="cp", k = 8),
                             data = shr.B, family = gaussian())
