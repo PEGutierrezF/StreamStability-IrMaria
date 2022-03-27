@@ -722,15 +722,14 @@ Trajectories<- read.csv("data/Trajectories.csv")
 ch.A <- Trajectories %>%
   filter(stream =="QPA", variable =="Chla")
 
-ch.A$date <- as.integer(as.Date(ll.A$date, format = "%Y-%m-%d"))
+ch.A$date <- as.integer(as.Date(ch.A$date, format = "%Y-%m-%d"))
 descdist(ch.A$value, discrete=FALSE, boot=500)
-
+hist(ch.A$value)
 
 # Model 1 Chlorophyll Prieta A "cc" -----------------------------------------------
 
 priors.chl_A.cc = get_prior(value ~ s(date, bs="cc", k = 5),
                            data = ch.A, family = gaussian())
-priors.chl_A.cc
 
 chla.qp_A.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 5)),
                               data = ch.A, family = gaussian(), cores = 1, 
@@ -758,7 +757,7 @@ mcmc_plot(chla.qp_A.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-
+############################ Best model -> cr ##############################################
 # Model 2 Chlorophyll Prieta A "cr" ----------------------------------------
 
 priors.chl_A.cr = get_prior(value ~ s(date, bs="cr", k = 5),
@@ -835,7 +834,7 @@ mcmc_plot(chla.qp_A.Bayes.ps,
           type = "areas",
           prob = 0.95)
 
-############################ Best model -> cc ##############################################
+
 # Model 5 Chlorophyll Prieta A "cp" --------------------------------------------------------
 
 priors.ch_A.cp = get_prior(value ~ s(date, bs="cp", k = 8),
