@@ -541,7 +541,7 @@ model_weights(ll.qp_A.Bayes.cc, ll.qp_A.Bayes.cr,
 ###########################################################################
 
 rm(list=ls())
-Trajectories<- read.csv("data/Trajectories.csv")
+Trajectories <- read.csv("data/Trajectories.csv")
 
 ll.B <- Trajectories %>%
   filter(stream =="QPB", variable =="Leaf_litter")
@@ -558,7 +558,7 @@ priors.ll_B.cc = get_prior(value ~ s(date, bs="cc", k = 8),
 priors.ll_B.cc
 
 ll.qp_B.Bayes.cc <- brms::brm(bf(value ~ s(date, bs="cc", k = 8)),
-                              data = ll.A, family = gaussian(), cores = 1, 
+                              data = ll.B, family = gaussian(), cores = 1, 
                               seed = 14, warmup = 8000, iter = 10000, thin = 1, 
                               refresh = 0, control = list(adapt_delta = 0.99),
                               prior = priors.ll_B.cc)
@@ -583,7 +583,7 @@ mcmc_plot(ll.qp_B.Bayes.cc,
           type = "areas",
           prob = 0.95)
 
-
+############################ Best model -> cr #############################
 # Model 2 Leaf litter Prieta A "cr" ----------------------------------------
 
 
