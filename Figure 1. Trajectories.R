@@ -92,7 +92,7 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
- grid.draw(g) + ggsave("TrajectoriesC.tiff", g, path = "figures", width=9, height=6,dpi=300)
+ grid.draw(g) + ggsave("TrajectoriesD.tiff", g, path = "figures", width=9, height=6,dpi=300)
 
 
 # Table R-squared 
