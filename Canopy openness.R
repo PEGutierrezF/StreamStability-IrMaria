@@ -16,7 +16,7 @@ rm(list=ls())
 
 
 
-
+library(dplyr)
 canopycover<- read.csv("data/all_data.csv")
 head(canopycover)
 

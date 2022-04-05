@@ -33,6 +33,7 @@ leaflitter <- na.omit(leaflitter)
 
 QPAleaf.mod  <- lm(QPA_leaflitter ~ date_ll, data=leaflitter)
 summary(QPAleaf.mod)
+plot(QPA_leaflitter ~ date_ll, data=leaflitter)
 
 leaflitter$QPAresid<- QPAleaf.mod $resid
 leaflitter
