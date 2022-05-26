@@ -22,7 +22,7 @@ df.temp <- read_excel(path = df, sheet = "temperature")
 df.temp$date<-as.POSIXct(df.temp$date,"%Y-%m-%d",tz = "UTC")
 
 
-ggplot(data=df.temp, aes(x=date, y=temperature, 
+temp <- ggplot(data=df.temp, aes(x=date, y=temperature, 
                          colour=factor(stream, labels = c("Prieta A", "Prieta B")))) +
   geom_line(size=0.8) + 
   scale_color_manual(values=c('#ce1256','#0570b0'))+ 
@@ -33,6 +33,9 @@ ggplot(data=df.temp, aes(x=date, y=temperature,
   # Vertical line    
   annotate("rect", xmin = as.POSIXct("2017-09-6"), xmax = as.POSIXct("2017-09-21"), 
            ymin = -Inf, ymax = Inf,  fill = "#df65b0", alpha=.5) +
+  annotate("segment", x = as.POSIXct("2017-01-01"), xend = as.POSIXct("2020-09-29"),
+           y = 19.9, yend = 19.9, colour = "gray30", size=0.8, linetype=2) +
+
   
   theme_bw()  +
   theme(legend.position="none") +
@@ -47,6 +50,7 @@ ggplot(data=df.temp, aes(x=date, y=temperature,
   theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black"))  #subaxis y
 
+temp
 
 
 
@@ -58,7 +62,7 @@ df.pH <- read_excel(path = df, sheet = "pH")
 df.pH$date<-as.POSIXct(df.pH$date,"%Y-%m-%d",tz = "UTC")
 
 
-ggplot(data=df.pH, aes(x=date, y=pH., 
+pH <- ggplot(data=df.pH, aes(x=date, y=pH., 
                          colour=factor(stream, labels = c("Prieta A", "Prieta B")))) +
   geom_line(size=0.8) + 
   scale_color_manual(values=c('#ce1256','#0570b0'))+ 
@@ -69,6 +73,8 @@ ggplot(data=df.pH, aes(x=date, y=pH.,
   # Vertical line    
   annotate("rect", xmin = as.POSIXct("2017-09-6"), xmax = as.POSIXct("2017-09-21"), 
            ymin = -Inf, ymax = Inf,  fill = "#df65b0", alpha=.5) +
+  annotate("segment", x = as.POSIXct("2017-01-01"), xend = as.POSIXct("2020-09-29"),
+           y = 6.65, yend = 6.65, colour = "gray30", size=0.8, linetype=2) +
   
   theme_bw()  +
   theme(legend.position="none") +
@@ -85,4 +91,8 @@ ggplot(data=df.pH, aes(x=date, y=pH.,
 
 
 
+Fig1 <- (temp) / (pH)
+Fig2 <- Fig1 + plot_annotation(tag_levels = 'A') 
+Fig2
 
+Fig2 + ggsave("Figure 2.jpg",width = 200, height = 220, units = "mm")
