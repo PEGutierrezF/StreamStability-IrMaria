@@ -28,7 +28,43 @@ ggplot(data=df.temp, aes(x=date, y=temperature,
   scale_color_manual(values=c('#ce1256','#0570b0'))+ 
   
   # Labels 
-  labs(x = "", y= "Water level (m)", color='Stream') +
+  labs(x = "Year", y= "Stream temperature (C)", color='Stream') +
+  
+  # Vertical line    
+  annotate("rect", xmin = as.POSIXct("2017-09-6"), xmax = as.POSIXct("2017-09-21"), 
+           ymin = -Inf, ymax = Inf,  fill = "#df65b0", alpha=.5) +
+  
+  theme_bw()  +
+  theme(legend.position="none") +
+  #Quite la leyenda  
+  # theme(legend.key.size = unit(0.6, "cm"))+
+  # theme(legend.title=element_text(size=14)) + # legend title size
+  # theme(legend.text = element_text(color = "black", size = 12))+  #factor name 
+
+  # Axis   
+  theme(axis.title.x = element_text(size = 12, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 12, angle = 90)) + # axis y
+  theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black"))  #subaxis y
+
+
+
+
+# pH ----------------------------------------------------------------------
+
+
+
+df.pH <- read_excel(path = df, sheet = "pH")
+df.pH$date<-as.POSIXct(df.pH$date,"%Y-%m-%d",tz = "UTC")
+
+
+ggplot(data=df.pH, aes(x=date, y=pH., 
+                         colour=factor(stream, labels = c("Prieta A", "Prieta B")))) +
+  geom_line(size=0.8) + 
+  scale_color_manual(values=c('#ce1256','#0570b0'))+ 
+  
+  # Labels 
+  labs(x = "Year", y= "pH", color='Stream') +
   
   # Vertical line    
   annotate("rect", xmin = as.POSIXct("2017-09-6"), xmax = as.POSIXct("2017-09-21"), 
@@ -41,8 +77,12 @@ ggplot(data=df.temp, aes(x=date, y=temperature,
   # theme(legend.title=element_text(size=14)) + # legend title size
   # theme(legend.text = element_text(color = "black", size = 12))+  #factor name 
   
+  # Axis   
   theme(axis.title.x = element_text(size = 12, angle = 0)) + # axis x
   theme(axis.title.y = element_text(size = 12, angle = 90)) + # axis y
   theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
   theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black"))  #subaxis y
+
+
+
 
