@@ -15,7 +15,7 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
-metrics<- read.csv("00 Metrics.csv")
+metrics<- read.csv("Figure extra/00 Metrics.csv")
 metrics
 
 
@@ -170,7 +170,7 @@ r5<- ggplot(metrics,
 geom_point(aes(color=Stream,shape=Variable), size=5) +
 geom_vline(aes(xintercept = 0), color='darkgrey') +
   geom_hline(aes(yintercept = 0), color='darkgrey') +
-  xlim(-1,1) 
+  xlim(-1,1) + ylim (-0.1,0.1)
 r5
 
 cor.test(metrics$Resistance,metrics$Resilience,method = "pearson", exact=F)
