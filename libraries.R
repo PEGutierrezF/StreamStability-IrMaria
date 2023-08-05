@@ -25,7 +25,10 @@ libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
 lapply(libraries, require, character.only = TRUE)
 
 
-
+CXX14FLAGS=-O3 -march=native -mtune=native -fPIC -pthread -D_REENTRANT
+CXX14 = /usr/bin/g++ -m64 -mtune=native -std=c++1y
+CXX14FLAGS+=-I/path/to/TBB/include
+LDFLAGS+=-L/path/to/TBB/lib -ltbb
 
 
 
