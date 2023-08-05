@@ -157,8 +157,6 @@ metrics + ggsave("Metrics.jpeg", width=6, height=10,dpi=600)
 
 # Relationship between Resistance and Resiliences -------------------------
 
-
-
 metrics<- read.csv("00 Metrics.csv")
 metrics
 
