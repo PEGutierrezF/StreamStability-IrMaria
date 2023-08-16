@@ -21,7 +21,7 @@ canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253
           -0.278572075, -0.028641207, -0.043732484, -0.026001523, -0.203414234, 
           -0.05181515, -0.099839151, -0.318969951, -0.332011037, 0.152945865)
 
-date <- seq(1, length(canopy_QPA))
+event <- seq(1, length(canopy_QPA))
 data <- data.frame(date, canopy_QPA)
 
 # Define the Nelson-Siegel function
@@ -34,7 +34,7 @@ nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
 start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
 
 # Fit the model using nlsLM
-mod.QPA <- nlsLM(canopy_QPA ~ nelson_siegel(date, beta0, beta1, beta2, tau), 
+mod.QPA <- nlsLM(canopy_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
              data = data, 
              start = start_params)
 
@@ -55,16 +55,15 @@ print(paste("p-value:", round(pvalue, 20)))
 
 
 
-# Create a plot using ggplot2
-curve_data <- data.frame(date = seq(1, max(date), length.out = 1000))
-curve_data$y <- predict(fit, newdata = curve_data)
+# Calculate the predicted values from the model
+predicted_values <- predict(mod.QPA, newdata = data.frame(event = event))
 
-ggplot(data, aes(x = date, y = canopy_QPA)) +
-  geom_point() +
-  geom_line(data = curve_data, aes(x = date, y = y), color = "blue") +
-  labs(title = "Humped Yield Curve (Nelson-Siegel Model)",
-       x = "Date",
-       y = "Yield") +
+# Create a ggplot
+ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point(color = "blue") +
+  geom_line(aes(y = predicted_values), color = "red") +
+  labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
+       x = "Event",
+       y = "Canopy QPA") +
   theme_minimal()
-
 
