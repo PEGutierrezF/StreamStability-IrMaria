@@ -2,13 +2,9 @@
 
 
 
-# Load required library
-install.packages('optimx')
-library(optimx)
-
 # cleans global environment
 rm(list = ls())
-
+library(minpack.lm)
 
 # data
 canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253, 
@@ -33,9 +29,6 @@ nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
   y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
   return(y)
 }
-
-date <- seq(1, length(canopy_QPA))
-data <- data.frame(date, canopy_QPA)
 
 # Initial parameter values
 start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
