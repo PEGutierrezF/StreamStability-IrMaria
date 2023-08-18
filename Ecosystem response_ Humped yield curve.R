@@ -2,6 +2,16 @@
 
 
 
+# ---------------------------------------------
+# Long-term ecosystem response
+# 17 Aug 2023
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
+#  
+
+
+
 # cleans global environment
 rm(list = ls())
 library(minpack.lm)
