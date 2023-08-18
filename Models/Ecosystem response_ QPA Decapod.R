@@ -16,138 +16,7 @@
 rm(list = ls())
 
 
-# data
-canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253, 
-          0.599072942, 2.035709058, 1.727578155, 1.716528319, 1.669203747, 
-          1.581599124, 1.645628869, 1.436226353, 1.434460089, 1.479398525, 
-          1.391721113, 1.434460089, 1.323650326, 1.294256092, 1.206443161, 
-          1.17562524, 1.110170268, 1.026044255, 0.991775799, 1.070264724, 
-          1.026930388, 1.036626365, 0.966693202, 0.895547766, 0.759415592, 
-          0.631161257, 0.6258842, 0.577094035, 0.681203769, 0.163260678, 
-          0.224379493, 0.556040626, 0.491596663, 0.305941265, 0.419465091, 
-          0.52140513, 0.25351904, 0.016155257, 0.238118669, 0.137395756, 
-          -0.05633391, 0.006844991, 0.152945865, 0.011934061, -0.194014687, 
-          -0.05181515, -0.161291931, -0.023368787, -0.01812402, -0.091360533, 
-          -0.278572075, -0.028641207, -0.043732484, -0.026001523, -0.203414234, 
-          -0.05181515, -0.099839151, -0.318969951, -0.332011037, 0.152945865)
 
-event <- seq(1, length(canopy_QPA))
-data <- data.frame(event, canopy_QPA)
-
-# Define the Nelson-Siegel function
-nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
-  y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
-  return(y)
-}
-
-# Initial parameter values
-start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
-
-# Fit the model using nlsLM
-mod.QPA <- nlsLM(canopy_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
-             data = data, 
-             start = start_params)
-
-summary(mod.QPA)
-# Extract R-squared and p-value
-# Calculate the R-squared value manually
-fitted_values <- fitted(mod.QPA)
-observed_values <- data$canopy_QPA
-mean_observed <- mean(observed_values)
-ss_total <- sum((observed_values - mean_observed)^2)
-ss_residual <- sum((observed_values - fitted_values)^2)
-rsquare <- 1 - ss_residual / ss_total
-
-# Print R-squared value
-print(paste("R-squared:", round(rsquare, 4)))
-pvalue <- summary(mod.QPA)$coefficients[4, 4]  # P-value for the 'tau' parameter
-print(paste("p-value:", round(pvalue, 20)))
-
-
-
-# Calculate the predicted values from the model
-predicted_values <- predict(mod.QPA, newdata = data.frame(event = event))
-
-# Create a ggplot
-ggplot(data, aes(x = event, y = canopy_QPA)) +
-  geom_point(color = "blue") +
-  geom_line(aes(y = predicted_values), color = "red") +
-  labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
-       x = "Event",
-       y = "Canopy QPA") +
-  theme_minimal()
-
-
-###########################################################################
-# Quebrada Prieta B -------------------------------------------------------
-###########################################################################
-
-
-# Create a data frame with your canopy_QPB data
-canopy_QPB <- c(0.066649426, 0.123402242, 0.218712422, -0.071410803, -0.471304866,
-                 0.27459288, 1.913568932, 1.551896958, 1.536349726, 1.490548934,
-                 1.39148244, 1.294424291, 1.13646499, 1.016906589, 1.246987452,
-                 1.185334648, 1.109390578, 1.240990432, 1.181352166, 1.195615482,
-                 1.141460837, 0.782647871, 1.030918963, 0.925352283, 1.106814364,
-                 1.309983304, 1.233443227, 1.201890013, 1.067352865, 1.085962175,
-                 0.96675143, 0.881087944, 0.923288298, 1.041071334, 0.774289613,
-                 0.459874479, 0.852670731, 0.967740061, 0.80962898, 0.85930059,
-                 0.704782735, 0.823422302, 0.573085869, 0.148375163, 0.631465433,
-                 0.654706397, 0.614728641, 0.627307423, 0.748787321, 0.398941928,
-                 0.379558061, 0.34147549, 0.421376001, 0.43325061, 0.404163872,
-                 0.339625351, 0.449973408, 0.421376001, 0.27459288, 0.305723799,
-                 0.256646237, 0.161738391, 0.270632479, 0.155079099, 0.388415515
-)
-
-event <- seq(1, length(canopy_QPB))
-data_QPB <- data.frame(event, canopy_QPB)
-
-# Define the Nelson-Siegel function
-nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
-  y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
-  return(y)
-}
-
-# Initial parameter values
-start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
-
-# Fit the model using nlsLM
-mod.QPB <- nlsLM(canopy_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
-                 data = data_QPB, 
-                 start = start_params)
-
-summary(mod.QPB)
-# Extract R-squared and p-value
-# Calculate the R-squared value manually
-fitted_values <- fitted(mod.QPB)
-observed_values <- data_QPB$canopy_QPB
-mean_observed <- mean(observed_values)
-ss_total <- sum((observed_values - mean_observed)^2)
-ss_residual <- sum((observed_values - fitted_values)^2)
-rsquare <- 1 - ss_residual / ss_total
-
-# Print R-squared value
-print(paste("R-squared:", round(rsquare, 4)))
-pvalue <- summary(mod.QPA)$coefficients[4, 4]  # P-value for the 'tau' parameter
-print(paste("p-value:", round(pvalue, 20)))
-
-
-
-# Calculate the predicted values from the model
-predicted_values <- predict(mod.QPB, newdata = data.frame(event = event))
-
-# Create a ggplot
-ggplot(data, aes(x = event, y = canopy_QPB)) +
-  geom_point(color = "blue") +
-  geom_line(aes(y = predicted_values), color = "red") +
-  labs(title = "Canopy QPB and Fitted Nelson-Siegel Curve",
-       x = "Event",
-       y = "Canopy QPA") +
-  theme_minimal()
-
-
-# Shrimp Abundance --------------------------------------------------------
-# Given data
 shrimp_QPB <- c(4.696673669, 7.102844975, 2.92230371, 4.775812621, 3.786680872, 
                 5.861103582, 4.841844408, 4.095107269, 8.184963933, 7.032519247, 
                 8.948997943, 4.558330701, 7.366546849, 6.695518125, 9.333305943, 
@@ -159,10 +28,36 @@ shrimp_QPB <- c(4.696673669, 7.102844975, 2.92230371, 4.775812621, 3.786680872,
                 4.804636027, 12.30938817, 6.83983239, 4.741247918, 5.366055518)
 
 event <- seq(1, length(shrimp_QPB))
-data_QPB <- data.frame(event, shrimp_QPB)
+data <- data.frame(event, shrimp_QPB)
 
 
+###########################################################################
+# Linear model (mod.1) ----------------------------------------------------
+# Create a linear model
+mod.1 <- lm(shrimp_QPB ~ event, data = data)
+# Print the summary of the linear model
+summary(mod.1)
 
+# Get R-squared value and p-value
+r_squared <- summary(mod.1)$r.squared
+p_value <- summary(mod.1)$coefficients[2, 4]
+# Print R-squared value and p-values
+cat("R-squared:", r_squared, "\n")
+cat("P-value:", p_value, "\n")
+
+# Create a ggplot
+mod.1.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
+  geom_point() +         # Scatter plot points
+  geom_smooth(method = "lm", se = FALSE) +  # Trend line without confidence interval
+  labs(title = "Canopy QPA and Trend Line",
+       x = "Event",
+       y = "Canopy QPA") +
+  theme_minimal()
+
+mod.1.plot
+
+###########################################################################
+# Humped yield curve (mod.2) ----------------------------------------------
 # Define the Nelson-Siegel function
 nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
   y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
@@ -173,34 +68,146 @@ nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
 start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
 
 # Fit the model using nlsLM
-mod_humped_shrimp_QPB <- nlsLM(shrimp_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
-                 data = data_QPB, 
-                 start = start_params)
+mod.2 <- nlsLM(shrimp_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
+               data = data, 
+               start = start_params)
 
-summary(mod_humped_shrimp_QPB)
+summary(mod.2)
 # Extract R-squared and p-value
 # Calculate the R-squared value manually
-fitted_values <- fitted(mod_humped_shrimp_QPB)
-observed_values <- data_QPB$shrimp_QPB
+fitted_values <- fitted(mod.2)
+observed_values <- data$shrimp_QPB
 mean_observed <- mean(observed_values)
 ss_total <- sum((observed_values - mean_observed)^2)
 ss_residual <- sum((observed_values - fitted_values)^2)
 rsquare <- 1 - ss_residual / ss_total
 
-# Print R-squared value
-print(paste("R-squared:", round(rsquare, 4)))
-pvalue <- summary(mod_humped_shrimp_QPB)$coefficients[4, 4]  # P-value for the 'tau' parameter
-print(paste("p-value:", round(pvalue, 20)))
+# Print R-squared value and p-values
+cat("R-squared:", rsquare, "\n")
+pvalue <- summary(mod.2)$coefficients[4, 4]  # P-value for the 'tau' parameter
+cat("P-value:", pvalue, "\n")
 
 
 # Calculate the predicted values from the model
-predicted_values <- predict(mod_humped_shrimp_QPB, newdata = data.frame(event = event))
+predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 
 # Create a ggplot
-ggplot(data_QPB, aes(x = event, y = shrimp_QPB)) +
+mod.2.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
   geom_point(color = "blue") +
   geom_line(aes(y = predicted_values), color = "red") +
-  labs(title = "Canopy QPB and Fitted Nelson-Siegel Curve",
+  labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
        x = "Event",
        y = "Canopy QPA") +
   theme_minimal()
+
+mod.2.plot
+
+###########################################################################
+# Inverted Parabola Curve (mod. 3) ----------------------------------------
+# Fit a quadratic regression model
+mod.3 <- lm(shrimp_QPB ~ event + I(event^2), data=data)
+# Get model summary
+summary(mod.3)
+
+# Extract R-squared value and p-value
+r_squared.mod3 <- summary(mod.3)$r.squared
+p_value.mod3 <- summary(mod.3)$coefficients[4]  # P-value for the quadratic term
+# Display results
+cat("R-squared:", r_squared.mod3, "\n")
+cat("R-squared:", p_value.mod3, "\n")
+
+# Create a new data frame for prediction
+new_data <- data.frame(event = seq(1, length(shrimp_QPB), length.out = 100))
+
+# Predict using the model
+predictions <- predict(mod.3, newdata = new_data)
+
+# Create a ggplot for visualization
+mod.3.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
+  geom_point() +
+  geom_line(data = data.frame(event = new_data$event, shrimp_QPB = predictions), 
+            aes(x = event, y = shrimp_QPB), color = "blue") +
+  labs(title = "Inverted Parabolic Curve Fit",
+       x = "Event",
+       y = "Canopy QPA") +
+  theme_minimal()
+
+mod.3.plot
+
+
+
+
+###########################################################################
+# Goodness-of-fit diagnostics based on the log-likelihood -----------------
+# Calculate log-likelihood for mod.1 (linear model)
+log_likelihood_mod.1 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.1), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.1))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+log_likelihood_mod.2 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.2), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.2))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+log_likelihood_mod.3 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.3), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.3))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+log_likelihood_mod.4 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.4), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.4))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+log_likelihood_mod.5 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.5), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.5))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+log_likelihood_mod.6 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.6), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.6))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+log_likelihood_mod.7 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.7), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.7))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+log_likelihood_mod.8 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.8), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.8))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
+
+
+# Calculate AIC and BIC for mod.1
+aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
+bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$shrimp_QPB)) * length(coef(mod.1))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
+bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$shrimp_QPB)) * length(coef(mod.2))
+
+# Calculate AIC and BIC for mod.1
+aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
+bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$shrimp_QPB)) * length(coef(mod.3))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
+bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$shrimp_QPB)) * length(coef(mod.4))
+
+# Calculate AIC and BIC for mod.1
+aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
+bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$shrimp_QPB)) * length(coef(mod.5))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
+bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$shrimp_QPB)) * length(coef(mod.6))
+
+# Calculate AIC and BIC for mod.1
+aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
+bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$shrimp_QPB)) * length(coef(mod.7))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
+bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$shrimp_QPB)) * length(coef(mod.8))
+
+
+# Compare log-likelihoods, AIC, and BIC
+cat("Log-Likelihood Mod.1:", log_likelihood_mod.1, "\n")
+cat("Log-Likelihood Mod.2:", log_likelihood_mod.2, "\n")
+cat("Log-Likelihood Mod.3:", log_likelihood_mod.3, "\n")
+cat("Log-Likelihood Mod.4:", log_likelihood_mod.4, "\n")
+cat("Log-Likelihood Mod.5:", log_likelihood_mod.5, "\n")
+cat("Log-Likelihood Mod.6:", log_likelihood_mod.6, "\n")
+cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
+cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
+
+cat("AIC Mod.1:", aic_mod.1, "\n")
+cat("AIC Mod.2:", aic_mod.2, "\n")
+cat("AIC Mod.3:", aic_mod.3, "\n")
+cat("AIC Mod.4:", aic_mod.4, "\n")
+cat("AIC Mod.5:", aic_mod.5, "\n")
+cat("AIC Mod.6:", aic_mod.6, "\n")
+cat("AIC Mod.7:", aic_mod.7, "\n")
+cat("AIC Mod.8:", aic_mod.8, "\n")
+
+cat("BIC Mod.1:", bic_mod.1, "\n")
+cat("BIC Mod.2:", bic_mod.2, "\n")
+cat("BIC Mod.3:", bic_mod.3, "\n")
+cat("BIC Mod.4:", bic_mod.4, "\n")
+cat("BIC Mod.5:", bic_mod.5, "\n")
+cat("BIC Mod.6:", bic_mod.6, "\n")
+cat("BIC Mod.7:", bic_mod.7, "\n")
+cat("BIC Mod.8:", bic_mod.8, "\n")
+
