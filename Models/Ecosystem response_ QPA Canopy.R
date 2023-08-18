@@ -38,15 +38,14 @@ data <- data.frame(event, canopy_QPA)
 # Linear model (mod.1) ----------------------------------------------------
 # Create a linear model
 mod.1 <- lm(canopy_QPA ~ event, data = data)
-
 # Print the summary of the linear model
 summary(mod.1)
 
-# Get R-squared value
+# Get R-squared value and p-value
 r_squared <- summary(mod.1)$r.squared
-cat("R-squared:", r_squared, "\n")
-# Get p-value
 p_value <- summary(mod.1)$coefficients[2, 4]
+# Print R-squared value and p-values
+cat("R-squared:", r_squared, "\n")
 cat("P-value:", p_value, "\n")
 
 # Create a ggplot
@@ -86,11 +85,10 @@ ss_total <- sum((observed_values - mean_observed)^2)
 ss_residual <- sum((observed_values - fitted_values)^2)
 rsquare <- 1 - ss_residual / ss_total
 
-# Print R-squared value
-print(paste("R-squared:", round(rsquare, 4)))
+# Print R-squared value and p-values
+cat("R-squared:", rsquare, "\n")
 pvalue <- summary(mod.2)$coefficients[4, 4]  # P-value for the 'tau' parameter
-print(paste("p-value:", round(pvalue, 20)))
-
+cat("P-value:", pvalue, "\n")
 
 
 # Calculate the predicted values from the model
@@ -111,7 +109,6 @@ mod.2.plot
 # Parabola Curve Quadratic function (mod.3) -------------------------------
 # Fit a quadratic regression model
 mod.3 <- lm(canopy_QPA ~ event + I(event^2), data=data)
-
 # Get model summary
 summary(mod.3)
 
@@ -156,6 +153,16 @@ mod.4 <- nls(canopy_QPA ~ logistic_function(event, A, B, C, D),
 # Get model summary
 summary(mod.4)
 
+
+# Calculate residuals
+residuals <- residuals(mod.4)
+# Calculate R-squared value
+ss_residuals <- sum(residuals^2)
+ss_total <- sum((data$canopy_QPA - mean(data$canopy_QPA))^2)
+r_squared <- 1 - (ss_residuals / ss_total)
+# Print R-squared value
+cat("R-squared:", sprintf("%.4f", r_squared), "\n")
+
 # Generate predictions using the model
 new_data <- data.frame(event = seq(1, length(canopy_QPA), length.out = 100))
 predictions <- predict(mod.4, newdata = new_data)
@@ -198,7 +205,7 @@ cat("Standard errors:\n")
 print(std_errors)
 cat("t-values:\n")
 print(t_values)
-cat("p-values:\n")
+cat("p-values:","\n")
 print(p_values)
 
 
