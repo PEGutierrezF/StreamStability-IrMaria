@@ -35,7 +35,7 @@ event <- seq(1, length(canopy_QPA))
 data <- data.frame(event, canopy_QPA)
 
 ###########################################################################
-# Linear model ------------------------------------------------------------
+# Linear model (mod.1) ----------------------------------------------------
 # Create a linear model
 mod.1 <- lm(canopy_QPA ~ event, data = data)
 
@@ -50,7 +50,7 @@ p_value <- summary(mod.1)$coefficients[2, 4]
 cat("P-value:", p_value, "\n")
 
 # Create a ggplot
-ggplot(data, aes(x = event, y = canopy_QPA)) +
+mod.1.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
   geom_point() +         # Scatter plot points
   geom_smooth(method = "lm", se = FALSE) +  # Trend line without confidence interval
   labs(title = "Canopy QPA and Trend Line",
@@ -58,9 +58,10 @@ ggplot(data, aes(x = event, y = canopy_QPA)) +
        y = "Canopy QPA") +
   theme_minimal()
 
+mod.1.plot
 
 ###########################################################################
-# Humped yield curve ------------------------------------------------------
+# Humped yield curve (mod.2) ----------------------------------------------
 # Define the Nelson-Siegel function
 nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
   y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
@@ -96,7 +97,7 @@ print(paste("p-value:", round(pvalue, 20)))
 predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 
 # Create a ggplot
-ggplot(data, aes(x = event, y = canopy_QPA)) +
+mod.2.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
   geom_point(color = "blue") +
   geom_line(aes(y = predicted_values), color = "red") +
   labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
@@ -104,42 +105,74 @@ ggplot(data, aes(x = event, y = canopy_QPA)) +
        y = "Canopy QPA") +
   theme_minimal()
 
-
+mod.2.plot
 
 ###########################################################################
-# Parabola Curve Quadratic function ---------------------------------------
-# Fit the quadratic model
-mod.3 <- lm(canopy_QPA ~ poly(event, 2, raw = TRUE), data = data)
+# Parabola Curve Quadratic function (mod.3) -------------------------------
+# Fit a quadratic regression model
+mod.3 <- lm(canopy_QPA ~ event + I(event^2), data=data)
 
+# Get model summary
+summary(mod.3)
 
-# Get R-squared value
-r_squared <- summary(mod.3)$r.squared
-cat("R-squared:", r_squared, "\n")
+# Extract R-squared value and p-value
+r_squared.mod3 <- summary(mod.3)$r.squared
+p_value.mod3 <- summary(mod.3)$coefficients[4]  # P-value for the quadratic term
+# Display results
+cat("R-squared:", r_squared.mod3, "\n")
+cat("R-squared:", p_value.mod3, "\n")
 
-# Get p-values for coefficients
-p_values <- summary(mod.3)$coefficients[, 4]
-cat("P-values for coefficients:\n")
-print(p_values)
+# Create a new data frame for prediction
+new_data <- data.frame(event = seq(1, length(canopy_QPA), length.out = 100))
 
-# Create the ggplot plot
-ggplot(data, aes(x = event, y = canopy_QPA)) +
-  geom_point(color = "blue") +  # Scatter plot points
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE), se = FALSE, color = "red") +
-  labs(title = "Quadratic Curve Visualization",
+# Predict using the model
+predictions <- predict(mod.3, newdata = new_data)
+
+# Create a ggplot for visualization
+mod.3.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point() +
+  geom_line(data = data.frame(event = new_data$event, canopy_QPA = predictions), 
+            aes(x = event, y = canopy_QPA), color = "blue") +
+  labs(title = "Inverted Parabolic Curve Fit",
        x = "Event",
-       y = "Shrimp QPB") +
-  theme_minimal() +  # Use a minimal theme
-  theme(plot.title = element_text(hjust = 0.5))  # Center the plot title
+       y = "Canopy QPA") +
+  theme_minimal()
 
-
-
-###########################################################################
-# Logistic curve  ---------------------------------------------------------
-
+mod.3.plot
 
 
 ###########################################################################
-# Logarithmic curve  ------------------------------------------------------
+# Logistic curve (mod.4) --------------------------------------------------
+# Define the logistic function
+logistic_function <- function(x, A, B, C, D) {
+  A + (B - A) / (1 + exp(-C * (x - D)))
+}
+
+# Fit a logistic curve model
+mod.4 <- nls(canopy_QPA ~ logistic_function(event, A, B, C, D),
+             data = data,
+             start = list(A = min(canopy_QPA), B = max(canopy_QPA), C = 1, D = median(event)))
+
+# Get model summary
+summary(mod.4)
+
+# Generate predictions using the model
+new_data <- data.frame(event = seq(1, length(canopy_QPA), length.out = 100))
+predictions <- predict(mod.4, newdata = new_data)
+
+# Create a ggplot for visualization
+mod.4.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point() +
+  geom_line(data = data.frame(event = new_data$event, canopy_QPA = predictions), aes(x = event, y = canopy_QPA), color = "red") +
+  labs(title = "Logistic Curve Fit",
+       x = "Event",
+       y = "Canopy QPA") +
+  theme_minimal()
+
+mod.4.plot
+
+###########################################################################
+# Logarithmic curve (mod.5) -----------------------------------------------
 # Fit a logarithmic curve model
 mod.5 <- nls(canopy_QPA ~ a * log(event) + b, data = data, start = list(a = 1, b = 1))
 
@@ -174,7 +207,7 @@ pred_data <- data.frame(event = data$event,
                         canopy_QPA_pred = predict(mod.5, newdata = data))
 
 # Create a ggplot
-gg <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+mod.5.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
   geom_point() +
   geom_line(data = pred_data, aes(x = event, y = canopy_QPA_pred), color = "blue") +
   labs(title = "Logarithmic Curve Fitting",
@@ -182,6 +215,119 @@ gg <- ggplot(data, aes(x = event, y = canopy_QPA)) +
        y = "Canopy QPA") +
   theme_minimal()
 
-# Print the ggplot
-print(gg)
+mod.5.plot
+
+
+###########################################################################
+# Exponential curve (mod.6) -----------------------------------------------
+# Define the exponential function
+exponential <- function(x, A, B, C) {
+  A * exp(B * x) + C
+}
+
+# Fit the exponential curve
+mod.6 <- nls(canopy_QPA ~ exponential(event, A, B, C), 
+           data = data,
+           start = list(A = 1, B = 0.1, C = 0))
+
+# Get summary of the fitted model
+fit_summary <- summary(mod.6)
+
+# Calculate total sum of squares
+total_ss <- sum((data$canopy_QPA - mean(data$canopy_QPA))^2)
+# Calculate residual sum of squares
+residual_ss <- sum(fit_summary$residuals^2)
+# Calculate R-squared value
+rsquared <- 1 - residual_ss / total_ss
+# Extract p-values
+p_values <- fit_summary$coefficients[, "Pr(>|t|)"]
+# Print the results
+cat("R-squared value:", rsquared, "\n")
+cat("P-values for parameters:\n")
+print(p_values)
+
+
+# Create a new data frame for prediction
+new_data <- data.frame(event = seq(1, length(canopy_QPA), length.out = 100))
+new_data$predicted <- predict(mod.6, newdata = new_data)
+
+# Plot the data and fitted curve using ggplot2
+mod.6.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point() +
+  geom_line(data = new_data, aes(x = event, y = predicted), color = "blue") +
+  labs(x = "Event", y = "canopy_QPA") +
+  ggtitle("Exponential Curve Fitting") +
+  theme_minimal()
+
+mod.6.plot
+
+###########################################################################
+# Quadratic curve (mod.7) -------------------------------------------------
+# Fit a quadratic model
+mod.7 <- lm(canopy_QPA ~ poly(event, 2), data = data)
+
+# Get R-squared value and p-values for coefficients
+rsquared.mod7 <- summary(mod.7)$r.squared
+pvalues.mod7 <- summary(mod.7)$coefficients[, 4]
+# Print R-squared value and p-values
+cat("p-value:", rsquared.mod7, "\n")
+cat("p-value:", pvalues.mod7, "\n")
+
+# Create a plot
+mod.7.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point() + # Plot the data points
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, color = "blue") +  # Plot the quadratic curve
+  labs(x = "Event", y = "canopy_QPA", title = "Quadratic Curve Fitting") +
+  theme_minimal()
+
+mod.7.plot
+
+
+###########################################################################
+# Goniometric curve (mod.8) -----------------------------------------------
+# Define the goniometric function
+goniometric <- function(x, a, b, c, d) {
+  a * sin(b * x + c) + d
+}
+
+# Fit the model using nonlinear least squares with adjusted initial values and different algorithm
+mod.8 <- nls(canopy_QPA ~ goniometric(event, a, b, c, d), 
+             data = data,
+             start = list(a = 1, b = 1, c = 0, d = mean(canopy_QPA)),
+             algorithm = "port")
+
+# Extract coefficients
+coefficients <- coef(mod.8)
+# Print coefficients
+print(coefficients)
+# Calculate R-squared value
+residuals <- residuals(mod.8)
+SSR <- sum(residuals^2)
+SST <- sum((data$canopy_QPA - mean(data$canopy_QPA))^2)
+R_squared <- 1 - SSR / SST
+cat("R-squared value:", R_squared, "\n")
+
+# Calculate p-value
+summary_fit <- summary(mod.8)
+p_value.mod8 <- summary_fit$coefficients[4, "Pr(>|t|)"]
+cat("p-value:", p_value.mod8, "\n")
+
+
+# Generate predicted values from the fitted model
+data$predicted <- predict(mod.8)
+
+# Create a ggplot with the original data and fitted curve
+mod.8.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point() +
+  geom_line(aes(y = predicted), color = "blue") +
+  labs(title = "Fitted Goniometric Curve",
+       x = "Event",
+       y = "canopy_QPA") +
+  theme_minimal()
+
+mod.8.plot
+
+(mod.1.plot + mod.2.plot + mod.3.plot + mod.4.plot) /
+  (mod.5.plot + mod.6.plot + mod.7.plot + mod.8.plot)
+
 
