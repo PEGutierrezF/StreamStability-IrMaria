@@ -106,7 +106,7 @@ mod.2.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
 mod.2.plot
 
 ###########################################################################
-# Parabola Curve Quadratic function (mod.3) -------------------------------
+# Inverted Parabola Curve (mod. 3) ----------------------------------------
 # Fit a quadratic regression model
 mod.3 <- lm(canopy_QPA ~ event + I(event^2), data=data)
 # Get model summary
