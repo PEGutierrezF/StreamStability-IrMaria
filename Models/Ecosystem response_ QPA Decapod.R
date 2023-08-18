@@ -173,14 +173,14 @@ nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
 start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
 
 # Fit the model using nlsLM
-mod.QPB <- nlsLM(shrimp_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
+mod_humped_shrimp_QPB <- nlsLM(shrimp_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
                  data = data_QPB, 
                  start = start_params)
 
-summary(mod.QPB)
+summary(mod_humped_shrimp_QPB)
 # Extract R-squared and p-value
 # Calculate the R-squared value manually
-fitted_values <- fitted(mod.QPB)
+fitted_values <- fitted(mod_humped_shrimp_QPB)
 observed_values <- data_QPB$shrimp_QPB
 mean_observed <- mean(observed_values)
 ss_total <- sum((observed_values - mean_observed)^2)
@@ -189,13 +189,12 @@ rsquare <- 1 - ss_residual / ss_total
 
 # Print R-squared value
 print(paste("R-squared:", round(rsquare, 4)))
-pvalue <- summary(mod.QPA)$coefficients[4, 4]  # P-value for the 'tau' parameter
+pvalue <- summary(mod_humped_shrimp_QPB)$coefficients[4, 4]  # P-value for the 'tau' parameter
 print(paste("p-value:", round(pvalue, 20)))
 
 
-
 # Calculate the predicted values from the model
-predicted_values <- predict(mod.QPB, newdata = data.frame(event = event))
+predicted_values <- predict(mod_humped_shrimp_QPB, newdata = data.frame(event = event))
 
 # Create a ggplot
 ggplot(data_QPB, aes(x = event, y = shrimp_QPB)) +

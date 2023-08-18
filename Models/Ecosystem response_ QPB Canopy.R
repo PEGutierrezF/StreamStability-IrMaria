@@ -35,7 +35,7 @@ event <- seq(1, length(canopy_QPA))
 data_QPA <- data.frame(event, canopy_QPA)
 
 # Fit a quadratic function to the data using lm():
-quadratic_model <- lm(canopy_QPA ~ poly(event, 2, raw = TRUE), data = data)
+quadratic_model <- lm(canopy_QPA ~ poly(event, 2, raw = TRUE), data = data_QPA)
 
 # Get R-squared value
 r_squared <- summary(quadratic_model)$r.squared
@@ -76,13 +76,16 @@ shrimp_QPB <- c(4.696673669, 7.102844975, 2.92230371, 4.775812621, 3.786680872,
                 4.804636027, 12.30938817, 6.83983239, 4.741247918, 5.366055518)
 
 event <- seq(1, length(shrimp_QPB))
-data <- data.frame(event, shrimp_QPB)
+data_QPA <- data.frame(event, shrimp_QPB)
 
 # Fit the quadratic model
-quadratic_model <- lm(shrimp_QPB ~ poly(event, 2, raw = TRUE), data = data)
+mod_quadratic_shrimp_QPB <- lm(shrimp_QPB ~ poly(event, 3, raw = TRUE), data = data_QPA)
 
-# Fit the quadratic model
-quadratic_model <- lm(shrimp_QPB ~ poly(event, 2, raw = TRUE), data = data)
+# Get residuals for shrimp_QPB model
+residuals_shrimp_QPB <- residuals(mod_quadratic_shrimp_QPB)
+# Create a histogram of residuals for shrimp_QPB model
+hist(residuals_shrimp_QPB, main = "Residual Error Distribution (shrimp_QPB)", xlab = "Residuals")
+
 
 # Get R-squared value
 r_squared <- summary(quadratic_model)$r.squared
@@ -96,7 +99,7 @@ print(p_values)
 # Create the ggplot plot
 ggplot(data, aes(x = event, y = shrimp_QPB)) +
   geom_point(color = "blue") +  # Scatter plot points
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE), se = FALSE, color = "red") +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 3, raw = TRUE), se = FALSE, color = "red") +
   labs(title = "Quadratic Curve Visualization",
        x = "Event",
        y = "Shrimp QPB") +
