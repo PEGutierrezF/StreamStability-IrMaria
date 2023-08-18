@@ -3,7 +3,7 @@
 
 
 # ---------------------------------------------
-# Long-term ecosystem response: Linear response
+# Long-term ecosystem response: Canopy openness
 # 17 Aug 2023
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
@@ -329,5 +329,81 @@ mod.8.plot
 
 (mod.1.plot + mod.2.plot + mod.3.plot + mod.4.plot) /
   (mod.5.plot + mod.6.plot + mod.7.plot + mod.8.plot)
+
+
+
+###########################################################################
+# Goodness-of-fit diagnostics based on the log-likelihood -----------------
+# Calculate log-likelihood for mod.1 (linear model)
+log_likelihood_mod.1 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.1), sd = sqrt(sum((data$canopy_QPA - fitted(mod.1))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.2 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.2), sd = sqrt(sum((data$canopy_QPA - fitted(mod.2))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.3 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.3), sd = sqrt(sum((data$canopy_QPA - fitted(mod.3))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.4 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.4), sd = sqrt(sum((data$canopy_QPA - fitted(mod.4))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.5 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.5), sd = sqrt(sum((data$canopy_QPA - fitted(mod.5))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.6 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.6), sd = sqrt(sum((data$canopy_QPA - fitted(mod.6))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.7 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.7), sd = sqrt(sum((data$canopy_QPA - fitted(mod.7))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.8 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.8), sd = sqrt(sum((data$canopy_QPA - fitted(mod.8))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+
+
+# Calculate AIC and BIC for mod.1
+aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
+bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$canopy_QPA)) * length(coef(mod.1))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
+bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$canopy_QPA)) * length(coef(mod.2))
+
+# Calculate AIC and BIC for mod.1
+aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
+bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$canopy_QPA)) * length(coef(mod.3))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
+bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$canopy_QPA)) * length(coef(mod.4))
+
+# Calculate AIC and BIC for mod.1
+aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
+bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$canopy_QPA)) * length(coef(mod.5))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
+bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$canopy_QPA)) * length(coef(mod.6))
+
+# Calculate AIC and BIC for mod.1
+aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
+bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$canopy_QPA)) * length(coef(mod.7))
+
+# Calculate AIC and BIC for mod.2
+aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
+bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$canopy_QPA)) * length(coef(mod.8))
+
+
+# Compare log-likelihoods, AIC, and BIC
+cat("Log-Likelihood Mod.1:", log_likelihood_mod.1, "\n")
+cat("Log-Likelihood Mod.2:", log_likelihood_mod.2, "\n")
+cat("Log-Likelihood Mod.3:", log_likelihood_mod.3, "\n")
+cat("Log-Likelihood Mod.4:", log_likelihood_mod.4, "\n")
+cat("Log-Likelihood Mod.5:", log_likelihood_mod.5, "\n")
+cat("Log-Likelihood Mod.6:", log_likelihood_mod.6, "\n")
+cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
+cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
+
+cat("AIC Mod.1:", aic_mod.1, "\n")
+cat("AIC Mod.2:", aic_mod.2, "\n")
+cat("AIC Mod.3:", aic_mod.3, "\n")
+cat("AIC Mod.4:", aic_mod.4, "\n")
+cat("AIC Mod.5:", aic_mod.5, "\n")
+cat("AIC Mod.6:", aic_mod.6, "\n")
+cat("AIC Mod.7:", aic_mod.7, "\n")
+cat("AIC Mod.8:", aic_mod.8, "\n")
+
+cat("BIC Mod.1:", bic_mod.1, "\n")
+cat("BIC Mod.2:", bic_mod.2, "\n")
+cat("BIC Mod.3:", bic_mod.3, "\n")
+cat("BIC Mod.4:", bic_mod.4, "\n")
+cat("BIC Mod.5:", bic_mod.5, "\n")
+cat("BIC Mod.6:", bic_mod.6, "\n")
+cat("BIC Mod.7:", bic_mod.7, "\n")
+cat("BIC Mod.8:", bic_mod.8, "\n")
 
 
