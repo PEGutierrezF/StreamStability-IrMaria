@@ -145,3 +145,63 @@ ggplot(data, aes(x = event, y = canopy_QPB)) +
        y = "Canopy QPA") +
   theme_minimal()
 
+
+# Shrimp Abundance --------------------------------------------------------
+# Given data
+shrimp_QPB <- c(4.696673669, 7.102844975, 2.92230371, 4.775812621, 3.786680872, 
+                5.861103582, 4.841844408, 4.095107269, 8.184963933, 7.032519247, 
+                8.948997943, 4.558330701, 7.366546849, 6.695518125, 9.333305943, 
+                14.62520908, 8.463158621, 12.83836099, 15.93527468, 13.17293781, 
+                5.624433334, 5.197004403, 6.152430647, 7.169357883, 5.89132428, 
+                8.384487872, 8.557024587, 8.147560149, 10.10395362, 5.160561525, 
+                8.385994999, 6.265705047, 5.676738116, 7.221369143, 6.218530111, 
+                5.30139752, 4.76111744, 3.812979913, 4.197876748, 4.487483645, 
+                4.804636027, 12.30938817, 6.83983239, 4.741247918, 5.366055518)
+
+event <- seq(1, length(shrimp_QPB))
+data_QPB <- data.frame(event, shrimp_QPB)
+
+
+
+# Define the Nelson-Siegel function
+nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
+  y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
+  return(y)
+}
+
+# Initial parameter values
+start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
+
+# Fit the model using nlsLM
+mod.QPB <- nlsLM(shrimp_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
+                 data = data_QPB, 
+                 start = start_params)
+
+summary(mod.QPB)
+# Extract R-squared and p-value
+# Calculate the R-squared value manually
+fitted_values <- fitted(mod.QPB)
+observed_values <- data_QPB$shrimp_QPB
+mean_observed <- mean(observed_values)
+ss_total <- sum((observed_values - mean_observed)^2)
+ss_residual <- sum((observed_values - fitted_values)^2)
+rsquare <- 1 - ss_residual / ss_total
+
+# Print R-squared value
+print(paste("R-squared:", round(rsquare, 4)))
+pvalue <- summary(mod.QPA)$coefficients[4, 4]  # P-value for the 'tau' parameter
+print(paste("p-value:", round(pvalue, 20)))
+
+
+
+# Calculate the predicted values from the model
+predicted_values <- predict(mod.QPB, newdata = data.frame(event = event))
+
+# Create a ggplot
+ggplot(data_QPB, aes(x = event, y = shrimp_QPB)) +
+  geom_point(color = "blue") +
+  geom_line(aes(y = predicted_values), color = "red") +
+  labs(title = "Canopy QPB and Fitted Nelson-Siegel Curve",
+       x = "Event",
+       y = "Canopy QPA") +
+  theme_minimal()
