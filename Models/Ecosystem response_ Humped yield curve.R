@@ -14,7 +14,7 @@
 
 # cleans global environment
 rm(list = ls())
-library(minpack.lm)
+
 
 # data
 canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253, 
@@ -32,7 +32,7 @@ canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253
           -0.05181515, -0.099839151, -0.318969951, -0.332011037, 0.152945865)
 
 event <- seq(1, length(canopy_QPA))
-data <- data.frame(date, canopy_QPA)
+data <- data.frame(event, canopy_QPA)
 
 # Define the Nelson-Siegel function
 nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
@@ -78,8 +78,10 @@ ggplot(data, aes(x = event, y = canopy_QPA)) +
   theme_minimal()
 
 
-
+###########################################################################
 # Quebrada Prieta B -------------------------------------------------------
+###########################################################################
+
 
 # Create a data frame with your canopy_QPB data
 canopy_QPB <- c(0.066649426, 0.123402242, 0.218712422, -0.071410803, -0.471304866,
@@ -98,7 +100,7 @@ canopy_QPB <- c(0.066649426, 0.123402242, 0.218712422, -0.071410803, -0.47130486
 )
 
 event <- seq(1, length(canopy_QPB))
-data_QPB <- data.frame(date, canopy_QPB)
+data_QPB <- data.frame(event, canopy_QPB)
 
 # Define the Nelson-Siegel function
 nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
