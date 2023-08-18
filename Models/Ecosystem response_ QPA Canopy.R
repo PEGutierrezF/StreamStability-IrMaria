@@ -34,17 +34,19 @@ canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253
 event <- seq(1, length(canopy_QPA))
 data <- data.frame(event, canopy_QPA)
 
+###########################################################################
+# Linear model ------------------------------------------------------------
 # Create a linear model
-linear_model <- lm(canopy_QPA ~ event, data = data)
+mod.1 <- lm(canopy_QPA ~ event, data = data)
 
 # Print the summary of the linear model
-summary(linear_model)
+summary(mod.1)
 
 # Get R-squared value
-r_squared <- summary(linear_model)$r.squared
+r_squared <- summary(mod.1)$r.squared
 cat("R-squared:", r_squared, "\n")
 # Get p-value
-p_value <- summary(linear_model)$coefficients[2, 4]
+p_value <- summary(mod.1)$coefficients[2, 4]
 cat("P-value:", p_value, "\n")
 
 # Create a ggplot
@@ -58,47 +60,128 @@ ggplot(data, aes(x = event, y = canopy_QPA)) +
 
 
 ###########################################################################
-# Quebrada Prieta B -------------------------------------------------------
-###########################################################################
+# Humped yield curve ------------------------------------------------------
+# Define the Nelson-Siegel function
+nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
+  y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
+  return(y)
+}
 
-# Create a data frame with your canopy_QPB data
-canopy_QPB <- c(0.066649426, 0.123402242, 0.218712422, -0.071410803, -0.471304866,
-                0.27459288, 1.913568932, 1.551896958, 1.536349726, 1.490548934,
-                1.39148244, 1.294424291, 1.13646499, 1.016906589, 1.246987452,
-                1.185334648, 1.109390578, 1.240990432, 1.181352166, 1.195615482,
-                1.141460837, 0.782647871, 1.030918963, 0.925352283, 1.106814364,
-                1.309983304, 1.233443227, 1.201890013, 1.067352865, 1.085962175,
-                0.96675143, 0.881087944, 0.923288298, 1.041071334, 0.774289613,
-                0.459874479, 0.852670731, 0.967740061, 0.80962898, 0.85930059,
-                0.704782735, 0.823422302, 0.573085869, 0.148375163, 0.631465433,
-                0.654706397, 0.614728641, 0.627307423, 0.748787321, 0.398941928,
-                0.379558061, 0.34147549, 0.421376001, 0.43325061, 0.404163872,
-                0.339625351, 0.449973408, 0.421376001, 0.27459288, 0.305723799,
-                0.256646237, 0.161738391, 0.270632479, 0.155079099, 0.388415515
-)
+# Initial parameter values
+start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
 
-event <- seq(1, length(canopy_QPB))
-data_QPB <- data.frame(event, canopy_QPB)
+# Fit the model using nlsLM
+mod.2 <- nlsLM(canopy_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
+                 data = data, 
+                 start = start_params)
 
-# Create a linear model
-linear_model <- lm(canopy_QPB ~ event, data = data_QPB)
+summary(mod.2)
+# Extract R-squared and p-value
+# Calculate the R-squared value manually
+fitted_values <- fitted(mod.2)
+observed_values <- data$canopy_QPA
+mean_observed <- mean(observed_values)
+ss_total <- sum((observed_values - mean_observed)^2)
+ss_residual <- sum((observed_values - fitted_values)^2)
+rsquare <- 1 - ss_residual / ss_total
 
-# Print the summary of the linear model
-summary(linear_model)
+# Print R-squared value
+print(paste("R-squared:", round(rsquare, 4)))
+pvalue <- summary(mod.2)$coefficients[4, 4]  # P-value for the 'tau' parameter
+print(paste("p-value:", round(pvalue, 20)))
 
-# Get R-squared value
-r_squared <- summary(linear_model)$r.squared
-cat("R-squared:", r_squared, "\n")
-# Get p-value
-p_value <- summary(linear_model)$coefficients[2, 4]
-cat("P-value:", p_value, "\n")
+
+
+# Calculate the predicted values from the model
+predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 
 # Create a ggplot
-ggplot(data_QPB, aes(x = event, y = canopy_QPB)) +
-  geom_point() +         # Scatter plot points
-  geom_smooth(method = "lm", se = FALSE) +  # Trend line without confidence interval
-  labs(title = "Canopy QPA and Trend Line",
+ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point(color = "blue") +
+  geom_line(aes(y = predicted_values), color = "red") +
+  labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
        x = "Event",
        y = "Canopy QPA") +
   theme_minimal()
+
+
+
+###########################################################################
+# Parabola Curve Quadratic function ---------------------------------------
+# Fit the quadratic model
+mod.3 <- lm(canopy_QPA ~ poly(event, 2, raw = TRUE), data = data)
+
+
+# Get R-squared value
+r_squared <- summary(mod.3)$r.squared
+cat("R-squared:", r_squared, "\n")
+
+# Get p-values for coefficients
+p_values <- summary(mod.3)$coefficients[, 4]
+cat("P-values for coefficients:\n")
+print(p_values)
+
+# Create the ggplot plot
+ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point(color = "blue") +  # Scatter plot points
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE), se = FALSE, color = "red") +
+  labs(title = "Quadratic Curve Visualization",
+       x = "Event",
+       y = "Shrimp QPB") +
+  theme_minimal() +  # Use a minimal theme
+  theme(plot.title = element_text(hjust = 0.5))  # Center the plot title
+
+
+
+###########################################################################
+# Logistic curve  ---------------------------------------------------------
+
+
+
+###########################################################################
+# Logarithmic curve  ------------------------------------------------------
+# Fit a logarithmic curve model
+mod.5 <- nls(canopy_QPA ~ a * log(event) + b, data = data, start = list(a = 1, b = 1))
+
+# Get summary of the model
+summary(mod.5)
+
+# Calculate R-squared manually
+ss_total <- sum((data$canopy_QPA - mean(data$canopy_QPA))^2)
+ss_residual <- sum(residuals(mod.5)^2)
+r_squared <- 1 - (ss_residual / ss_total)
+
+# Calculate p-values using t-distribution
+coefs <- coef(mod.5)
+std_errors <- sqrt(diag(vcov(mod.5)))
+t_values <- coefs / std_errors
+p_values <- 2 * (1 - pt(abs(t_values), df = length(data$event) - length(coefs)))
+
+# Display results
+cat("R-squared:", r_squared, "\n")
+cat("Parameter estimates:\n")
+print(coefs)
+cat("Standard errors:\n")
+print(std_errors)
+cat("t-values:\n")
+print(t_values)
+cat("p-values:\n")
+print(p_values)
+
+
+# Create a data frame with predicted values
+pred_data <- data.frame(event = data$event, 
+                        canopy_QPA_pred = predict(mod.5, newdata = data))
+
+# Create a ggplot
+gg <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+  geom_point() +
+  geom_line(data = pred_data, aes(x = event, y = canopy_QPA_pred), color = "blue") +
+  labs(title = "Logarithmic Curve Fitting",
+       x = "Event",
+       y = "Canopy QPA") +
+  theme_minimal()
+
+# Print the ggplot
+print(gg)
 
