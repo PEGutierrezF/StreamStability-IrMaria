@@ -18,19 +18,20 @@ rm(list = ls())
 
 
 # Create a data frame with your canopy_QPB data (2017-01-01 to 2022-09-01)
-canopy_QPB <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253, 
-                0.599072942, 2.035709058, 1.727578155, 1.716528319, 1.669203747, 
-                1.581599124, 1.645628869, 1.436226353, 1.434460089, 1.479398525, 
-                1.391721113, 1.434460089, 1.323650326, 1.294256092, 1.206443161, 
-                1.17562524, 1.110170268, 1.026044255, 0.991775799, 1.070264724, 
-                1.026930388, 1.036626365, 0.966693202, 0.895547766, 0.759415592, 
-                0.631161257, 0.6258842, 0.577094035, 0.681203769, 0.163260678, 
-                0.224379493, 0.556040626, 0.491596663, 0.305941265, 0.419465091, 
-                0.52140513, 0.25351904, 0.016155257, 0.238118669, 0.137395756, 
-                -0.05633391, 0.006844991, 0.152945865, 0.011934061, -0.194014687, 
-                -0.05181515, -0.161291931, -0.023368787, -0.01812402, -0.091360533, 
-                -0.278572075, -0.028641207, -0.043732484, -0.026001523, -0.203414234, 
-                -0.05181515, -0.099839151, -0.318969951, -0.332011037, 0.152945865)
+canopy_QPB <- c(0.066649426, 0.123402242, 0.218712422, -0.071410803, -0.471304866,
+                0.27459288, 1.913568932, 1.551896958, 1.536349726, 1.490548934,
+                1.39148244, 1.294424291, 1.13646499, 1.016906589, 1.246987452,
+                1.185334648, 1.109390578, 1.240990432, 1.181352166, 1.195615482,
+                1.141460837, 0.782647871, 1.030918963, 0.925352283, 1.106814364,
+                1.309983304, 1.233443227, 1.201890013, 1.067352865, 1.085962175,
+                0.96675143, 0.881087944, 0.923288298, 1.041071334, 0.774289613,
+                0.459874479, 0.852670731, 0.967740061, 0.80962898, 0.85930059,
+                0.704782735, 0.823422302, 0.573085869, 0.148375163, 0.631465433,
+                0.654706397, 0.614728641, 0.627307423, 0.748787321, 0.398941928,
+                0.379558061, 0.34147549, 0.421376001, 0.43325061, 0.404163872,
+                0.339625351, 0.449973408, 0.421376001, 0.27459288, 0.305723799,
+                0.256646237, 0.161738391, 0.270632479, 0.155079099, 0.388415515
+)
 
 event <- seq(1, length(canopy_QPB))
 data <- data.frame(event, canopy_QPB)
@@ -344,43 +345,43 @@ mod.8.plot
 ###########################################################################
 # Goodness-of-fit diagnostics based on the log-likelihood -----------------
 # Calculate log-likelihood for all models
-log_likelihood_mod.1 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.1), sd = sqrt(sum((data$canopy_QPA - fitted(mod.1))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
-log_likelihood_mod.2 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.2), sd = sqrt(sum((data$canopy_QPA - fitted(mod.2))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
-log_likelihood_mod.3 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.3), sd = sqrt(sum((data$canopy_QPA - fitted(mod.3))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
-log_likelihood_mod.4 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.4), sd = sqrt(sum((data$canopy_QPA - fitted(mod.4))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
-log_likelihood_mod.5 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.5), sd = sqrt(sum((data$canopy_QPA - fitted(mod.5))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
-log_likelihood_mod.6 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.6), sd = sqrt(sum((data$canopy_QPA - fitted(mod.6))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
-log_likelihood_mod.7 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.7), sd = sqrt(sum((data$canopy_QPA - fitted(mod.7))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
-log_likelihood_mod.8 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.8), sd = sqrt(sum((data$canopy_QPA - fitted(mod.8))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
+log_likelihood_mod.1 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.1), sd = sqrt(sum((data$canopy_QPB - fitted(mod.1))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
+log_likelihood_mod.2 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.2), sd = sqrt(sum((data$canopy_QPB - fitted(mod.2))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
+log_likelihood_mod.3 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.3), sd = sqrt(sum((data$canopy_QPB - fitted(mod.3))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
+log_likelihood_mod.4 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.4), sd = sqrt(sum((data$canopy_QPB - fitted(mod.4))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
+log_likelihood_mod.5 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.5), sd = sqrt(sum((data$canopy_QPB - fitted(mod.5))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
+log_likelihood_mod.6 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.6), sd = sqrt(sum((data$canopy_QPB - fitted(mod.6))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
+log_likelihood_mod.7 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.7), sd = sqrt(sum((data$canopy_QPB - fitted(mod.7))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
+log_likelihood_mod.8 <- sum(dnorm(data$canopy_QPB, mean = fitted(mod.8), sd = sqrt(sum((data$canopy_QPB - fitted(mod.8))^2) / (length(data$canopy_QPB) - 2)), log = TRUE))
 
 
 # Calculate AIC and BIC for mod.1
 aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
-bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$canopy_QPA)) * length(coef(mod.1))
+bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$canopy_QPB)) * length(coef(mod.1))
 
 # Calculate AIC and BIC for mod.2
 aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
-bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$canopy_QPA)) * length(coef(mod.2))
+bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$canopy_QPB)) * length(coef(mod.2))
 
 # Calculate AIC and BIC for mod.3
 aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
-bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$canopy_QPA)) * length(coef(mod.3))
+bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$canopy_QPB)) * length(coef(mod.3))
 
 # Calculate AIC and BIC for mod.4
 aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
-bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$canopy_QPA)) * length(coef(mod.4))
+bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$canopy_QPB)) * length(coef(mod.4))
 
 # Calculate AIC and BIC for mod.5
 aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
-bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$canopy_QPA)) * length(coef(mod.5))
+bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$canopy_QPB)) * length(coef(mod.5))
 
 # Calculate AIC and BIC for mod.6
 aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
-bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$canopy_QPA)) * length(coef(mod.6))
+bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$canopy_QPB)) * length(coef(mod.6))
 
 # Calculate AIC and BIC for mod.7
 aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
-bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$canopy_QPA)) * length(coef(mod.7))
+bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$canopy_QPB)) * length(coef(mod.7))
 
 # Calculate AIC and BIC for mod.8
 aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
