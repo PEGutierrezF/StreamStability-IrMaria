@@ -3,7 +3,7 @@
 
 
 # ---------------------------------------------
-# Long-term ecosystem response: Canopy openness
+# Long-term ecosystem response: Canopy openness Quebrada Prieta A
 # 17 Aug 2023
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
@@ -14,6 +14,7 @@
 
 # cleans global environment
 rm(list = ls())
+
 
 
 # Create a data frame with your canopy_QPA data (2017-01-01 to 2022-09-01)
@@ -33,6 +34,8 @@ canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253
 
 event <- seq(1, length(canopy_QPA))
 data <- data.frame(event, canopy_QPA)
+
+
 
 ###########################################################################
 # Linear model (mod.1) ----------------------------------------------------
@@ -69,7 +72,6 @@ nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
 
 # Initial parameter values
 start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
-
 # Fit the model using nlsLM
 mod.2 <- nlsLM(canopy_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
                  data = data, 
@@ -97,7 +99,7 @@ predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 # Create a ggplot
 mod.2.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
   geom_point(color = "blue") +
-  geom_line(aes(y = predicted_values), color = "red") +
+  geom_line(aes(y = predicted_values), color = "blue") +
   labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
        x = "Event",
        y = "Canopy QPA") +
@@ -341,7 +343,7 @@ mod.8.plot
 
 ###########################################################################
 # Goodness-of-fit diagnostics based on the log-likelihood -----------------
-# Calculate log-likelihood for mod.1 (linear model)
+# Calculate log-likelihood for all models
 log_likelihood_mod.1 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.1), sd = sqrt(sum((data$canopy_QPA - fitted(mod.1))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
 log_likelihood_mod.2 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.2), sd = sqrt(sum((data$canopy_QPA - fitted(mod.2))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
 log_likelihood_mod.3 <- sum(dnorm(data$canopy_QPA, mean = fitted(mod.3), sd = sqrt(sum((data$canopy_QPA - fitted(mod.3))^2) / (length(data$canopy_QPA) - 2)), log = TRUE))
@@ -360,27 +362,27 @@ bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$canopy_QPA)) * length(c
 aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
 bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$canopy_QPA)) * length(coef(mod.2))
 
-# Calculate AIC and BIC for mod.1
+# Calculate AIC and BIC for mod.3
 aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
 bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$canopy_QPA)) * length(coef(mod.3))
 
-# Calculate AIC and BIC for mod.2
+# Calculate AIC and BIC for mod.4
 aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
 bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$canopy_QPA)) * length(coef(mod.4))
 
-# Calculate AIC and BIC for mod.1
+# Calculate AIC and BIC for mod.5
 aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
 bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$canopy_QPA)) * length(coef(mod.5))
 
-# Calculate AIC and BIC for mod.2
+# Calculate AIC and BIC for mod.6
 aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
 bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$canopy_QPA)) * length(coef(mod.6))
 
-# Calculate AIC and BIC for mod.1
+# Calculate AIC and BIC for mod.7
 aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
 bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$canopy_QPA)) * length(coef(mod.7))
 
-# Calculate AIC and BIC for mod.2
+# Calculate AIC and BIC for mod.8
 aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
 bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$canopy_QPA)) * length(coef(mod.8))
 
