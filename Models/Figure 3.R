@@ -44,14 +44,24 @@ mod.2.QPA <- nlsLM(canopy_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau),
                start = start_params)
 
 predicted_values_QPA <- predict(mod.2.QPA, newdata = data.frame(event = event))
+
 # Create a ggplot
 mod.2.plot.QPA <- ggplot(data_canopy_QPA, aes(x = event, y = canopy_QPA)) +
-  geom_point(color = "black") +
-  geom_line(aes(y = predicted_values_QPA), color = "blue", linewidth=1) +
-  labs(title = "",
-       x = "Sampling event",
-       y = "Canopy openness") +
-  theme_bw()
+  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
+  geom_line(aes(y = predicted_values_QPA), color= "gray20", linewidth=1.7) +
+  
+  xlab('') + ylab("Canopy openness") + 
+  theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
+  theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-2,2.5) + 
+  theme(legend.position="none")+
+  
+  theme(panel.grid.major = element_line(colour = "gray95"), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 mod.2.plot.QPA
 
@@ -93,7 +103,7 @@ predicted_values_QPB <- predict(mod.2.QPB, newdata = data.frame(event = event))
 
 # Create a ggplot
 mod.2.plot.QPB <- ggplot(data_canopy_QPB, aes(x = event, y = canopy_QPB)) +
-  geom_point(color = "black") +
+  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_line(aes(y = predicted_values_QPB), color = "blue", linewidth=1) +
   labs(title = "",
        x = "Sampling event",
@@ -158,7 +168,7 @@ predicted_values_chla_QPA <- predict(mod.2, newdata = data.frame(event = event))
 
 # Create a ggplot
 mod.2.chla.plot.QPA <- ggplot(data, aes(x = event, y = chlorophyll_QPA)) +
-  geom_point(color = "black") +
+  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_line(aes(y = predicted_values_chla_QPA), color = "blue", linewidth=1) +
   labs(title = "",
        x = "Sampling event",
@@ -222,7 +232,7 @@ predicted_values_chla_QPB <- predict(mod.2, newdata = data.frame(event = event))
 
 # Create a ggplot
 mod.2.chla.plot.QPB <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
-  geom_point(color = "black") +
+  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_line(aes(y = predicted_values_chla_QPB), color = "blue", linewidth=1) +
   labs(title = "",
        x = "Sampling event",
