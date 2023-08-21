@@ -15,7 +15,7 @@
 remove.packages(c("StanHeaders", "rstan"))
 install.packages("StanHeaders", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
-
+install.packages('minpack.lm')
 
 
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',

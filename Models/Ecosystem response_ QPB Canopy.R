@@ -272,22 +272,35 @@ mod.6.plot <- ggplot(data, aes(x = event, y = canopy_QPB)) +
 mod.6.plot
 
 ###########################################################################
-# Quadratic curve (mod.7) -------------------------------------------------
-# Fit a quadratic model
-mod.7 <- lm(canopy_QPB ~ poly(event, 2), data = data)
+# Gompertz asymmetric sigmoid model curve (mod.7) -------------------------
+# Gompertz function
+gompertz_asymmetric <- function(x, A, b, c, d) {
+  y = A * exp(-b * exp(-c * x)) + d
+  return(y)
+}
 
-# Get R-squared value and p-values for coefficients
-rsquared.mod7 <- summary(mod.7)$r.squared
-pvalues.mod7 <- summary(mod.7)$coefficients[, 4]
-# Print R-squared value and p-values
-cat("p-value:", rsquared.mod7, "\n")
-cat("p-value:", pvalues.mod7, "\n")
 
-# Create a plot
+mod.7 <- nlsLM(canopy_QPB ~ gompertz_asymmetric(event, A, b, c, d),
+               data = data,
+               start = list(A = 1, b = 1, c = 1, d = 0))
+
+rss <- sum(residuals(mod.7)^2)
+tss <- sum((data$canopy_QPA - mean(data$canopy_QPB))^2)
+rsquared_mod.7 <- 1 - (rss / tss)
+pvalue_mod.7 <- summary(mod.7)$coefficients[,"Pr(>|t|)"]["A"]
+
+cat("R-squared value:", rsquared_mod.7, "\n")
+cat("p-value value:", pvalue_mod.7, "\n")
+
+
+curve_data <- data.frame(event = seq(1, length(canopy_QPB), length.out = 100))
+curve_data$predicted <- predict(mod.7, newdata = curve_data)
+
 mod.7.plot <- ggplot(data, aes(x = event, y = canopy_QPB)) +
-  geom_point() + # Plot the data points
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, color = "blue") +  # Plot the quadratic curve
-  labs(x = "Event", y = "canopy_QPB", title = "Quadratic Curve Fitting") +
+  geom_point() +
+  geom_line(data = curve_data, aes(x = event, y = predicted), color = "red") +
+  labs(title = "Gompertz Asymmetric Sigmoid Model Fit",
+       x = "Event", y = "Canopy QPA") +
   theme_minimal()
 
 mod.7.plot
