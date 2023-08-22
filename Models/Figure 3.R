@@ -104,18 +104,26 @@ predicted_values_QPB <- predict(mod.2.QPB, newdata = data.frame(event = event))
 # Create a ggplot
 mod.2.plot.QPB <- ggplot(data_canopy_QPB, aes(x = event, y = canopy_QPB)) +
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
-  geom_line(aes(y = predicted_values_QPB), color = "blue", linewidth=1) +
-  labs(title = "",
-       x = "Sampling event",
-       y = "") +
-  theme_bw()
+  geom_line(aes(y = predicted_values_QPB), color= "gray20", linewidth=1.7) +
+
+  xlab('') + ylab("Canopy openness") + 
+  theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
+  theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-2,2.5) + 
+  theme(legend.position="none")+
+  
+  theme(panel.grid.major = element_line(colour = "gray95"), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 mod.2.plot.QPB
 
 
 ###########################################################################
-# Chlorophyll Prieta A ----------------------------------------------------
-
+# Periphyton Prieta A ----------------------------------------------------
 # Create a data frame with your canopy_QPA data (2017-01-01 to 2022-09-01)
 chlorophyll_QPA <- c(0.374941114, 0.421008704, 0.059098445, -0.356900918, -0.05326958,
                      -0.133541362, -0.319898689, -0.340327935, -0.49053223, -0.326974628,
@@ -128,59 +136,57 @@ chlorophyll_QPA <- c(0.374941114, 0.421008704, 0.059098445, -0.356900918, -0.053
                      -1.216284093, -0.030794936, 0.128182961, 0.296216546, 0.109570674,
                      0.135445071, 0.163041949, 0.135653819, -0.172758478, -0.042531071,
                      0.025660758, 0.543062826, 0.494435909, -0.055966918, -0.086641353,
-                     0.009111772)
+                     0.009111772, 0.168652927, 0.589891, 0.359543263, 0.249273612, 
+                     0.190985156, 0.776090885, 0.219440474, 0.449951267)
 
 event <- seq(1, length(chlorophyll_QPA))
 data <- data.frame(event, chlorophyll_QPA)
 
-# Humped yield curve (mod.2) ----------------------------------------------
-# Define the Nelson-Siegel function
-nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
-  y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
-  return(y)
-}
 
-# Initial parameter values
-start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
-# Fit the model using nlsLM
-mod.2 <- nlsLM(chlorophyll_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
-               data = data, 
-               start = start_params)
+# Inverted Parabola Curve (mod. 3) ----------------------------------------
+# Fit a quadratic regression model
+mod.3 <- lm(chlorophyll_QPA ~ event + I(event^2), data=data)
+# Get model summary
+summary(mod.3)
 
-summary(mod.2)
-# Extract R-squared and p-value
-# Calculate the R-squared value manually
-fitted_values <- fitted(mod.2)
-observed_values <- data$chlorophyll_QPA
-mean_observed <- mean(observed_values)
-ss_total <- sum((observed_values - mean_observed)^2)
-ss_residual <- sum((observed_values - fitted_values)^2)
-r_square_mod.2 <- 1 - ss_residual / ss_total
+# Extract R-squared value and p-value
+r_squared.mod3 <- summary(mod.3)$r.squared
+p_value.mod3 <- summary(mod.3)$coefficients[4]  # P-value for the quadratic term
+# Display results
+cat("R-squared:", r_squared.mod3, "\n")
+cat("R-squared:", p_value.mod3, "\n")
 
-# Print R-squared value and p-values
-cat("R-squared:", r_square_mod.2, "\n")
-pvalue <- summary(mod.2)$coefficients[4, 4]  # P-value for the 'tau' parameter
-cat("P-value:", pvalue, "\n")
+# Create a new data frame for prediction
+new_data <- data.frame(event = seq(1, length(chlorophyll_QPA), length.out = 100))
+
+# Predict using the model
+predictions_peri_QPA <- predict(mod.3, newdata = new_data)
 
 
-# Calculate the predicted values from the model
-predicted_values_chla_QPA <- predict(mod.2, newdata = data.frame(event = event))
-
-# Create a ggplot
-mod.2.chla.plot.QPA <- ggplot(data, aes(x = event, y = chlorophyll_QPA)) +
+# Create a ggplot for visualization
+mod.2.periphyton.QPA <- ggplot(data, aes(x = event, y = chlorophyll_QPA)) +
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
-  geom_line(aes(y = predicted_values_chla_QPA), color = "blue", linewidth=1) +
-  labs(title = "",
-       x = "Sampling event",
-       y = "Epilithic algae") +
-  theme_bw()
+  geom_line(data = data.frame(event = new_data$event, periphyton_QPA = predictions_peri_QPA), 
+            aes(x = event, y = periphyton_QPA), color = "gray20", linewidth=1.7) +
+  
+  xlab('') + ylab("Epilithic algae") + 
+  theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
+  theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-2,2.5) + 
+  theme(legend.position="none")+
+  
+  theme(panel.grid.major = element_line(colour = "gray95"), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-mod.2.chla.plot.QPA
+mod.2.periphyton.QPA
 
-
+  
 ###########################################################################
 # Chlorophyll Prieta B ----------------------------------------------------
-
 chlorophyll_QPB <- c(0.50664315, 0.367207886, -0.014872716, 0.066137971, 0.030785219, -0.420636925,
                      -0.532707828, -0.565502931, -0.302866704, -0.739818027, -0.631285253, -1.005281876,
                      -0.586985814, -0.704420806, -1.267086154, -0.51728118, -0.499008016, -0.389993121,
@@ -190,61 +196,59 @@ chlorophyll_QPB <- c(0.50664315, 0.367207886, -0.014872716, 0.066137971, 0.03078
                      0.036101327, 0.191078061, -0.683301671, -0.459379957, -1.553418692, -0.560293394,
                      -0.198035461, 0.086767025, -0.516006206, -0.328713949, 0.433791523, 0.021171656,
                      -0.272604249, 0.083860925, -0.10855559, 0.285803829, -0.374389114, 0.269429207,
-                     -0.467751563, -0.021651399)
+                     -0.467751563, -0.021651399, -0.173116019, 0.265943762, 0.061304029, 0.747564142, 
+                     0.041108448, 0.684064969, 0.517588636, 0.369352134)
 
 event <- seq(1, length(chlorophyll_QPB))
 data <- data.frame(event, chlorophyll_QPB)
 
 
 
-# Humped yield curve (mod.2) ----------------------------------------------
-# Define the Nelson-Siegel function
-nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
-  y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
-  return(y)
-}
+# Inverted Parabola Curve (mod. 3) ----------------------------------------
+# Fit a quadratic regression model
+mod.3 <- lm(chlorophyll_QPB ~ event + I(event^2), data=data)
+# Get model summary
+summary(mod.3)
 
-# Initial parameter values
-start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
-# Fit the model using nlsLM
-mod.2 <- nlsLM(chlorophyll_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
-               data = data, 
-               start = start_params)
+# Extract R-squared value and p-value
+r_squared.mod3 <- summary(mod.3)$r.squared
+p_value.mod3 <- summary(mod.3)$coefficients[4]  # P-value for the quadratic term
+# Display results
+cat("R-squared:", r_squared.mod3, "\n")
+cat("R-squared:", p_value.mod3, "\n")
 
-summary(mod.2)
-# Extract R-squared and p-value
-# Calculate the R-squared value manually
-fitted_values <- fitted(mod.2)
-observed_values <- data$chlorophyll_QPB
-mean_observed <- mean(observed_values)
-ss_total <- sum((observed_values - mean_observed)^2)
-ss_residual <- sum((observed_values - fitted_values)^2)
-r_square_mod.2 <- 1 - ss_residual / ss_total
+# Create a new data frame for prediction
+new_data <- data.frame(event = seq(1, length(chlorophyll_QPB), length.out = 100))
 
-# Print R-squared value and p-values
-cat("R-squared:", r_square_mod.2, "\n")
-pvalue <- summary(mod.2)$coefficients[4, 4]  # P-value for the 'tau' parameter
-cat("P-value:", pvalue, "\n")
+# Predict using the model
+predictions_peri_QPB <- predict(mod.3, newdata = new_data)
 
 
-# Calculate the predicted values from the model
-predicted_values_chla_QPB <- predict(mod.2, newdata = data.frame(event = event))
-
-# Create a ggplot
-mod.2.chla.plot.QPB <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
+# Create a ggplot for visualization
+mod.2.periphyton.QPB <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
-  geom_line(aes(y = predicted_values_chla_QPB), color = "blue", linewidth=1) +
-  labs(title = "",
-       x = "Sampling event",
-       y = "")+
-  theme_bw()
+  geom_line(data = data.frame(event = new_data$event, periphyton_QPB = predictions_peri_QPB), 
+            aes(x = event, y = periphyton_QPB), color = "gray20", linewidth=1.7) +
+  
+  xlab('') + ylab("") + 
+  theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
+  theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
+  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis y
+  
+  ylim(-2,2.5) + 
+  theme(legend.position="none")+
+  
+  theme(panel.grid.major = element_line(colour = "gray95"), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-mod.2.chla.plot.QPB
+mod.2.periphyton.QPB
 
 
 
 Figure3 <- (mod.2.plot.QPA | mod.2.plot.QPB) /
-            (mod.2.chla.plot.QPA | mod.2.chla.plot.QPB)
+            (mod.2.periphyton.QPA | mod.2.periphyton.QPB)
 
 
 Figure3 <- Figure3 + plot_annotation(tag_levels = 'A')
