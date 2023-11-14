@@ -447,3 +447,4 @@ cat("BIC Mod.5:", bic_mod.5, "\n")
 cat("BIC Mod.6:", bic_mod.6, "\n")
 cat("BIC Mod.7:", bic_mod.7, "\n")
 cat("BIC Mod.8:", bic_mod.8, "\n")
+
