@@ -18,7 +18,7 @@ Trajectories<- read.csv("data/Trajectories.csv")
 head(Trajectories)
 
 
-Trajectories$date<-as.POSIXct(Trajectories$date,"%Y-%m-%d",tz = "UTC")
+Trajectories$date <- as.POSIXct(Trajectories$date,"%Y-%m-%d",tz = "UTC")
 
 # Reorder names in a new variable
 
@@ -35,7 +35,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 # General graph -----------------------------------------------------------
 
- p<- ggplot(Trajectories, aes(date, value)) + 
+ p <- ggplot(Trajectories, aes(date, value)) + 
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
@@ -76,10 +76,14 @@ p
 p + geom_richtext(data = labels, aes(label = lab), x = as.POSIXct("2018-12-01"), y = -2.5)
 
 #
-p + ggsave("Trajectories.tiff",  path = "figures", width=9, height=6,dpi=300)
+p + ggsave("Trajectoriesa.jpeg",  path = "figures", width=9, height=6,dpi=300)
 
 
+# Check for non-finite values in your data
+non_finite_rows <- which(!is.finite(data$canopy_QPA))
 
+# Display the rows with non-finite values
+data[non_finite_rows, ]
 
 # Individual strip color  -------------------------------------------------
 
@@ -92,7 +96,7 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
- grid.draw(g) + ggsave("TrajectoriesD.tiff", g, path = "figures", width=9, height=6,dpi=300)
+ grid.draw(g) + ggsave("TrajectoriesD.jpeg", g, path = "figures", width=9, height=6,dpi=300)
 
 
 # Table R-squared 
