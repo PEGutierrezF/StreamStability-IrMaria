@@ -45,7 +45,7 @@ mod.2.QPA <- nlsLM(canopy_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau),
 
 predicted_values_QPA <- predict(mod.2.QPA, newdata = data.frame(event = event))
 
-# Create a ggplot
+
 # Create a ggplot
 mod.2.plot.QPA <- ggplot(data, aes(x = event, y = canopy_QPA)) +
   
