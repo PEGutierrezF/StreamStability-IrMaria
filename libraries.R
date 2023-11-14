@@ -18,6 +18,7 @@ install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption
 install.packages('minpack.lm')
 
 
+install.packages('optimx')
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "reshape2", "ggpubr", "tidyverse", "grid","lubridate",
                "fitdistrplus", "mgcv","ggtext", 'brms','magrittr',

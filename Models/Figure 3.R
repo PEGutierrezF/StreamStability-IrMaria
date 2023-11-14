@@ -46,10 +46,20 @@ mod.2.QPA <- nlsLM(canopy_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau),
 predicted_values_QPA <- predict(mod.2.QPA, newdata = data.frame(event = event))
 
 # Create a ggplot
-mod.2.plot.QPA <- ggplot(data_canopy_QPA, aes(x = event, y = canopy_QPA)) +
-  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
-  geom_line(aes(y = predicted_values_QPA), color= "gray20", linewidth=1.7) +
+# Create a ggplot
+mod.2.plot.QPA <- ggplot(data, aes(x = event, y = canopy_QPA)) +
   
+  geom_ribbon(aes(ymin = fitted_values - 1.96 * summary(mod.2)$sigma,
+                  ymax = fitted_values + 1.96 * summary(mod.2)$sigma),
+              fill = "gray", alpha = 0.5) +  # Add 95% CI manually
+  
+  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
+  geom_line(aes(y = .fitted), color= "gray20", linewidth=1.7, data = predictions) +
+
+  labs(title = "",
+       x = "Event",
+       y = "Canopy QPA") +
+
   xlab('') + ylab("Canopy openness") + 
   theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
   theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
@@ -61,7 +71,9 @@ mod.2.plot.QPA <- ggplot(data_canopy_QPA, aes(x = event, y = canopy_QPA)) +
   
   theme(panel.grid.major = element_line(colour = "gray95"), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+
+  geom_hline(yintercept = 0, linetype = "solid", color = "black", size = 1)  # Add a black solid line at y = 0
 
 mod.2.plot.QPA
 

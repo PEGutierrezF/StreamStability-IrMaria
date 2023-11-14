@@ -99,13 +99,20 @@ predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 # Create a ggplot
 mod.2.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
   geom_point(color = "blue") +
-  geom_line(aes(y = predicted_values), color = "blue") +
+  geom_line(aes(y = .fitted), color = "blue", data = predictions) +
+  geom_ribbon(aes(ymin = fitted_values - 1.96 * summary(mod.2)$sigma,
+                  ymax = fitted_values + 1.96 * summary(mod.2)$sigma),
+              fill = "gray", alpha = 0.5) +  # Add 95% CI manually
   labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
        x = "Event",
        y = "Canopy QPA") +
-  theme_minimal()
+  theme_minimal() +
+  theme_bw() +
+  coord_cartesian(ylim = c(-2, 2)) +
+  geom_hline(yintercept = 0, linetype = "solid", color = "black", size = 1)  # Add a black solid line at y = 0
 
 mod.2.plot
+
 
 ###########################################################################
 # Inverted Parabola Curve (mod. 3) ----------------------------------------
