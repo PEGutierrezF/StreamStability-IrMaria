@@ -17,19 +17,17 @@ rm(list=ls())
 
 
 
-macroinvertebrates <- read.csv("data/all_data.csv")
+macroinvertebrates <- read.xlsx("data/all_data.xlsx", sheet='macro_density', detectDates = TRUE)
 head(macroinvertebrates)
-
-macroiv <- macroinvertebrates %>% dplyr::select(date_macroiv, QPA_miv, QPB_miv)
-macroiv$date_macroiv <- as.POSIXct(macroiv$date_macroiv,"%Y-%m-%d",tz = "UTC")
-macroiv <- na.omit(macroiv)
+macroiv <- na.omit(macroinvertebrates)
+head(macroiv)
 
 
 ################################################################
 # Linear model Macroinvertebrate abundance Prieta A -----------
 ################################################################
 
-QPA.macroinv.mod  <- lm(QPA_miv ~ date_macroiv, data=macroiv)
+QPA.macroinv.mod  <- lm(QPA_miv ~ date, data=macroiv)
 summary(QPA.macroinv.mod)
 
 macroiv$QPAresid<- QPA.macroinv.mod$resid
@@ -38,7 +36,7 @@ head(macroiv)
 1/apply(macroiv, 2, sd)
 
 
-qpa.miv <- ggplot(macroiv, aes(date_macroiv, y=QPA_miv))+
+qpa.miv <- ggplot(macroiv, aes(date, y=QPA_miv))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
@@ -61,7 +59,7 @@ qpa.miv
 ################################################################
 
 
-QPB.macroinv.mod  <- lm(QPB_miv ~ date_macroiv, data=macroiv)
+QPB.macroinv.mod  <- lm(QPB_miv ~ date, data=macroiv)
 summary(QPB.macroinv.mod)
 
 macroiv$QPAresid<- QPB.macroinv.mod$resid
@@ -70,7 +68,7 @@ head(macroiv)
 1/apply(macroiv, 2, sd)
 
 
-qpb.miv <- ggplot(macroiv, aes(date_macroiv, y=QPB_miv))+
+qpb.miv <- ggplot(macroiv, aes(date, y=QPB_miv))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   

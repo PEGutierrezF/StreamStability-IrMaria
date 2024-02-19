@@ -17,28 +17,25 @@ rm(list=ls())
 
 
 
-decapod <- read.csv("data/all_data.csv")
+decapod <- read.xlsx("data/all_data.xlsx", sheet='decapoda_abundance', detectDates = TRUE)
 head(decapod)
-
-shrimp <- decapod %>% dplyr::select(date_shrimp, QPA_shrimp, QPB_shrimp)
-shrimp$date_shrimp <- as.POSIXct(shrimp$date_shrimp,"%Y-%m-%d",tz = "UTC")
-shrimp <- na.omit(shrimp)
-
+decapod <- na.omit(decapod)
+head(decapod)
 
 ################################################################
 # Linear model Decapoda abundance Prieta A ---------------------
 ################################################################
 
-QPA.shrimp.mod  <- lm(QPA_shrimp ~ date_shrimp, data=shrimp)
+QPA.shrimp.mod  <- lm(QPA_shrimp ~ date, data=decapod)
 summary(QPA.shrimp.mod)
 
-shrimp$QPAresid<- QPA.shrimp.mod$resid
-shrimp
+decapod$QPAresid <- QPA.shrimp.mod$resid
+decapod
 
-1/apply(shrimp, 2, sd)
+1/apply(decapod, 2, sd)
 
 
-qpa.s <- ggplot(shrimp, aes(date_shrimp, y=QPA_shrimp))+
+qpa.s <- ggplot(decapod, aes(date, y=QPA_shrimp))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
@@ -62,15 +59,15 @@ qpa.s
 ################################################################
 
 
-QPB.shrimp.mod  <- lm(QPB_shrimp ~ date_shrimp, data=shrimp)
+QPB.shrimp.mod <- lm(QPB_shrimp ~ date, data=decapod)
 summary(QPB.shrimp.mod)
 
-shrimp$QPBresid<- QPB.shrimp.mod$resid
-shrimp
+decapod$QPBresid<- QPB.shrimp.mod$resid
+decapod
 
-1/apply(shrimp, 2, sd)
+1/apply(decapod, 2, sd)
 
-qpb.s <- ggplot(shrimp, aes(date_shrimp, y=QPB_shrimp))+
+qpb.s <- ggplot(decapod, aes(date, y=QPB_shrimp))+
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
