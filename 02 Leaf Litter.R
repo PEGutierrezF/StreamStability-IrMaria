@@ -18,11 +18,13 @@ rm(list=ls())
 
 
 data <- read.csv("data/all_data.csv")
+leaflitter <- read.xlsx("data/all_data.xlsx", sheet='leaflitter', detectDates = TRUE)
+head(leaflitter)
 
 leaflitter <- data%>%dplyr::select(date_ll, QPA_leaflitter, QPB_leaflitter)
 
 
-leaflitter$date_ll <- as.POSIXct(leaflitter$date_ll,"%Y-%m-%d",tz = "UTC")
+leaflitter$date <- as.POSIXct(leaflitter$date,"%Y-%m-%d",tz = "UTC")
 leaflitter <- na.omit(leaflitter)
 
 
@@ -31,16 +33,16 @@ leaflitter <- na.omit(leaflitter)
 ################################################################
 
 
-QPAleaf.mod  <- lm(QPA_leaflitter ~ date_ll, data=leaflitter)
+QPAleaf.mod  <- lm(QPA_leaflitter ~ date, data=leaflitter)
 summary(QPAleaf.mod)
-plot(QPA_leaflitter ~ date_ll, data=leaflitter)
+plot(QPA_leaflitter ~ date, data=leaflitter)
 
 leaflitter$QPAresid<- QPAleaf.mod $resid
 leaflitter
 
 1/apply(leaflitter, 2, sd) #2 mean apply to columns
 
-p1 <- ggplot(leaflitter,aes(x= date_ll, y=QPA_leaflitter)) +
+p1 <- ggplot(leaflitter,aes(x= date, y=QPA_leaflitter)) +
   geom_point(size = 3) + 
   geom_smooth(method=lm,se=FALSE) +
   
