@@ -17,11 +17,8 @@ rm(list=ls())
 
 
 
-data <- read.csv("data/all_data.csv")
 leaflitter <- read.xlsx("data/all_data.xlsx", sheet='leaflitter', detectDates = TRUE)
 head(leaflitter)
-
-leaflitter <- data%>%dplyr::select(date_ll, QPA_leaflitter, QPB_leaflitter)
 
 
 leaflitter$date <- as.POSIXct(leaflitter$date,"%Y-%m-%d",tz = "UTC")
@@ -65,7 +62,7 @@ p1
 # Linear model Leaf Litter Prieta B ----------------------------
 ################################################################
 
-QPBleaf.mod <- lm(QPB_leaflitter ~ date_ll, data=leaflitter)
+QPBleaf.mod <- lm(QPB_leaflitter ~ date, data=leaflitter)
 summary(QPBleaf.mod)
 
 leaflitter$QPBresid<- QPBleaf.mod$resid

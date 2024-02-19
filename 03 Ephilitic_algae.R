@@ -17,11 +17,8 @@ rm(list=ls())
 
 
 
-chlorophyll.a <- read.csv("data/all_data.csv")
-head(chlorophyll.a)
-
-chla <- chlorophyll.a %>% dplyr::select(date_chla, QPA_chla, QPB_chla)
-chla$date_chla <- as.POSIXct(chla$date_chla,"%Y-%m-%d",tz = "UTC")
+chla <- read.xlsx("data/all_data.xlsx", sheet='epilithic_algae', detectDates = TRUE)
+head(chla)
 chla <- na.omit(chla)
 
 
