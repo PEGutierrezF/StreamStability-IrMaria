@@ -16,13 +16,14 @@ rm(list=ls())
 
 
 
-library(dplyr)
-canopycover<- read.csv("data/all_data.csv")
+canopycover<- read.xlsx("data/all_data.xlsx", detectDates = TRUE)
 head(canopycover)
+
 
 canopy <- canopycover %>% dplyr::select(date_co, QPA_canopy, QPB_canopy)
 canopy$date_co<-as.POSIXct(canopy$date_co,"%Y-%m-%d",tz = "UTC")
 canopy <- na.omit(canopy)
+head(canopy)
 
 ################################################################
 # Linear model Canopy QPA --------------------------------------

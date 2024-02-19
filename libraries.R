@@ -22,7 +22,7 @@ install.packages('minpack.lm')
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "reshape2", "ggpubr", "tidyverse", "grid","lubridate",
                "fitdistrplus", "mgcv","ggtext", 'brms','magrittr',
-               'readxl', 'optimx', 'minpack.lm')
+               'readxl', 'optimx', 'minpack.lm','openxlsx')
 lapply(libraries, require, character.only = TRUE)
 
 
