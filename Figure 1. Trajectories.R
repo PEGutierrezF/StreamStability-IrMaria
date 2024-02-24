@@ -14,11 +14,11 @@
 
 rm(list = ls())
 
-Trajectories<- read.csv("data/Trajectories.csv")
-head(Trajectories)
+trajectories <- read.xlsx("data/data_trajectories.xlsx", detectDates = TRUE)
+head(trajectories)
 
 
-Trajectories$date <- as.POSIXct(Trajectories$date,"%Y-%m-%d",tz = "UTC")
+trajectories$date <- as.POSIXct(trajectories$date,"%Y-%m-%d",tz = "UTC")
 
 # Reorder names in a new variable
 
@@ -28,14 +28,14 @@ variable_new <- c("canopy_cover"= "textstyle('Canopy openness')",
     "Shrimps"="textstyle('Shrimps')",
     "macroinvertebrates"= "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))")
 
-Trajectories$variable <- factor(Trajectories$variable,      # Reordering group factor levels
+trajectories$variable <- factor(trajectories$variable,      # Reordering group factor levels
                          levels = c("canopy_cover", "Leaf_litter", "Chla", "Shrimps", "macroinvertebrates"))
 
 streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 # General graph -----------------------------------------------------------
 
- p <- ggplot(Trajectories, aes(date, value)) + 
+ p <- ggplot(trajectories, aes(date, value)) + 
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
@@ -60,16 +60,16 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
             col= "red",linetype=4, alpha=0.9) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
              col= "blue",linetype=4, alpha=0.9) +
-  
-  facet_grid(stream ~ variable,
-        labeller = labeller(variable = as_labeller(variable_new, label_parsed),
-        stream  = streams_new)) +
 
   theme(strip.text.x = element_text(size = 10, color = "black"),
-    strip.text.y = element_text(size = 10, color = "black"),
-    strip.placement = "outside") +
+  strip.text.y = element_text(size = 10, color = "black"),
+  strip.placement = "outside") +
   theme(strip.background=element_rect(color= "black", fill="gray85")) +
-  theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) 
+  theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) +
+  
+  facet_grid(stream ~ variable,
+             labeller = labeller(variable = as_labeller(variable_new, label_parsed),
+                                 stream  = streams_new)) 
 
 p
 
@@ -96,7 +96,7 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
- grid.draw(g) + ggsave("TrajectoriesD.jpeg", g, path = "figures", width=9, height=6,dpi=300)
+ grid.draw(g) + ggsave("Figure 1.jpeg", g, path = "figures", width=9, height=6,dpi=300)
 
 
 # Table R-squared 
