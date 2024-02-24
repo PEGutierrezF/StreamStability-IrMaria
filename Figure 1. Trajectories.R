@@ -33,6 +33,7 @@ trajectories$variable <- factor(trajectories$variable,      # Reordering group f
 
 streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
+
 # General graph -----------------------------------------------------------
 
  p <- ggplot(trajectories, aes(date, value)) + 
@@ -70,20 +71,13 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
   facet_grid(stream ~ variable,
              labeller = labeller(variable = as_labeller(variable_new, label_parsed),
                                  stream  = streams_new)) 
-
 p
 
 p + geom_richtext(data = labels, aes(label = lab), x = as.POSIXct("2018-12-01"), y = -2.5)
 
 #
-p + ggsave("Trajectoriesa.jpeg",  path = "figures", width=9, height=6,dpi=300)
+# p + ggsave("Trajectoriesa.jpeg",  path = "figures", width=9, height=6,dpi=300)
 
-
-# Check for non-finite values in your data
-non_finite_rows <- which(!is.finite(data$canopy_QPA))
-
-# Display the rows with non-finite values
-data[non_finite_rows, ]
 
 # Individual strip color  -------------------------------------------------
 
@@ -97,57 +91,6 @@ for (i in stripr) {
   k <- k+1
 }
  grid.draw(g) + ggsave("Figure 1.jpeg", g, path = "figures", width=9, height=6,dpi=300)
-
-
-# Table R-squared 
- 
- 
-# en orden perdo igual data
-labels <- data.frame(#variable_new= c("textstyle('Canopy openness')", 
-                      #               "textstyle('Leaf litter')",
-                       #               "textstyle('Chlorophyll-')*italic('a')",
-                        #              "textstyle('Shrimps')",
-                         #              "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))",
-                          #           "textstyle('Canopy openness')", 
-                           #          "textstyle('Leaf litter')",
-                            #         "textstyle('Chlorophyll-')*italic('a')",
-                             #        "textstyle('Shrimps')",
-                              #       "atop(NA,atop(textstyle('Macroinvertebrate'),textstyle('density')))"),
-                                     stream= c("QPA","QPB","QPA","QPB","QPA","QPB","QPA","QPB","QPB","QPB"),
-                    lab = paste0("<b>R<sup>2</sup> = ", sprintf("%.2f", c(.59,.51,.14,.16,.41,.51,.37,.28,.55,.60))),
-                    code=1:10)
-
-labels
-
-
-p + geom_richtext(data = labels, aes(x = as.POSIXct("2018-12-01"), y = -2.5, label = lab))
-
-
-
-
-
-
-tag_facet <- function(p, open = "(", close = ")", tag_pool = letters, x = -Inf, y = Inf, 
-                      hjust = -0.5, vjust = 1.5, fontface = 2, family = "", ...) {
-  gb <- ggplot_build(p)
-  lay <- gb$layout$layout
-  tags <- cbind(lay, label = paste0(open, tag_pool[lay$PANEL], close), x = x, y = y)
-  p + geom_text(data = tags, aes_string(x = "x", y = "y", label = "label"), ..., hjust = hjust, 
-                vjust = vjust, fontface = fontface, family = family, inherit.aes = FALSE) 
-}
-
-new <- "R^2"
-my_tag <- c(new, "R","R","R","R","R","R","R","R=","R","R")
-my_tag
-
-egg::tag_facet(p, 
-          x =  as.POSIXct("2017-12-01"), y = -3, 
-          vjust = -1, hjust = -0.25,
-          open = "", close = "",
-          fontface = 3,
-          size = 4,
-          family = "serif",
-          tag_pool = new)
 
 
 
