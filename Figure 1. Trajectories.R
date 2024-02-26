@@ -55,22 +55,20 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  
-    
   geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
             col= "red",linetype=4, alpha=0.9) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
-             col= "blue",linetype=4, alpha=0.9) +
-
+             col= "blue",linetype=4, alpha=0.9)
+  
+p + facet_grid(stream ~ variable,
+             labeller = labeller(variable = as_labeller(variable_new, label_parsed),
+                                 stream  = streams_new)) +
   theme(strip.text.x = element_text(size = 10, color = "black"),
-  strip.text.y = element_text(size = 10, color = "black"),
-  strip.placement = "outside") +
+        strip.text.y = element_text(size = 10, color = "black"),
+        strip.placement = "outside") +
   theme(strip.background=element_rect(color= "black", fill="gray85")) +
   theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) +
-  
-  facet_grid(stream ~ variable,
-             labeller = labeller(variable = as_labeller(variable_new, label_parsed),
-                                 stream  = streams_new)) 
+  theme(strip.switch.pad.grid = unit('0.5', "cm"))
 p
 
 p + geom_richtext(data = labels, aes(label = lab), x = as.POSIXct("2018-12-01"), y = -2.5)
