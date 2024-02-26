@@ -17,7 +17,7 @@ rm(list = ls())
 
 
 
-# Create a data frame with your canopy_QPA data (2017-01-01 to 2022-09-01)
+# Create a data frame with canopy_QPA data (2017-01-01 to 2022-09-01)
 canopy_QPA <- c(0.336436902, -0.349667996, 0.08348054, 0.194286951, -0.521518253, 
                 0.599072942, 2.035709058, 1.727578155, 1.716528319, 1.669203747, 
                 1.581599124, 1.645628869, 1.436226353, 1.434460089, 1.479398525, 
@@ -415,7 +415,7 @@ cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
 cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
 
 cat("AIC Mod.1:", aic_mod.1, "\n")
-cat("AIC Mod.2:", aic_mod.2, "\n")
+cat("AIC Mod.2:", aic_mod.2, "\n") # Humped yield curve  
 cat("AIC Mod.3:", aic_mod.3, "\n")
 cat("AIC Mod.4:", aic_mod.4, "\n")
 cat("AIC Mod.5:", aic_mod.5, "\n")
@@ -424,7 +424,7 @@ cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
 
 cat("BIC Mod.1:", bic_mod.1, "\n")
-cat("BIC Mod.2:", bic_mod.2, "\n")
+cat("BIC Mod.2:", bic_mod.2, "\n") # Humped yield curve 
 cat("BIC Mod.3:", bic_mod.3, "\n")
 cat("BIC Mod.4:", bic_mod.4, "\n")
 cat("BIC Mod.5:", bic_mod.5, "\n")
