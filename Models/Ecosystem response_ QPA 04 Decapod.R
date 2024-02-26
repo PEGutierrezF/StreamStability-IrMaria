@@ -17,17 +17,23 @@ rm(list = ls())
 
 
 
-shrimp_QPA <- c(0.078654086, 0.411841894, -0.961840432, -0.270906801, 0.008101078, 0.388087446, 
-                0.07876591, -0.357455085, -0.157341736, -0.23393578, -0.239203865, -0.086031458,
-                0.194384455, 0.449264798, 0.357700178, 0.923433147, -0.010068608, 0.383830498,
-                0.645842869, 0.709639939, -0.010001997, 0.180285861, 0.399394425, 0.269734048,
-                0.098597297, 0.121989466, 0.408274831, 0.371495165, 0.817862356, 0.500372304,
-                0.240039901, 0.083373911, 0.354399016, 0.320034799, 0.140367341, -0.254432235,
-                0.003846263, -0.34321992, -0.081858956, 0.105006467, 0.239319973, 0.408686216,
-                0.12504962, 0.322919454, 0.718199634)
+# Create a data frame with Decapoda_QPA data (2017-01-01 to 2022-09-01)
+decapoda_QPA <- c(0.078654086, 0.411841894, -0.961840432, -0.270906801, 0.008101078, 0.388087446, 
+                  0.07876591, -0.357455085, -0.157341736, -0.23393578, -0.239203865, -0.086031458, 
+                  0.194384455, 0.449264798, 0.357700178, 0.923433147, -0.010068608, 0.383830498, 
+                  0.645842869, 0.709639939, -0.010001997, 0.180285861, 0.399394425, 0.269734048, 
+                  0.098597297, 0.121989466, 0.408274831, 0.371495165, 0.817862356, 0.500372304, 
+                  0.240039901, 0.083373911, 0.354399016, 0.320034799, 0.140367341, -0.254432235, 
+                  0.003846263, -0.34321992, -0.081858956, 0.105006467, 0.239319973, 0.408686216, 
+                  0.12504962, 0.322919454, 0.718199634, -0.19458057, -0.628874296, -0.699498734, 
+                  -0.333033181, -0.643381145, -0.497259411, -0.638556847, -0.771123635, -0.209821714, 
+                  -0.777532836, -0.725945658, -0.771792055, -0.762260335, -0.393835734, -0.890604404, 
+                  -0.267314505, -0.828057819, -0.435227036, -0.41283978, -0.536717338, -0.534703537, 
+                  -0.537231614, -0.883109826, -0.995781911)
 
-event <- seq(1, length(shrimp_QPA))
-data <- data.frame(event, shrimp_QPA)
+
+event <- seq(1, length(decapoda_QPA))
+data <- data.frame(event, decapoda_QPA)
 
 
 
@@ -35,7 +41,7 @@ data <- data.frame(event, shrimp_QPA)
 ###########################################################################
 # Linear model (mod.1) ----------------------------------------------------
 # Create a linear model
-mod.1 <- lm(shrimp_QPA ~ event, data = data)
+mod.1 <- lm(decapoda_QPA ~ event, data = data)
 # Print the summary of the linear model
 summary(mod.1)
 
@@ -47,7 +53,7 @@ cat("R-squared:", r_squared_mod.1, "\n")
 cat("P-value:", p_value_mod.1, "\n")
 
 # Create a ggplot
-mod.1.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.1.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +         # Scatter plot points
   geom_smooth(method = "lm", se = FALSE) +  # Trend line without confidence interval
   labs(title = "Canopy QPA and Trend Line",
@@ -68,7 +74,7 @@ nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
 # Initial parameter values
 start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
 # Fit the model using nlsLM
-mod.2 <- nlsLM(shrimp_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
+mod.2 <- nlsLM(decapoda_QPA ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
                data = data, 
                start = start_params)
 
@@ -76,7 +82,7 @@ summary(mod.2)
 # Extract R-squared and p-value
 # Calculate the R-squared value manually
 fitted_values <- fitted(mod.2)
-observed_values <- data$shrimp_QPA
+observed_values <- data$decapoda_QPA
 mean_observed <- mean(observed_values)
 ss_total <- sum((observed_values - mean_observed)^2)
 ss_residual <- sum((observed_values - fitted_values)^2)
@@ -92,12 +98,12 @@ cat("P-value:", pvalue_mod.2, "\n")
 predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 
 # Create a ggplot
-mod.2.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.2.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point(color = "blue") +
   geom_line(aes(y = predicted_values), color = "blue") +
   labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPA") +
   theme_minimal()
 
 mod.2.plot
@@ -105,7 +111,7 @@ mod.2.plot
 ###########################################################################
 # Inverted Parabola Curve (mod. 3) ----------------------------------------
 # Fit a quadratic regression model
-mod.3 <- lm(shrimp_QPA ~ event + I(event^2), data=data)
+mod.3 <- lm(decapoda_QPA ~ event + I(event^2), data=data)
 # Get model summary
 summary(mod.3)
 
@@ -117,19 +123,19 @@ cat("R-squared:", r_squared.mod3, "\n")
 cat("R-squared:", p_value.mod3, "\n")
 
 # Create a new data frame for prediction
-new_data <- data.frame(event = seq(1, length(shrimp_QPA), length.out = 100))
+new_data <- data.frame(event = seq(1, length(decapoda_QPA), length.out = 100))
 
 # Predict using the model
 predictions <- predict(mod.3, newdata = new_data)
 
 # Create a ggplot for visualization
-mod.3.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.3.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +
   geom_line(data = data.frame(event = new_data$event, shrimp_QPA = predictions), 
             aes(x = event, y = shrimp_QPA), color = "blue") +
   labs(title = "Inverted Parabolic Curve Fit",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPA") +
   theme_minimal()
 
 mod.3.plot
@@ -142,12 +148,15 @@ logistic_function <- function(x, A, B, C, D) {
   A + (B - A) / (1 + exp(-C * (x - D)))
 }
 
-# Fit a logistic curve model
-mod.4 <- nls(shrimp_QPA ~ logistic_function(event, A, B, C, D),
-             data = data,
-             start = list(A = min(shrimp_QPA), B = max(shrimp_QPA), C = 1, D = median(event)))
+# Try different starting parameter values
+start_params <- list(A = -1, B = 1, C = 0.1, D = median(data$event))
 
-# Get model summary
+# Fit the model using nls.lm algorithm
+mod.4 <- nlsLM(decapoda_QPA ~ logistic_function(event, A, B, C, D),
+               data = data,
+               start = start_params)
+
+# Check the summary of the model
 summary(mod.4)
 
 
@@ -155,22 +164,43 @@ summary(mod.4)
 residuals <- residuals(mod.4)
 # Calculate R-squared value
 ss_residuals <- sum(residuals^2)
-ss_total <- sum((data$shrimp_QPA - mean(data$shrimp_QPA))^2)
+ss_total <- sum((data$decapoda_QPA - mean(data$decapoda_QPA))^2)
 r_squared_mod.4 <- 1 - (ss_residuals / ss_total)
+
 # Print R-squared value
 cat("R-squared:", sprintf("%.4f", r_squared_mod.4), "\n")
 
+
+
+# Extract coefficients and their standard errors
+coefficients <- coef(mod.4)
+std_errors <- summary(mod.4)$parameters[, "Std. Error"]
+
+# Calculate t-values and p-values
+t_values <- coefficients / std_errors
+p_values <- 2 * pt(abs(t_values), df = Inf, lower.tail = FALSE)
+
+# Print p-values
+cat("p-values:\n")
+print(p_values)
+
+# Check the summary of the model
+summary_mod_4 <- summary(mod.4)
+cat("p-value for coefficient B:", summary_mod_4$coefficients["B", "Pr(>|t|)"], "\n")
+
+
+
 # Generate predictions using the model
-new_data <- data.frame(event = seq(1, length(shrimp_QPA), length.out = 100))
+new_data <- data.frame(event = seq(1, length(decapoda_QPA), length.out = 100))
 predictions <- predict(mod.4, newdata = new_data)
 
 # Create a ggplot for visualization
-mod.4.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.4.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +
   geom_line(data = data.frame(event = new_data$event, shrimp_QPA = predictions), aes(x = event, y = shrimp_QPA), color = "red") +
   labs(title = "Logistic Curve Fit",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPA") +
   theme_minimal()
 
 mod.4.plot
@@ -178,13 +208,13 @@ mod.4.plot
 ###########################################################################
 # Logarithmic curve (mod.5) -----------------------------------------------
 # Fit a logarithmic curve model
-mod.5 <- nls(shrimp_QPA ~ a * log(event) + b, data = data, start = list(a = 1, b = 1))
+mod.5 <- nls(decapoda_QPA ~ a * log(event) + b, data = data, start = list(a = 1, b = 1))
 
 # Get summary of the model
 summary(mod.5)
 
 # Calculate R-squared manually
-ss_total <- sum((data$shrimp_QPA - mean(data$shrimp_QPA))^2)
+ss_total <- sum((data$decapoda_QPA - mean(data$decapoda_QPA))^2)
 ss_residual <- sum(residuals(mod.5)^2)
 r_squared_mod.5 <- 1 - (ss_residual / ss_total)
 
@@ -208,15 +238,15 @@ print(p_values)
 
 # Create a data frame with predicted values
 pred_data <- data.frame(event = data$event, 
-                        canopy_QPA_pred = predict(mod.5, newdata = data))
+                        decapoda_QPA_pred = predict(mod.5, newdata = data))
 
 # Create a ggplot
-mod.5.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.5.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +
-  geom_line(data = pred_data, aes(x = event, y = canopy_QPA_pred), color = "blue") +
+  geom_line(data = pred_data, aes(x = event, y = decapoda_QPA_pred), color = "blue") +
   labs(title = "Logarithmic Curve Fitting",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPA") +
   theme_minimal()
 
 mod.5.plot
@@ -232,7 +262,7 @@ exponential <- function(x, A, B, C) {
 
 # Fit the exponential curve
 mod.6 <- nlsLM(
-  shrimp_QPA ~ exponential(event, A, B, C),
+  decapoda_QPA ~ exponential(event, A, B, C),
   data = data,
   start = list(A = 1, B = 0.1, C = 0)
 )
@@ -241,7 +271,7 @@ mod.6 <- nlsLM(
 fit_summary <- summary(mod.6)
 
 # Calculate total sum of squares
-total_ss <- sum((data$canopy_QPA - mean(data$shrimp_QPA))^2)
+total_ss <- sum((data$decapoda_QPA - mean(data$decapoda_QPA))^2)
 # Calculate residual sum of squares
 residual_ss <- sum(fit_summary$residuals^2)
 # Calculate R-squared value
@@ -255,14 +285,14 @@ print(p_values)
 
 
 # Create a new data frame for prediction
-new_data <- data.frame(event = seq(1, length(shrimp_QPA), length.out = 100))
+new_data <- data.frame(event = seq(1, length(decapoda_QPA), length.out = 100))
 new_data$predicted <- predict(mod.6, newdata = new_data)
 
 # Plot the data and fitted curve using ggplot2
-mod.6.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.6.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +
   geom_line(data = new_data, aes(x = event, y = predicted), color = "blue") +
-  labs(x = "Event", y = "canopy_QPA") +
+  labs(x = "Event", y = "Decapoda QPA") +
   ggtitle("Exponential Curve Fitting") +
   theme_minimal()
 
@@ -280,7 +310,7 @@ gompertz_asymmetric <- function(x, A, b, c, d) {
 
 # Fit the nonlinear model using nlsLM
 mod.7 <- nlsLM(
-  shrimp_QPA ~ gompertz_asymmetric(event, A, b, c, d),
+  decapoda_QPA ~ gompertz_asymmetric(event, A, b, c, d),
   data = data,
   start = list(A = 1, b = 1, c = 1, d = 0),
   control = nls.lm.control(maxiter = 100, ftol = 1e-6)
@@ -288,7 +318,7 @@ mod.7 <- nlsLM(
 # Calculate the residual sum of squares (rss)
 rss <- sum(residuals(mod.7)^2)
 # Calculate the total sum of squares (tss)
-tss <- sum((data$shrimp_QPA - mean(data$shrimp_QPA))^2)
+tss <- sum((data$decapoda_QPA - mean(data$decapoda_QPA))^2)
 # Calculate R-squared value
 rsquared_mod.7 <- 1 - (rss / tss)
 # Print the R-squared value
@@ -296,14 +326,14 @@ cat("R-squared value:", rsquared_mod.7, "\n")
 # Print the summary of the model
 summary(mod.7)
 
-curve_data <- data.frame(event = seq(1, length(shrimp_QPA), length.out = 100))
+curve_data <- data.frame(event = seq(1, length(decapoda_QPA), length.out = 100))
 curve_data$predicted <- predict(mod.7, newdata = curve_data)
 
-mod.7.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.7.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +
   geom_line(data = curve_data, aes(x = event, y = predicted), color = "blue") +
   labs(title = "Gompertz Asymmetric Sigmoid Model Fit",
-       x = "Event", y = "Canopy QPA") +
+       x = "Event", y = "Decapoda QPA") +
   theme_minimal()
 
 mod.7.plot
@@ -317,9 +347,9 @@ goniometric <- function(x, a, b, c, d) {
 }
 
 # Fit the model using nonlinear least squares with adjusted initial values and different algorithm
-mod.8 <- nls(shrimp_QPA ~ goniometric(event, a, b, c, d), 
+mod.8 <- nls(decapoda_QPA ~ goniometric(event, a, b, c, d), 
              data = data,
-             start = list(a = 1, b = 1, c = 0, d = mean(shrimp_QPA)),
+             start = list(a = 1, b = 1, c = 0, d = mean(decapoda_QPA)),
              algorithm = "port")
 
 # Extract coefficients
@@ -329,7 +359,7 @@ print(coefficients)
 # Calculate R-squared value
 residuals <- residuals(mod.8)
 SSR <- sum(residuals^2)
-SST <- sum((data$canopy_QPA - mean(data$shrimp_QPA))^2)
+SST <- sum((data$decapoda_QPA - mean(data$decapoda_QPA))^2)
 R_squared <- 1 - SSR / SST
 cat("R-squared value:", R_squared, "\n")
 
@@ -343,12 +373,12 @@ cat("p-value:", p_value.mod8, "\n")
 data$predicted <- predict(mod.8)
 
 # Create a ggplot with the original data and fitted curve
-mod.8.plot <- ggplot(data, aes(x = event, y = shrimp_QPA)) +
+mod.8.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +
   geom_line(aes(y = predicted), color = "blue") +
   labs(title = "Fitted Goniometric Curve",
        x = "Event",
-       y = "canopy_QPA") +
+       y = "Decapoda QPA") +
   theme_minimal()
 
 mod.8.plot
@@ -361,47 +391,47 @@ mod.8.plot
 ###########################################################################
 # Goodness-of-fit diagnostics based on the log-likelihood -----------------
 # Calculate log-likelihood for all models
-log_likelihood_mod.1 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.1), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.1))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
-log_likelihood_mod.2 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.2), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.2))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
-log_likelihood_mod.3 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.3), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.3))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
-log_likelihood_mod.4 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.4), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.4))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
-log_likelihood_mod.5 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.5), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.5))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
-log_likelihood_mod.6 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.6), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.6))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
-log_likelihood_mod.7 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.7), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.7))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
-log_likelihood_mod.8 <- sum(dnorm(data$shrimp_QPA, mean = fitted(mod.8), sd = sqrt(sum((data$shrimp_QPA - fitted(mod.8))^2) / (length(data$shrimp_QPA) - 2)), log = TRUE))
+log_likelihood_mod.1 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.1), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.1))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
+log_likelihood_mod.2 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.2), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.2))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
+log_likelihood_mod.3 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.3), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.3))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
+log_likelihood_mod.4 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.4), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.4))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
+log_likelihood_mod.5 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.5), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.5))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
+log_likelihood_mod.6 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.6), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.6))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
+log_likelihood_mod.7 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.7), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.7))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
+log_likelihood_mod.8 <- sum(dnorm(data$decapoda_QPA, mean = fitted(mod.8), sd = sqrt(sum((data$decapoda_QPA - fitted(mod.8))^2) / (length(data$decapoda_QPA) - 2)), log = TRUE))
 
 
 # Calculate AIC and BIC for mod.1
 aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
-bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$shrimp_QPA)) * length(coef(mod.1))
+bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$decapoda_QPA)) * length(coef(mod.1))
 
 # Calculate AIC and BIC for mod.2
 aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
-bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$shrimp_QPA)) * length(coef(mod.2))
+bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$decapoda_QPA)) * length(coef(mod.2))
 
 # Calculate AIC and BIC for mod.3
 aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
-bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$shrimp_QPA)) * length(coef(mod.3))
+bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$decapoda_QPA)) * length(coef(mod.3))
 
 # Calculate AIC and BIC for mod.4
 aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
-bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$shrimp_QPA)) * length(coef(mod.4))
+bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$decapoda_QPA)) * length(coef(mod.4))
 
 # Calculate AIC and BIC for mod.5
 aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
-bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$shrimp_QPA)) * length(coef(mod.5))
+bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$decapoda_QPA)) * length(coef(mod.5))
 
 # Calculate AIC and BIC for mod.6
 aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
-bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$shrimp_QPA)) * length(coef(mod.6))
+bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$decapoda_QPA)) * length(coef(mod.6))
 
 # Calculate AIC and BIC for mod.7
 aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
-bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$shrimp_QPA)) * length(coef(mod.7))
+bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$decapoda_QPA)) * length(coef(mod.7))
 
 # Calculate AIC and BIC for mod.8
 aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
-bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$shrimp_QPA)) * length(coef(mod.8))
+bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$decapoda_QPA)) * length(coef(mod.8))
 
 
 # Compare log-likelihoods, AIC, and BIC
