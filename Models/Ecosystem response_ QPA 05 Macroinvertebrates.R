@@ -36,8 +36,8 @@ event <- seq(1, length(macros_QPA))
 data <- data.frame(event, macros_QPA)
 
 
-
-
+hist(macros_QPA)
+shapiro.test(macros_QPA)
 
 ###########################################################################
 # Linear model (mod.1) ----------------------------------------------------
