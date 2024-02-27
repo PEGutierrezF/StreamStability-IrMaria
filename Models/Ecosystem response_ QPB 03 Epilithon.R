@@ -22,17 +22,21 @@ rm(list = ls())
 
 
 # Create a data frame with your canopy_QPA data (2017-01-01 to 2022-09-01)
-chlorophyll_QPB <- c(0.50664315, 0.367207886, -0.014872716, 0.066137971, 0.030785219, -0.420636925,
-                     -0.532707828, -0.565502931, -0.302866704, -0.739818027, -0.631285253, -1.005281876,
-                     -0.586985814, -0.704420806, -1.267086154, -0.51728118, -0.499008016, -0.389993121,
-                     -0.380058376, -0.19471036, -0.818682043, -0.243142403, -0.234457311, -0.351418593,
-                     -0.321838209, -0.25677644, -0.835178915, -0.517806213, -0.604142102, -0.415562593,
-                     -1.278258443, -0.887589297, -1.272011892, -0.215530212, -0.198301758, -0.462592338,
-                     0.036101327, 0.191078061, -0.683301671, -0.459379957, -1.553418692, -0.560293394,
-                     -0.198035461, 0.086767025, -0.516006206, -0.328713949, 0.433791523, 0.021171656,
-                     -0.272604249, 0.083860925, -0.10855559, 0.285803829, -0.374389114, 0.269429207,
-                     -0.467751563, -0.021651399, -0.173116019, 0.265943762, 0.061304029, 0.747564142, 
-                     0.041108448, 0.684064969, 0.517588636, 0.369352134)
+chlorophyll_QPB <- c(0.50664315, 0.367207886, -0.014872716, 0.066137971, 0.030785219, 
+                     -0.420636925, -0.532707828, -0.565502931, -0.302866704, -0.739818027, 
+                     -0.631285253, -1.005281876, -0.586985814, -0.704420806, -1.267086154, 
+                     -0.51728118, -0.499008016, -0.389993121, -0.380058376, -0.19471036, 
+                     -0.818682043, -0.243142403, -0.234457311, -0.351418593, -0.321838209, 
+                     -0.25677644, -0.835178915, -0.517806213, -0.604142102, -0.415562593, 
+                     -1.278258443, -0.887589297, -1.272011892, -0.215530212, -0.198301758, 
+                     -0.462592338, 0.036101327, 0.191078061, -0.683301671, -0.459379957, 
+                     -1.553418692, -0.560293394, -0.198035461, 0.086767025, -0.516006206, 
+                     -0.328713949, 0.433791523, 0.021171656, -0.272604249, 0.083860925, 
+                     -0.10855559, 0.285803829, -0.374389114, 0.269429207, -0.467751563, 
+                     -0.021651399, -0.173116019, 0.265943762, 0.061304029, 0.747564142, 
+                     0.041108448, 0.684064969, 0.517588636, 0.369352134, -0.077452898, 
+                     0.087514826, 0.291396042, 0.53368889, 0.187990095)
+
 
 event <- seq(1, length(chlorophyll_QPB))
 data <- data.frame(event, chlorophyll_QPB)
@@ -57,9 +61,9 @@ cat("P-value:", p_value, "\n")
 mod.1.plot <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
   geom_point() +         # Scatter plot points
   geom_smooth(method = "lm", se = FALSE) +  # Trend line without confidence interval
-  labs(title = "Canopy QPA and Trend Line",
+  labs(title = "Epilithon algae and Trend Line",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Epilithon algae QPB") +
   theme_minimal()
 
 mod.1.plot
@@ -102,9 +106,9 @@ predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 mod.2.plot <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
   geom_point(color = "blue") +
   geom_line(aes(y = predicted_values), color = "blue") +
-  labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
+  labs(title = "Epilithon algae and Fitted Nelson-Siegel Curve",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Epilithon algae QPB") +
   theme_minimal()
 
 mod.2.plot
@@ -136,7 +140,7 @@ mod.3.plot <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
             aes(x = event, y = chlorophyll_QPB), color = "blue") +
   labs(title = "Inverted Parabolic Curve Fit",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Epilithon algae QPB") +
   theme_minimal()
 
 mod.3.plot
@@ -227,7 +231,7 @@ mod.5.plot <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
   geom_line(data = pred_data, aes(x = event, y = canopy_QPB_pred), color = "blue") +
   labs(title = "Logarithmic Curve Fitting",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Epilithon algae QPB") +
   theme_minimal()
 
 mod.5.plot
@@ -271,7 +275,7 @@ new_data$predicted <- predict(mod.6, newdata = new_data)
 mod.6.plot <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
   geom_point() +
   geom_line(data = new_data, aes(x = event, y = predicted), color = "blue") +
-  labs(x = "Event", y = "canopy_QPA") +
+  labs(x = "Event", y = "Epilithon algae QPB") +
   ggtitle("Exponential Curve Fitting") +
   theme_minimal()
 
@@ -307,7 +311,7 @@ mod.7.plot <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
   geom_point() +
   geom_line(data = curve_data, aes(x = event, y = predicted), color = "red") +
   labs(title = "Gompertz Asymmetric Sigmoid Model Fit",
-       x = "Event", y = "Canopy QPA") +
+       x = "Event", y = "Epilithon algae QPB") +
   theme_minimal()
 
 mod.7.plot

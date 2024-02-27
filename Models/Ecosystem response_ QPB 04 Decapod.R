@@ -18,15 +18,22 @@ rm(list = ls())
 
 
 
-shrimp_QPB<- c(-0.013455405, 0.400185472, -0.487937686, 0.003254209, -0.228820057,
-                0.208027978, 0.016985791, -0.150517021, 0.541988872, 0.390235065,
-                0.631231632, -0.043353451, 0.436639122, 0.341128433, 0.673279354,
-                1.122436756, 0.575412531, 0.992127709, 1.208225252, 1.017854627,
-                0.16681027, 0.087772451, 0.256537298, 0.409506162, 0.213170875,
-                0.566073384, 0.586442602, 0.537408582, 0.752616862, 0.080735464,
-                0.56625312, 0.274781187, 0.17606686, 0.416734634, 0.26722363,
-                0.107660536, 0.000172464, -0.22189892, -0.125731072, -0.059017824,
-                0.009271358, 0.950052304, 0.362453294, -0.004009558, 0.119783165)
+shrimp_QPB<- c(-0.013455405, 0.400185472, -0.487937686, 0.003254209, -0.228820057, 
+               0.208027978, 0.016985791, -0.150517021, 0.541988872, 0.390235065, 
+               0.631231632, -0.043353451, 0.436639122, 0.341128433, 0.673279354, 
+               1.122436756, 0.575412531, 0.992127709, 1.208225252, 1.017854627, 
+               0.16681027, 0.087772451, 0.256537298, 0.409506162, 0.213170875, 
+               0.566073384, 0.586442602, 0.537408582, 0.752616862, 0.080735464, 
+               0.56625312, 0.274781187, 0.17606686, 0.416734634, 0.26722363, 0.107660536, 
+               0.000172464, -0.22189892, -0.125731072, -0.059017824, 0.009271358, 
+               0.950052304, 0.362453294, -0.004009558, 0.119783165, -0.286086287, 
+               -0.573716033, -0.727644859, -0.44757473, -0.539695207, -0.755275737, 
+               -0.746319302, -0.565880826, -0.430242989, -0.711509319, -1.03760404, 
+               -0.351008952, -0.331514746, -0.556119565, -1.272283076, 0.268179237, 
+               0.003355149, -0.86495049, -0.131737915, 0.436245583, 0.425157916, 
+               1.01180779, -0.34408051, -0.815809062)
+
+
 
 event <- seq(1, length(shrimp_QPB))
 data <- data.frame(event, shrimp_QPB)
@@ -51,9 +58,9 @@ cat("P-value:", p_value_mod.1, "\n")
 mod.1.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
   geom_point() +         # Scatter plot points
   geom_smooth(method = "lm", se = FALSE) +  # Trend line without confidence interval
-  labs(title = "Canopy QPA and Trend Line",
+  labs(title = "Decapoda QPB and Trend Line",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPB") +
   theme_minimal()
 
 mod.1.plot
@@ -96,9 +103,9 @@ predicted_values <- predict(mod.2, newdata = data.frame(event = event))
 mod.2.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
   geom_point(color = "blue") +
   geom_line(aes(y = predicted_values), color = "blue") +
-  labs(title = "Canopy QPA and Fitted Nelson-Siegel Curve",
+  labs(title = "Decapoda QPB and Fitted Nelson-Siegel Curve",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPB") +
   theme_minimal()
 
 mod.2.plot
@@ -130,7 +137,7 @@ mod.3.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
             aes(x = event, y = shrimp_QPB), color = "blue") +
   labs(title = "Inverted Parabolic Curve Fit",
        x = "Event",
-       y = "Canopy QPB") +
+       y = "Decapoda QPB") +
   theme_minimal()
 
 mod.3.plot
@@ -151,39 +158,14 @@ mod.4 <- nlsLM(
   start = list(A = min(shrimp_QPB), B = max(shrimp_QPB), C = 1, D = median(data$event)),
   control = nls.lm.control(maxiter = 1000)  # Increase maximum iterations
 )
-# Calculate the residual sum of squares (rss)
-rss <- sum(residuals(mod.4)^2)
-# Calculate the total sum of squares (tss)
-tss <- sum((data$shrimp_QPB - mean(data$shrimp_QPB))^2)
-# Calculate R-squared value
-r_squared_mod.4 <- 1 - (rss / tss)
-# Print the R-squared value
-cat("R-squared:", sprintf("%.4f", r_squared_mod.4), "\n")
-# Print the summary of the model
-summary(mod.4)
-#######################################################################################
 
-
-
-
-
-# Fit a logistic curve model
-mod.4 <- nls(shrimp_QPB ~ logistic_function(event, A, B, C, D),
-             data = data,
-             start = list(A = min(shrimp_QPB), B = max(shrimp_QPB), C = 1, D = median(event)))
-
-# Get model summary
 summary(mod.4)
 
+residuals <- resid(mod.4)
+y <- data$shrimp_QPB
+rsquared <- 1 - sum(residuals^2) / sum((y - mean(y))^2)
+rsquared
 
-# Calculate residuals
-residuals <- residuals(mod.4)
-# Calculate R-squared value
-ss_residuals <- sum(residuals^2)
-ss_total <- sum((data$shrimp_QPA - mean(data$shrimp_QPA))^2)
-r_squared_mod.4 <- 1 - (ss_residuals / ss_total)
-# Print R-squared value
-cat("R-squared:", sprintf("%.4f", r_squared_mod.4), "\n")
 
 # Generate predictions using the model
 new_data <- data.frame(event = seq(1, length(shrimp_QPB), length.out = 100))
@@ -195,7 +177,7 @@ mod.4.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
   geom_line(data = data.frame(event = new_data$event, shrimp_QPB = predictions), aes(x = event, y = shrimp_QPB), color = "red") +
   labs(title = "Logistic Curve Fit",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPB") +
   theme_minimal()
 
 mod.4.plot
@@ -241,7 +223,7 @@ mod.5.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
   geom_line(data = pred_data, aes(x = event, y = canopy_QPB_pred), color = "blue") +
   labs(title = "Logarithmic Curve Fitting",
        x = "Event",
-       y = "Canopy QPA") +
+       y = "Decapoda QPB") +
   theme_minimal()
 
 mod.5.plot
@@ -287,7 +269,7 @@ new_data$predicted <- predict(mod.6, newdata = new_data)
 mod.6.plot <- ggplot(data, aes(x = event, y = shrimp_QPB)) +
   geom_point() +
   geom_line(data = new_data, aes(x = event, y = predicted), color = "blue") +
-  labs(x = "Event", y = "canopy_QPA") +
+  labs(x = "Event", y = "Decapoda QPB") +
   ggtitle("Exponential Curve Fitting") +
   theme_minimal()
 
@@ -341,11 +323,16 @@ goniometric <- function(x, a, b, c, d) {
   a * sin(b * x + c) + d
 }
 
-# Fit the model using nonlinear least squares with adjusted initial values and different algorithm
+# Fit the model using a different optimization algorithm with an increased iteration limit
 mod.8 <- nls(shrimp_QPB ~ goniometric(event, a, b, c, d), 
              data = data,
              start = list(a = 1, b = 1, c = 0, d = mean(shrimp_QPB)),
-             algorithm = "port")
+             algorithm = "port",
+             control = list(maxiter = 100))  # Increase the maximum number of iterations
+
+
+# Print summary of the model
+summary(mod.8)
 
 # Extract coefficients
 coefficients <- coef(mod.8)
