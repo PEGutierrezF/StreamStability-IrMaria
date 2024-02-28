@@ -23,12 +23,17 @@ df <- mardia(data_sem)
 df$uv.shapiro
 
 mod1 <- '
-clorophyll + decapod ~ canopy
+decapod ~ epilithon
+decapod ~ canopy + epilithon
 
+epilithon ~ canopy
+epilithon ~ decapod
+
+macroinvertebrates ~ decapod
+macroinvertebrates ~ epilithon 
+macroinvertebrates ~ canopy + epilithon + decapod'
 '
 
-# we found violations of the multivariate normality assumption required for SEM, 
-# we used the lavaan "MLM' estimator for our fitting function.
 fit1 <- sem(mod1, data=data_sem, std.lv = TRUE, estimator = "MLM")
 summary(fit1)
 

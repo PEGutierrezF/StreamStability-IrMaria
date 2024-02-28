@@ -15,14 +15,15 @@
 remove.packages(c("StanHeaders", "rstan"))
 install.packages("StanHeaders", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
-install.packages('minpack.lm')
+install.packages("mvnormalTest", dependencies=TRUE)
 
 
 # install.packages('optimx')
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "reshape2", "ggpubr", "tidyverse", "grid","lubridate",
                "fitdistrplus", "mgcv","ggtext", 'brms','magrittr',
-               'readxl', 'optimx', 'minpack.lm','openxlsx')
+               'readxl', 'optimx', 'minpack.lm','openxlsx',
+               'lavaan', 'mvnormalTest')
 lapply(libraries, require, character.only = TRUE)
 
 
