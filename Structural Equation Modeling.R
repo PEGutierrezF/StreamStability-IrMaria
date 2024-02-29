@@ -38,5 +38,6 @@ model <- psem(
 summary(model, .progressBar = F)
 
 
-References
-https://bookdown.org/bean_jerry/using_r_for_social_work_research/structural-equation-modeling.html
+# -------------------------------------------------------------------------
+
+
