@@ -36,7 +36,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 # General graph -----------------------------------------------------------
 
- p <- ggplot(trajectories, aes(date, value)) + 
+ c <- ggplot(trajectories, aes(date, value)) + 
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
@@ -58,10 +58,9 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 #  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
  #           col= "red",linetype=4, alpha=0.9, size = 1) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
-             col= "blue",linetype=4, alpha=0.9, size = 1) +
-  geom_vline(aes(xintercept=as.POSIXct("2022-03-1")), # Stream FRE
-           col= "red",linetype=4, alpha=0.9, size = 1) +
-
+            col= "blue",linetype=4, alpha=0.9, size = 1) +
+  #geom_vline(aes(xintercept=as.POSIXct("2022-03-1")), # Stream FRE
+   #        col= "red",linetype=4, alpha=0.9, size = 1) +
 
  facet_grid(stream ~ variable,
              labeller = labeller(variable = as_labeller(variable_new, label_parsed),
@@ -73,8 +72,15 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
   theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) +
   theme(strip.switch.pad.grid = unit('0.5', "cm"))
 
+c
 
-p + geom_richtext(data = labels, aes(label = lab), x = as.POSIXct("2018-12-01"), y = -2.5)
+vh_line <- data.frame(
+  xintercept = as.POSIXct("2022-03-1"),
+  stream = c("QPB", "QPB")
+)
+
+p <- c + geom_vline(data = vh_line, aes(xintercept = xintercept),  
+               col= "red",linetype=4, alpha=0.9, size = 1) 
 
 #
 # p + ggsave("Trajectoriesa.jpeg",  path = "figures", width=9, height=6,dpi=300)
