@@ -24,12 +24,12 @@ df$uv.shapiro
 
 
 mod1 <- '
-epilithon ~ canopy + decapod
-decapod ~ canopy + epilithon
-macroinvertebrates ~ canopy + epilithon + decapod
+decapod ~ canopy 
+epilithon ~ decapod + canopy
+macroinvertebrates ~ epilithon + decapod
 '
 
-fit <- cfa(mod1, data = data_pm, estimator = "ML")
+fit <- cfa(mod1, data = data_pm, std.lv=TRUE,estimator = "ML", orthogonal = TRUE)
 
 summary(fit, fit.measures = TRUE, standardized=T,rsquare=T)
 semPaths(fit, 'std', layout = 'circle')
