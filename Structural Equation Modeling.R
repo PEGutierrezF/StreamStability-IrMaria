@@ -23,14 +23,22 @@ df <- mardia(data_pm)
 df$uv.shapiro
 
 
-mod1 <- '
-decapod ~ canopy 
-epilithon ~ decapod + canopy
-macroinvertebrates ~ epilithon + decapod
+
+# Define the model with interaction and bidirectional influence between decapod and epilithon
+model <- '
+  # Regressions
+  epilithon ~ decapod
+  decapod ~ canopy + epilithon
+  macroinvertebrates ~ decapod + epilithon + canopy + decapod*epilithon
 '
 
-fit <- cfa(mod1, data = data_pm, std.lv=TRUE,estimator = "ML", orthogonal = TRUE)
+# Fit the model
+fit <- cfa(model, data = data_pm, estimator = "MLR")
 
-summary(fit, fit.measures = TRUE, standardized=T,rsquare=T)
+# Summarize the results
+summary(fit, fit.measures = TRUE, standardized = TRUE)
+
 semPaths(fit, 'std', layout = 'circle')
+
+
 
