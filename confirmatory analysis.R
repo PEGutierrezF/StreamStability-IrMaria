@@ -35,14 +35,25 @@ model <- '
   '
 
 # Fit the model
-fit <- cfa(model, data = data_pm, estimator = "MLR")
+fit <- cfa(model, data = data_pm, estimator = "ML")
 
 # Summarize the results
 summary(fit, fit.measures = TRUE, standardized = TRUE)
 
-semPaths(fit2, 'std', layout = 'circle')
+inspect(fit, 'r2')
+fitmeasures(fit,c('gfi','agfi','nfi','cfi','rmsea','srmr','tli'))
 
 
+semPaths(fit, 'std', layout = 'circle')
+
+
+### Results
+### Check 'Model Test User Model:' first.  Historically the significant chi-square test value
+# would be taken as an indicator of lack of fit.  
+
+### Values of CFI and TLI that are 0.95 or above are typically considered very good fit.  
+### Values of Standardized Root Mean Square Residual below 0.05 are considered indicative of 
+# well fitting model.
 
 # Define the model with interaction and bidirectional influence between decapod and epilithon
 mod2 <- '
