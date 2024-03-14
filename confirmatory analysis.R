@@ -26,12 +26,10 @@ df$uv.shapiro
 # Define the model with interaction and bidirectional influence between decapod and epilithon
 model <- '
   # Regressions
-  
+  leaflitter ~ canopy
   epilithon ~ decapod
   decapod ~ epilithon + leaflitter + canopy
-  macroinvertebrates ~ decapod + epilithon + canopy + decapod*epilithon
-  
-  leaflitter ~ canopy
+  macroinvertebrates ~ decapod + epilithon + canopy
   '
 
 # Fit the model
@@ -67,8 +65,10 @@ mod2 <- '
   '
 
 # Fit the model
-fit2 <- cfa(mod2, data = data_pm, estimator = "MLR")
+fit2 <- cfa(mod2, data = data_pm, estimator = "ML")
 
+### ECVI indicates the likelihood this model will replicate with the same sample 
+### size and population. Again, lower values are better.
 
 https://campus.datacamp.com/courses/structural-equation-modeling-with-lavaan-in-r/multi-factor-models?ex=12
 fitmeasures(fit, c('aic', 'ecvi'))
