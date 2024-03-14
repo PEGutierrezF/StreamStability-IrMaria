@@ -65,8 +65,8 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
  facet_grid(stream ~ variable,
              labeller = labeller(variable = as_labeller(variable_new, label_parsed),
                                  stream  = streams_new)) +
-  theme(strip.text.x = element_text(size = 10, color = "black"),
-        strip.text.y = element_text(size = 10, color = "black"),
+  theme(strip.text.x = element_text(size = 14, color = "black"),
+        strip.text.y = element_text(size = 14, color = "black"),
         strip.placement = "outside") +
   theme(strip.background=element_rect(color= "black", fill="gray85")) +
   theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) +
@@ -97,7 +97,7 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
- grid.draw(g) + ggsave("Figure 1.jpeg", g, path = "figures", width=9, height=6,dpi=300)
+ grid.draw(g) + ggsave("Figure 1a.jpeg", g, path = "figures", width=9, height=6,dpi=300)
 
 
 

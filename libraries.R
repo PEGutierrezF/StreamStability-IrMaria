@@ -23,7 +23,7 @@ libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "reshape2", "ggpubr", "tidyverse", "grid","lubridate",
                "fitdistrplus", "mgcv","ggtext", 'brms','magrittr',
                'readxl', 'optimx', 'minpack.lm','openxlsx',
-               'lavaan', 'mvnormalTest')
+               'lavaan', 'mvnormalTest', 'semPlot')
 lapply(libraries, require, character.only = TRUE)
 
 
