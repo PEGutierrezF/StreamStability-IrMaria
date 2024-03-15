@@ -2,18 +2,22 @@
 
 
 
-
-
-
-
-
-
+# ---------------------------------------------
+# COnfirmatory Factorial Analisys
+# 15 Mar 2024
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
+#  
 
 
 
 # cleans global environment
 rm(list = ls())
-
+install.packages("Matrix")
+install.packages('mvnormalTest')
+library(mvnormalTest)
+library(Matrix)
 data_pm <- read.xlsx("data/data_cfa.xlsx", detectDates = TRUE)
 head(data_pm)
 summary(data_pm)
@@ -30,6 +34,7 @@ model <- '
   epilithon ~ decapod
   decapod ~ epilithon + leaflitter + canopy
   macroinvertebrates ~ decapod + epilithon + canopy
+
   '
 
 # Fit the model
