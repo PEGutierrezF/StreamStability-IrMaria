@@ -16,7 +16,7 @@ rm(list=ls())
 
 
 
-canopycover<- read.xlsx("data_stability_metrics.xlsx", sheet='canopy', detectDates = TRUE)
+canopycover<- read.xlsx("data/data_stability_metrics.xlsx", sheet='canopy', detectDates = TRUE)
 head(canopycover)
 
 
@@ -37,7 +37,9 @@ residuals <- residuals(QPA.canopy.mod)
 1/sd(residuals)
 
 # Autocorrelation
-durbinWatsonTest(QPA.canopy.mod)
+library(lmtest)
+dwt(QPA.canopy.mod)
+dwtest(QPA.canopy.mod)
 
 res = QPA.canopy.mod$res 
 n = length(residuals) 

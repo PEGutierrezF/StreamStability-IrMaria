@@ -17,7 +17,7 @@ rm(list=ls())
 
 
 
-leaflitter <- read.xlsx("data/all_data.xlsx", sheet='leaflitter', detectDates = TRUE)
+leaflitter <- read.xlsx("data/data_stability_metrics.xlsx", sheet='leaflitter', detectDates = TRUE)
 head(leaflitter)
 
 
@@ -36,8 +36,18 @@ plot(QPA_leaflitter ~ date, data=leaflitter)
 
 leaflitter$QPAresid<- QPAleaf.mod $resid
 leaflitter
-
 1/apply(leaflitter, 2, sd) #2 mean apply to columns
+
+# Temporal stability
+residuals <- residuals(QPAleaf.mod)
+1/sd(residuals)
+
+
+# Autocorrelation
+library(lmtest)
+dwt(QPAleaf.mod)
+dwtest(QPAleaf.mod)
+
 
 p1 <- ggplot(leaflitter,aes(x= date, y=QPA_leaflitter)) +
   geom_point(size = 3) + 

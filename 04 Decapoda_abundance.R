@@ -17,7 +17,7 @@ rm(list=ls())
 
 
 
-decapod <- read.xlsx("data/all_data.xlsx", sheet='decapoda_abundance', detectDates = TRUE)
+decapod <- read.xlsx("data/data_stability_metrics.xlsx", sheet='decapoda_abundance', detectDates = TRUE)
 head(decapod)
 decapod <- na.omit(decapod)
 head(decapod)
@@ -34,6 +34,11 @@ decapod
 
 1/apply(decapod, 2, sd)
 
+
+# Autocorrelation
+library(lmtest)
+dwt(QPA.shrimp.mod)
+dwtest(QPA.shrimp.mod)
 
 qpa.s <- ggplot(decapod, aes(date, y=QPA_shrimp))+
   geom_point(size = 3) + 
