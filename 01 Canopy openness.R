@@ -16,7 +16,7 @@ rm(list=ls())
 
 
 
-canopycover<- read.xlsx("data/all_data.xlsx", detectDates = TRUE)
+canopycover<- read.xlsx("data_stability_metrics.xlsx", sheet='canopy', detectDates = TRUE)
 head(canopycover)
 
 
@@ -28,14 +28,23 @@ head(canopy)
 ################################################################
 # Linear model Canopy QPA --------------------------------------
 ################################################################
-
+library(car)
 QPA.canopy.mod  <- lm(QPA_canopy ~ date_co, data=canopy)
 summary(QPA.canopy.mod)
 
-canopy$QPACanopyresid<- QPA.canopy.mod$resid
-canopy
+# Temporal stability
+residuals <- residuals(QPA.canopy.mod)
+1/sd(residuals)
 
-1/apply(canopy, 2, sd)
+# Autocorrelation
+durbinWatsonTest(QPA.canopy.mod)
+
+res = QPA.canopy.mod$res 
+n = length(residuals) 
+mod2 = lm(residuals[-n] ~ residuals[-1]) 
+summary(mod2)
+plot((residuals[-n] ~ residuals[-1])) 
+
 
 cc1 <- ggplot(canopy, aes(x=date_co, y=QPA_canopy)) +
   geom_point(size = 3) + 
