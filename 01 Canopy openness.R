@@ -23,12 +23,11 @@ head(canopycover)
 canopy <- canopycover %>% dplyr::select(date_co, QPA_canopy, QPB_canopy)
 canopy$date_co<-as.POSIXct(canopy$date_co,"%Y-%m-%d",tz = "UTC")
 canopy <- na.omit(canopy)
-head(canopy)
+tail(canopy)
 
 ################################################################
 # Linear model Canopy QPA --------------------------------------
 ################################################################
-library(car)
 QPA.canopy.mod  <- lm(QPA_canopy ~ date_co, data=canopy)
 summary(QPA.canopy.mod)
 
@@ -36,16 +35,22 @@ summary(QPA.canopy.mod)
 residuals <- residuals(QPA.canopy.mod)
 1/sd(residuals)
 
+# Normality
+shapiro.test(residuals)
+hist(residuals)
+
 # Autocorrelation
-library(lmtest)
 dwt(QPA.canopy.mod)
 dwtest(QPA.canopy.mod)
 
-res = QPA.canopy.mod$res 
-n = length(residuals) 
-mod2 = lm(residuals[-n] ~ residuals[-1]) 
-summary(mod2)
-plot((residuals[-n] ~ residuals[-1])) 
+# Heterocedasticity
+# we fail to reject the null hypothesis (that variance of residuals is constant) 
+# and therefore infer that the residuals are homoscedastic. 
+lmtest::bptest(QPA.canopy.mod)  # Breusch-Pagan test
+
+
+par(mfrow=c(2,2)) # init 4 charts in 1 panel
+plot(QPA.canopy.mod)
 
 
 cc1 <- ggplot(canopy, aes(x=date_co, y=QPA_canopy)) +

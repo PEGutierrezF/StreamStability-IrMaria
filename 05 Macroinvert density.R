@@ -17,7 +17,8 @@ rm(list=ls())
 
 
 
-macroinvertebrates <- read.xlsx("data/all_data.xlsx", sheet='macro_density', detectDates = TRUE)
+macroinvertebrates <- read.xlsx("data/data_stability_metrics.xlsx", 
+                                sheet='macro_density', detectDates = TRUE)
 head(macroinvertebrates)
 macroiv <- na.omit(macroinvertebrates)
 head(macroiv)
@@ -34,6 +35,11 @@ macroiv$QPAresid<- QPA.macroinv.mod$resid
 head(macroiv)
 
 1/apply(macroiv, 2, sd)
+
+
+# Autocorrelation
+dwt(QPA.macroinv.mod)
+dwtest(QPA.macroinv.mod)
 
 
 qpa.miv <- ggplot(macroiv, aes(date, y=QPA_miv))+
@@ -57,8 +63,6 @@ qpa.miv
 ################################################################
 # Linear model Macroinvertebrate abundance Prieta B ------------
 ################################################################
-
-
 QPB.macroinv.mod  <- lm(QPB_miv ~ date, data=macroiv)
 summary(QPB.macroinv.mod)
 
@@ -66,6 +70,16 @@ macroiv$QPAresid<- QPB.macroinv.mod$resid
 head(macroiv)
 
 1/apply(macroiv, 2, sd)
+
+
+# Autocorrelation
+dwt(QPB.macroinv.mod)
+dwtest(QPB.macroinv.mod)
+
+# Heterocedasticity
+# we fail to reject the null hypothesis (that variance of residuals is constant) 
+# and therefore infer that the residuals are homoscedastic. 
+lmtest::bptest(QPB.macroinv.mod)  # Breusch-Pagan test
 
 
 qpb.miv <- ggplot(macroiv, aes(date, y=QPB_miv))+
