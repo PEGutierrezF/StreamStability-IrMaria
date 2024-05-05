@@ -16,12 +16,12 @@ rm(list=ls())
 
 
 
-canopycover<- read.xlsx("data/data_stability_metrics.xlsx", sheet='canopy', detectDates = TRUE)
+canopycover <- read.xlsx("data/data_stability_metrics.xlsx", sheet='canopy', detectDates = TRUE)
 head(canopycover)
 
 
 canopy <- canopycover %>% dplyr::select(date_co, QPA_canopy, QPB_canopy)
-canopy$date_co<-as.POSIXct(canopy$date_co,"%Y-%m-%d",tz = "UTC")
+canopy$date_co <- as.POSIXct(canopy$date_co,"%Y-%m-%d",tz = "UTC")
 canopy <- na.omit(canopy)
 tail(canopy)
 
@@ -50,7 +50,7 @@ lmtest::bptest(QPA.canopy.mod)  # Breusch-Pagan test
 
 
 par(mfrow=c(2,2)) # init 4 charts in 1 panel
-plot(QPA.canopy.mod)
+plot(QPA.canopy.mod, 1)
 
 
 cc1 <- ggplot(canopy, aes(x=date_co, y=QPA_canopy)) +
@@ -79,10 +79,30 @@ cc1
 QPB.canopy.mod  <- lm(QPB_canopy~ date_co, data=canopy)
 summary(QPB.canopy.mod)
 
-canopy$QPBCanopyresid<- QPB.canopy.mod$resid
-canopy
 
-1/apply(canopy, 2, sd)
+# Temporal stability
+residuals <- residuals(QPB.canopy.mod)
+1/sd(residuals)
+
+# Normality
+shapiro.test(residuals)
+hist(residuals)
+
+# Autocorrelation
+# P > 0.05: There is no significant evidence of autocorrelation in the residuals of the regression model.
+# P < 0.05: There is significant evidence of autocorrelation in the residuals of the regression model.
+dwt(QPB.canopy.mod)
+dwtest(QPB.canopy.mod)
+
+# Heterocedasticity
+# P > 0.05: There is no significant evidence of heteroscedasticity in the residuals of the regression model.
+# P < 0.05: There is significant evidence of heteroscedasticity in the residuals of the regression model.
+lmtest::bptest(QPB.canopy.mod)  # Breusch-Pagan test
+
+
+# par(mfrow=c(2,2)) # init 4 charts in 1 panel
+plot(QPB.canopy.mod, 1)
+
 
 cc2 <- ggplot(canopy, aes(x=date_co, y=QPB_canopy))+
   geom_point(size = 3) + 

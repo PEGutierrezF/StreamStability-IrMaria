@@ -3,7 +3,7 @@
 
 
 # ---------------------------------------------
-# COnfirmatory Factorial Analisys
+# Confirmatory Factorial Analysis
 # 15 Mar 2024
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
