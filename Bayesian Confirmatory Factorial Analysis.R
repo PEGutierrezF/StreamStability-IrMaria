@@ -1,9 +1,16 @@
 
-
+install.packages('blavaan')
 library(blavaan)
 library(coda)
 
-data_pm <- read.xlsx("data/data_cfa.xlsx", detectDates = TRUE)
+data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='full',
+                     detectDates = TRUE)
+head(data_pm)
+summary(data_pm)
+
+
+data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='post_Hurricane',
+                     detectDates = TRUE)
 head(data_pm)
 summary(data_pm)
 
@@ -15,10 +22,9 @@ data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
 
 model <- '
   # Regressions
-  leaflitter ~ canopy
-  epilithon ~ decapod
-  decapod ~ epilithon + leaflitter + canopy
-  macroinvertebrates ~ decapod + epilithon + leaflitter + canopy
+  epilithon ~ canopy
+  decapod ~ epilithon + leaflitter
+  macroinvertebrates ~ epilithon + leaflitter
 '
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
@@ -37,7 +43,7 @@ gelman.diag(mcmc.list)
 
 plot(mod)
 plot(mod,plot.type = "acf")
-
+plot(data_pm$decapod,data_pm$epilithon)
 
 # Autocorrelation ---------------------------------------------------------
 # Extract MCMC samples
