@@ -3,29 +3,9 @@ install.packages('blavaan')
 library(blavaan)
 library(coda)
 
-data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='full',
-                     detectDates = TRUE)
+data_pm <- read.xlsx("data/data_cfa.xlsx", detectDates = TRUE)
 head(data_pm)
 summary(data_pm)
-
-# Extract Nitrate values from monthly_avg
-nitrate_values <- monthly_avg$Nitrate
-# Add Nitrate column to data_pm
-data_pm$Nitrate <- nitrate_values
-print(data_pm)
-
-
-data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='post_Hurricane',
-                     detectDates = TRUE)
-# Extract Nitrate values from monthly_avg
-Potassium_values <- phys_QPA$Potassium
-nitrate_values <- phys_QPA$Nitrate
-# Add Nitrate column to data_pm
-data_pm$Potassium <- Potassium_values
-data_pm$Nitrate <- nitrate_values
-
-print(data_pm)
-
 
 # Interpolate NAs
 data_pm_interpolated <- apply(data_pm, 2, na.approx)
@@ -36,13 +16,13 @@ data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
 model <- '
   # Regressions
   leaflitter ~ canopy
-  epilithon ~ canopy + Nitrate + Potassium
-  decapod ~ epilithon + leaflitter + epilithon : leaflitter
-  macroinvertebrates ~ epilithon + leaflitter + epilithon : leaflitter
+  epilithon ~ decapod
+  decapod ~ epilithon + leaflitter + canopy
+  macroinvertebrates ~ decapod + epilithon + leaflitter + canopy
 '
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
-            n.chains = 4, burnin = 800, sample = 1000,
+            n.chains = 4, burnin = 8000, sample = 10000,
             seed = 14, mcmcfile = T)
 
 summary(mod)
@@ -57,7 +37,7 @@ gelman.diag(mcmc.list)
 
 plot(mod)
 plot(mod,plot.type = "acf")
-plot(data_pm$epilithon,data_pm$canopy)
+
 
 # Autocorrelation ---------------------------------------------------------
 # Extract MCMC samples
