@@ -15,7 +15,7 @@ physico_QPA <- physico %>%
 # Group by Year and Month and calculate the mean
 phys_QPA <- physico_QPA %>%
   group_by(Year, Month) %>%
-  summarise(across(c(Temp, Potassium, Nitrate), mean, na.rm = TRUE))
+  summarise(across(c(Temp, Potassium, Nitrate, NH4,DOC), mean, na.rm = TRUE))
 
 # Remove the first 9 rows
 phys_QPA <- phys_QPA[-(1:8), ]

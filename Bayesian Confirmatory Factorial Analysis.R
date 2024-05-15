@@ -18,14 +18,17 @@ print(data_pm)
 data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='post_Hurricane',
                      detectDates = TRUE)
 # Extract Nitrate values from monthly_avg
-Potassium_values <- phys_QPA$Potassium
-nitrate_values <- phys_QPA$Nitrate
+# Potassium_values <- phys_QPA$Potassium
+Temp_values <- phys_QPA$Temp
 # Add Nitrate column to data_pm
-data_pm$Potassium <- Potassium_values
-data_pm$Nitrate <- nitrate_values
+# data_pm$Potassium <- Potassium_values
+data_pm$Temp <- Temp_values
+
+
+data_pm <- data_pm %>% 
+  dplyr::select(-date)
 
 head(data_pm)
-
 
 # Interpolate NAs
 data_pm_interpolated <- apply(data_pm, 2, na.approx)
@@ -36,9 +39,9 @@ data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
 model <- '
   # Regressions
   leaflitter ~ canopy
-  epilithon ~ canopy + Nitrate + Potassium
-  decapod ~ epilithon + leaflitter + epilithon : leaflitter
-  macroinvertebrates ~ epilithon + leaflitter + epilithon : leaflitter
+  epilithon~ canopy 
+  decapod ~ epilithon + leaflitter + Temp
+  macroinvertebrates ~ epilithon + leaflitter + Temp
 '
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
