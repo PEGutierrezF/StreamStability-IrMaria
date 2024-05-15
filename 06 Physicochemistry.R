@@ -19,7 +19,6 @@ phys_QPA <- physico_QPA %>%
 
 # Remove the first 9 rows
 phys_QPA <- phys_QPA[-(1:8), ]
-
-print(phys_QPA)
+head(phys_QPA)
 
 
