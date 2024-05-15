@@ -24,7 +24,7 @@ nitrate_values <- phys_QPA$Nitrate
 data_pm$Potassium <- Potassium_values
 data_pm$Nitrate <- nitrate_values
 
-print(data_pm)
+head(data_pm)
 
 
 # Interpolate NAs
