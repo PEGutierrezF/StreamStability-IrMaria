@@ -19,10 +19,10 @@ data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='post_Hurricane',
                      detectDates = TRUE)
 # Extract Nitrate values from monthly_avg
 # Potassium_values <- phys_QPA$Potassium
-Temp_values <- phys_QPA$Temp
+Nitrate_values <- phys_QPA$Nitrate
 # Add Nitrate column to data_pm
 # data_pm$Potassium <- Potassium_values
-data_pm$Temp <- Temp_values
+data_pm$Nitrate <- Nitrate_values
 
 
 data_pm <- data_pm %>% 
@@ -39,9 +39,9 @@ data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
 model <- '
   # Regressions
   leaflitter ~ canopy
-  epilithon~ canopy 
-  decapod ~ epilithon + leaflitter + Temp
-  macroinvertebrates ~ epilithon + leaflitter + Temp
+  epilithon ~ canopy + decapod 
+  decapod ~ epilithon + leaflitter 
+  macroinvertebrates ~ epilithon + leaflitter + decapod 
 '
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
@@ -60,7 +60,7 @@ gelman.diag(mcmc.list)
 
 plot(mod)
 plot(mod,plot.type = "acf")
-plot(data_pm$epilithon,data_pm$canopy)
+plot(data_pm$canopy,data_pm$epilithon)
 
 # Autocorrelation ---------------------------------------------------------
 # Extract MCMC samples

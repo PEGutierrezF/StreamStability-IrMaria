@@ -15,84 +15,69 @@
 # cleans global environment
 rm(list = ls())
 
-df <- "data/physicochemical.xlsx"
-excel_sheets(path = df)
+traj_QPA <- read.xlsx("data/data_trajectories.xlsx", sheet='var_environ',
+                      detectDates = TRUE)
 
-df.temp <- read_excel(path = df, sheet = "temperature")
-df.temp$date<-as.POSIXct(df.temp$date,"%Y-%m-%d",tz = "UTC")
+data_long <- traj_QPA %>%
+  pivot_longer(cols = starts_with("Temp") | starts_with("Cond") | starts_with("Potassium") | starts_with("DOC") | starts_with("Nitrate"),
+               names_to = c("Parameter", "Stream"),
+               names_pattern = "(.*)_(QPA|QPB)",
+               values_to = "Value")
 
 
-temp <- ggplot(data=df.temp, aes(x=date, y=temperature, 
-                         colour=factor(stream, labels = c("Prieta A", "Prieta B")))) +
-  geom_line(size=0.8) + 
-  scale_color_manual(values=c('#ce1256','#0570b0'))+ 
+
+variable_new <- c("Cond"= "textstyle('Conductivity')", 
+                  "DOC"="textstyle('DOC')",
+                  "Nitrate"="textstyle('Nitrate')",  #Chlorophyll-')*italic('a')
+                  "Potassium"="textstyle('Potassium')",
+                  "Temp"= "textstyle(Temperature)")
+
+
+data_long$Parameter <- factor(data_long$Parameter,      # Reordering group factor levels
+                                levels = c("Temp", "Cond", "DOC", "Nitrate", "Potassium"))
+
+streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
+
+
+
+
+ggplot(data_long, aes(x = date_QPA, y = Value)) + 
+  geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
+  geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
+  geom_hline(yintercept = 0, color="gray20") +
   
-  # Labels 
-  labs(x = "Year", y= "Stream temperature (C)", color='Stream') +
-  
-  # Vertical line    
-  annotate("rect", xmin = as.POSIXct("2017-09-6"), xmax = as.POSIXct("2017-09-21"), 
-           ymin = -Inf, ymax = Inf,  fill = "#df65b0", alpha=.5) +
-  annotate("segment", x = as.POSIXct("2017-01-01"), xend = as.POSIXct("2020-09-29"),
-           y = 19.9, yend = 19.9, colour = "gray30", size=0.8, linetype=2) +
-
-  
-  theme_bw()  +
-  theme(legend.position="none") +
-  #Quite la leyenda  
-  # theme(legend.key.size = unit(0.6, "cm"))+
-  # theme(legend.title=element_text(size=14)) + # legend title size
-  # theme(legend.text = element_text(color = "black", size = 12))+  #factor name 
-
-  # Axis   
-  theme(axis.title.x = element_text(size = 12, angle = 0)) + # axis x
-  theme(axis.title.y = element_text(size = 12, angle = 90)) + # axis y
+  xlab('Year') + ylab("Change in magnitude") + 
+  theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
+  theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
   theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
-  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black"))  #subaxis y
-
-temp
-
-
-
-# pH ----------------------------------------------------------------------
-
-
-
-df.pH <- read_excel(path = df, sheet = "pH")
-df.pH$date<-as.POSIXct(df.pH$date,"%Y-%m-%d",tz = "UTC")
-
-
-pH <- ggplot(data=df.pH, aes(x=date, y=pH., 
-                         colour=factor(stream, labels = c("Prieta A", "Prieta B")))) +
-  geom_line(size=0.8) + 
-  scale_color_manual(values=c('#ce1256','#0570b0'))+ 
+  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis y
   
-  # Labels 
-  labs(x = "Year", y= "pH", color='Stream') +
+  #ylim(-3,3) + 
   
-  # Vertical line    
-  annotate("rect", xmin = as.POSIXct("2017-09-6"), xmax = as.POSIXct("2017-09-21"), 
-           ymin = -Inf, ymax = Inf,  fill = "#df65b0", alpha=.5) +
-  annotate("segment", x = as.POSIXct("2017-01-01"), xend = as.POSIXct("2020-09-29"),
-           y = 6.65, yend = 6.65, colour = "gray30", size=0.8, linetype=2) +
+  theme(legend.position="none")+
   
-  theme_bw()  +
-  theme(legend.position="none") +
-  #Quite la leyenda  
-  # theme(legend.key.size = unit(0.6, "cm"))+
-  # theme(legend.title=element_text(size=14)) + # legend title size
-  # theme(legend.text = element_text(color = "black", size = 12))+  #factor name 
+  theme(panel.grid.major = element_line(colour = "gray95"), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  # Axis   
-  theme(axis.title.x = element_text(size = 12, angle = 0)) + # axis x
-  theme(axis.title.y = element_text(size = 12, angle = 90)) + # axis y
-  theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
-  theme(axis.text.y=element_text(angle=0, size=10, vjust=0.5, color="black"))  #subaxis y
+  #  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
+  #           col= "red",linetype=4, alpha=0.9, size = 1) +
+  geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
+             col= "blue",linetype=4, alpha=0.9, size = 1) +
+  #geom_vline(aes(xintercept=as.POSIXct("2022-03-1")), # Stream FRE
+  #        col= "red",linetype=4, alpha=0.9, size = 1) +
+  
+  facet_grid(Stream ~ Parameter,
+             labeller = labeller(Parameter = as_labeller(variable_new, label_parsed),
+                                 Stream  = streams_new)) +
+  theme(strip.text.x = element_text(size = 14, color = "black"),
+        strip.text.y = element_text(size = 14, color = "black"),
+        strip.placement = "outside") +
+  theme(strip.background=element_rect(color= "black", fill="gray85")) +
+  theme(strip.text.x = element_text(margin = margin(0.001,0,0.001,0, "cm"))) +
+  theme(strip.switch.pad.grid = unit('0.5', "cm"))
 
 
 
-Fig1 <- (temp) / (pH)
-Fig2 <- Fig1 + plot_annotation(tag_levels = 'A') 
-Fig2
 
-Fig2 + ggsave("Figure 2.jpg",width = 200, height = 220, units = "mm")
+
