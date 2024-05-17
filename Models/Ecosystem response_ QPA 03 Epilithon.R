@@ -129,16 +129,25 @@ new_data <- data.frame(event = seq(1, length(epilithon_QPA), length.out = 100))
 predictions <- predict(mod.3, newdata = new_data)
 
 # Create a ggplot for visualization
-mod.3.plot <- ggplot(data, aes(x = event, y = epilithon_QPA)) +
+mod.3.plot.algae <- ggplot(data, aes(x = event, y = epilithon_QPA)) +
   geom_point() +
   geom_line(data = data.frame(event = new_data$event, epilithon_QPA = predictions), 
             aes(x = event, y = epilithon_QPA), color = "blue") +
-  labs(title = "Inverted Parabolic Curve Fit",
-       x = "Event",
-       y = "Canopy QPA") +
-  theme_minimal()
+  labs(title = expression(Quadratic~Model~(italic(y) == beta[0] + beta[1] * italic(x) + beta[2] * italic(x)^2)),
+       x = "Sampling event",
+       y = expression(Epilithon~(mg~chl-~italic(a) %.% m^{-2}))
+       ) +
+  geom_rangeframe() + theme_tufte() +
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray50",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray50",size = 0.5,linetype = 3))
 
-mod.3.plot
+mod.3.plot.algae
 
 
 ###########################################################################
@@ -244,37 +253,59 @@ exponential <- function(x, A, B, C) {
 mod.6 <- nls(epilithon_QPA ~ exponential(event, A, B, C), 
              data = data,
              start = list(A = 1, B = 0.1, C = 0))
+summary(mod.6)
 
-# Get summary of the fitted model
-fit_summary <- summary(mod.6)
 
-# Calculate total sum of squares
-total_ss <- sum((data$canopy_QPA - mean(data$epilithon_QPA))^2)
+# Get summary of the exponential curve fit
+mod.6_summary <- summary(mod.6)
+# Extract residual standard error
+residual_standard_error <- mod.6_summary$sigma
 # Calculate residual sum of squares
-residual_ss <- sum(fit_summary$residuals^2)
-# Calculate R-squared value
-rsquared <- 1 - residual_ss / total_ss
-# Extract p-values
-p_values <- fit_summary$coefficients[, "Pr(>|t|)"]
-# Print the results
-cat("R-squared value:", rsquared, "\n")
-cat("P-values for parameters:\n")
-print(p_values)
+RSS <- sum(residuals(mod.6)^2)
+# Calculate total sum of squares
+TSS <- sum((data$epilithon_QPA - mean(data$epilithon_QPA))^2)
+# Calculate R-squared
+R_squared <- 1 - (RSS / TSS)
+R_squared
+
+
+# Extract the residual sum of squares
+RSS <- sum(residuals(mod.6)^2)
+# Calculate the degrees of freedom for residuals
+df_residual <- nrow(data) - length(coef(mod.6))
+# Obtain the total sum of squares
+TSS <- sum((data$epilithon_QPA - mean(data$epilithon_QPA))^2)
+# Calculate the F-statistic
+F_statistic <- ((TSS - RSS) / 2) / (RSS / df_residual)
+# Calculate the p-value associated with the F-statistic
+p_value <- pf(F_statistic, 2, df_residual, lower.tail = FALSE)
+p_value
 
 
 # Create a new data frame for prediction
 new_data <- data.frame(event = seq(1, length(epilithon_QPA), length.out = 100))
 new_data$predicted <- predict(mod.6, newdata = new_data)
 
+
 # Plot the data and fitted curve using ggplot2
-mod.6.plot <- ggplot(data, aes(x = event, y = epilithon_QPA)) +
+mod.6.plot.algae <- ggplot(data, aes(x = event, y = epilithon_QPA)) +
   geom_point() +
   geom_line(data = new_data, aes(x = event, y = predicted), color = "blue") +
-  labs(x = "Event", y = "Epilithon QPA") +
-  ggtitle("Exponential Curve Fitting") +
-  theme_minimal()
+  labs(title = expression(paste("Exponential Curve: ", italic(y) == A + B %.% e^{C * italic(x)} + D)),
+    x = "Sampling event",
+       y = expression(Epilithon~(mg~chl-~italic(a) %.% m^{-2}))
+  ) +
+  geom_rangeframe() + theme_tufte() +
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray50",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray50",size = 0.5,linetype = 3))
 
-mod.6.plot
+mod.6.plot.algae
 
 
 ###########################################################################

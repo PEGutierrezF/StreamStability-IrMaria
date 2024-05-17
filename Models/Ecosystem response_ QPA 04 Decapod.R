@@ -196,15 +196,26 @@ new_data <- data.frame(event = seq(1, length(decapoda_QPA), length.out = 100))
 predictions <- predict(mod.4, newdata = new_data)
 
 # Create a ggplot for visualization
-mod.4.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
+mod.4.plot.shrimp <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
   geom_point() +
-  geom_line(data = data.frame(event = new_data$event, shrimp_QPA = predictions), aes(x = event, y = shrimp_QPA), color = "red") +
-  labs(title = "Logistic Curve Fit",
-       x = "Event",
-       y = "Decapoda QPA") +
-  theme_minimal()
+  geom_line(data = data.frame(event = new_data$event, shrimp_QPA = predictions), aes(x = event, y = shrimp_QPA), 
+            color = "blue") +
 
-mod.4.plot
+  labs( title = expression(Logistic~Curve~(italic(y) == A + frac(B - A, 1 + e^{-C * (italic(x) - D)}))),
+        x = "Sampling event",
+        y = expression(Decapod~abundance~(ind %.% m^{-2} ))) +
+  
+  geom_rangeframe() + theme_tufte() +
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray50",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray50",size = 0.5,linetype = 3))
+
+mod.4.plot.shrimp
 
 ###########################################################################
 # Logarithmic curve (mod.5) -----------------------------------------------

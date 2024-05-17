@@ -228,16 +228,26 @@ print(p_values)
 pred_data <- data.frame(event = data$event, 
                         macros_QPA_pred = predict(mod.5, newdata = data))
 
+library(ggthemes)
 # Create a ggplot
-mod.5.plot <- ggplot(data, aes(x = event, y = macros_QPA)) +
+mod.5.plot.macros <- ggplot(data, aes(x = event, y = macros_QPA)) +
   geom_point() +
   geom_line(data = pred_data, aes(x = event, y = macros_QPA_pred), color = "blue") +
-  labs(title = "Logarithmic Curve Fitting",
-       x = "Event",
-       y = "Macroinvertebrados QPA") +
-  theme_minimal()
+  
+  labs(title = expression(Logarithmic~Curve~(italic(y) == a %.% log(italic(x)) + b)),
+       x = "Sampling event",
+       y = expression(Macroinvertebrate~density~(ind %.% m^{-2} ))) +
+  geom_rangeframe() + theme_tufte() +
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray50",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray50",size = 0.5,linetype = 3))
 
-mod.5.plot
+mod.5.plot.macros
 
 
 

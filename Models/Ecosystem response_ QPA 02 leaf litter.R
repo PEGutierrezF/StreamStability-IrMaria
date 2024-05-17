@@ -232,15 +232,25 @@ pred_data <- data.frame(event = data$event,
                         leaflitter_QPA_pred = predict(mod.5, newdata = data))
 
 # Create a ggplot
-mod.5.plot <- ggplot(data, aes(x = event, y = leaflitter_QPA)) +
+mod.5.plot.leaf <- ggplot(data, aes(x = event, y = leaflitter_QPA)) +
   geom_point() +
   geom_line(data = pred_data, aes(x = event, y = leaflitter_QPA_pred), color = "blue") +
-  labs(title = "Logarithmic Curve Fitting",
-       x = "Event",
-       y = "Canopy QPA") +
-  theme_minimal()
 
-mod.5.plot
+  labs(title = expression(Logarithmic~Curve~(italic(y) == a %.% log(italic(x)) + b)),
+       x = "Sampling event",
+       y =  expression(Leaflitter~fall~(g %.% m^{-2} %.% d^{-1}))) +
+  geom_rangeframe() + theme_tufte() +
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray50",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray50",size = 0.5,linetype = 3))
+
+
+mod.5.plot.leaf
 
 
 
