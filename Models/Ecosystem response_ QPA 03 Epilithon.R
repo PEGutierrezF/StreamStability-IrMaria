@@ -17,9 +17,8 @@ rm(list = ls())
 
 
 
-# Create a data frame with epilithon_QPA data (2017-01-01 to 2022-09-01)
-epilithon_QPA <- c(0.374941114, 0.421008704, 0.059098445, -0.356900918, -0.05326958, 
-                   -0.133541362, -0.319898689, -0.340327935, -0.49053223, -0.326974628, 
+# Create a data frame with epilithon_QPA data (2017-10-03 (H. Maria, time 0) to 2022-09-01)
+epilithon_QPA <- c(-0.326974628, 
                    -0.052401445, -0.424571057, -0.270306082, -0.314461617, -0.77198127, 
                    -0.525529712, 0.353432899, 0.012869536, 0.010726568, 0.172358217, 
                    -0.339336835, 0.057037776, -0.309326024, 0.229468207, 0.277150141, 
@@ -118,10 +117,10 @@ summary(mod.3)
 
 # Extract R-squared value and p-value
 r_squared.mod3 <- summary(mod.3)$r.squared
-p_value.mod3 <- summary(mod.3)$coefficients[4]  # P-value for the quadratic term
+p_value_F_statistic.mod3 <- summary(mod.3)$fstatistic["Pr(>F)"]
 # Display results
 cat("R-squared:", r_squared.mod3, "\n")
-cat("R-squared:", p_value.mod3, "\n")
+cat("p-value:", p_value_F_statistic.mod3, "\n")
 
 # Create a new data frame for prediction
 new_data <- data.frame(event = seq(1, length(epilithon_QPA), length.out = 100))
@@ -375,39 +374,38 @@ log_likelihood_mod.7 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.7), sd =
 log_likelihood_mod.8 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.8), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.8))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
 
 
+
 # Calculate AIC and BIC for mod.1
 aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
-bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$epilithon_QPA)) * length(coef(mod.1))
+bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$leaflitter_QPA)) * length(coef(mod.1))
 
 # Calculate AIC and BIC for mod.2
 aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
-bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$epilithon_QPA)) * length(coef(mod.2))
+bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$leaflitter_QPA)) * length(coef(mod.2))
 
 # Calculate AIC and BIC for mod.3
 aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
-bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$epilithon_QPA)) * length(coef(mod.3))
+bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$leaflitter_QPA)) * length(coef(mod.3))
 
 # Calculate AIC and BIC for mod.4
-num_params <- length(fitted_params)
-aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * num_params
-num_params <- length(fitted_params)
-bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$epilithon_QPA)) * num_params
+aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
+bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$leaflitter_QPA)) * length(coef(mod.4))
 
 # Calculate AIC and BIC for mod.5
 aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
-bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$epilithon_QPA)) * length(coef(mod.5))
+bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$leaflitter_QPA)) * length(coef(mod.5))
 
 # Calculate AIC and BIC for mod.6
 aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
-bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$epilithon_QPA)) * length(coef(mod.6))
+bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$leaflitter_QPA)) * length(coef(mod.6))
 
 # Calculate AIC and BIC for mod.7
 aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
-bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$epilithon_QPA)) * length(coef(mod.7))
+bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$leaflitter_QPA)) * length(coef(mod.7))
 
 # Calculate AIC and BIC for mod.8
 aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
-bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$epilithon_QPA)) * length(coef(mod.8))
+bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$leaflitter_QPA)) * length(coef(mod.8))
 
 
 # Compare log-likelihoods, AIC, and BIC
@@ -437,5 +435,4 @@ cat("BIC Mod.5:", bic_mod.5, "\n")
 cat("BIC Mod.6:", bic_mod.6, "\n")
 cat("BIC Mod.7:", bic_mod.7, "\n")
 cat("BIC Mod.8:", bic_mod.8, "\n")
-
 

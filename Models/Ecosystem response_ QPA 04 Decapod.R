@@ -17,9 +17,8 @@ rm(list = ls())
 
 
 
-# Create a data frame with Decapoda_QPA data (2017-01-01 to 2022-09-01)
-decapoda_QPA <- c(0.078654086, 0.411841894, -0.961840432, -0.270906801, 0.008101078, 0.388087446, 
-                  0.07876591, -0.357455085, -0.157341736, -0.23393578, -0.239203865, -0.086031458, 
+# Create a data frame with Decapoda_QPA data (2017-10-04 (H. Maria, time 0) to 2022-09-01)
+decapoda_QPA <- c(-0.23393578, -0.239203865, -0.086031458, 
                   0.194384455, 0.449264798, 0.357700178, 0.923433147, -0.010068608, 0.383830498, 
                   0.645842869, 0.709639939, -0.010001997, 0.180285861, 0.399394425, 0.269734048, 
                   0.098597297, 0.121989466, 0.408274831, 0.371495165, 0.817862356, 0.500372304, 
@@ -159,6 +158,8 @@ mod.4 <- nlsLM(decapoda_QPA ~ logistic_function(event, A, B, C, D),
 # Check the summary of the model
 summary(mod.4)
 
+# Calculate the Root Mean Squared Error (RMSE)
+rmse <- sqrt(mean(residuals(mod.4)^2))
 
 # Calculate residuals
 residuals <- residuals(mod.4)
