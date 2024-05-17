@@ -419,6 +419,16 @@ cat("AIC Mod.6:", aic_mod.6, "\n")
 cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
 
+# Store AIC values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+# Sort AIC values in ascending order
+sorted_indices <- order(aic_values)
+# Print sorted AIC values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+}
+
+
 cat("BIC Mod.1:", bic_mod.1, "\n")
 cat("BIC Mod.2:", bic_mod.2, "\n")
 cat("BIC Mod.3:", bic_mod.3, "\n")
