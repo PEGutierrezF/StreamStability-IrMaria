@@ -18,8 +18,7 @@ rm(list = ls())
 
 
 
-shrimp_QPB<- c(-0.013455405, 0.400185472, -0.487937686, 0.003254209, -0.228820057, 
-               0.208027978, 0.016985791, -0.150517021, 0.541988872, 0.390235065, 
+shrimp_QPB<- c(0.390235065, 
                0.631231632, -0.043353451, 0.436639122, 0.341128433, 0.673279354, 
                1.122436756, 0.575412531, 0.992127709, 1.208225252, 1.017854627, 
                0.16681027, 0.087772451, 0.256537298, 0.409506162, 0.213170875, 
@@ -160,6 +159,24 @@ mod.4 <- nlsLM(
 )
 
 summary(mod.4)
+
+
+# Calculate the Root Mean Squared Error (RMSE)
+rmse <- sqrt(mean(residuals(mod.4)^2))
+rmse
+
+# Calculate residuals
+residuals <- residuals(mod.4)
+# Calculate R-squared value
+ss_residuals <- sum(residuals^2)
+ss_total <- sum((data$shrimp_QPB - mean(data$shrimp_QPB))^2)
+r_squared_mod.4 <- 1 - (ss_residuals / ss_total)
+
+# Print R-squared value
+cat("R-squared:", sprintf("%.4f", r_squared_mod.4), "\n")
+
+
+
 
 residuals <- resid(mod.4)
 y <- data$shrimp_QPB
@@ -426,6 +443,7 @@ cat("Log-Likelihood Mod.6:", log_likelihood_mod.6, "\n")
 cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
 cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
 
+
 cat("AIC Mod.1:", aic_mod.1, "\n")
 cat("AIC Mod.2:", aic_mod.2, "\n")
 cat("AIC Mod.3:", aic_mod.3, "\n")
@@ -434,6 +452,16 @@ cat("AIC Mod.5:", aic_mod.5, "\n")
 cat("AIC Mod.6:", aic_mod.6, "\n")
 cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
+
+# Store AIC values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+# Sort AIC values in ascending order
+sorted_indices <- order(aic_values)
+# Print sorted AIC values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+}
+
 
 cat("BIC Mod.1:", bic_mod.1, "\n")
 cat("BIC Mod.2:", bic_mod.2, "\n")

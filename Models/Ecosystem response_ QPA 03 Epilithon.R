@@ -250,10 +250,10 @@ exponential <- function(x, A, B, C) {
 }
 
 # Fit the exponential curve
-mod.6 <- nls(epilithon_QPA ~ exponential(event, A, B, C), 
+mod.6_QPA <- nls(epilithon_QPA ~ exponential(event, A, B, C), 
              data = data,
              start = list(A = 1, B = 0.1, C = 0))
-summary(mod.6)
+summary(mod.6_QPA)
 
 
 # Get summary of the exponential curve fit
