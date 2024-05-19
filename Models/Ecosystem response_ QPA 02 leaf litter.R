@@ -17,7 +17,7 @@ rm(list = ls())
 
 
 
-# Create a data frame with your leaf litter data (2017-10-18 (H. Maria, time 0) to 2022-09-14)
+# Create a data frame with your leaf litter data (2017-10-30 (H. Maria, time 0) to 2022-09-14)
 leaflitter_QPA <- c(
                     -2.565069159, -3.022216147, -2.425299443, -2.356670205, -2.167231853, -2.917151971, 
                     -0.300271157, -2.134096292, -2.839665992, -2.044478086, -1.733085534, -1.624609129, 

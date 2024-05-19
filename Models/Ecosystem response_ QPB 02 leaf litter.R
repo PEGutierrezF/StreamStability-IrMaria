@@ -17,11 +17,8 @@ rm(list = ls())
 
 
 
-# Create a data frame with your leaf litter data (2017-01-01 to 2022-09-14)
-leaflitter_QPB <- c(-1.03391679, -1.324947736, -0.511549589, -0.890394361, -0.114783801, 
-                    -0.607616663, -0.06972697, 0.10417567, 0.346472235, 0.566684541, 
-                    0.552601689, 0.146828173, 0.352881477, 0.105327722, -0.199475689, 
-                    0.381211487, 1.793614103, 0.714099845, -0.881529659, -0.946126372, 
+# Create a data frame with your leaf litter data (2017-10-30 to 2022-09-14)
+leaflitter_QPB <- c(-0.881529659, -0.946126372, 
                     -1.439828476, -1.023895647, -1.155725351, -1.592679052, -0.788258216, 
                     -1.643160676, -1.073264013, -1.256619939, -0.840765857, -0.502305706, 
                     -0.598869913, -0.70151056, -1.162473227, -0.817998155, -0.947264438, 
@@ -264,7 +261,8 @@ exponential <- function(x, A, B, C) {
 # Fit the exponential curve
 mod.6 <- nls(leaflitter_QPB ~ exponential(event, A, B, C), 
              data = data,
-             start = list(A = 1, B = 0.1, C = 0))
+             start = list(A = 1, B = 0.1, C = 0),
+             )
 
 # Get summary of the fitted model
 fit_summary <- summary(mod.6)
@@ -452,6 +450,15 @@ cat("AIC Mod.5:", aic_mod.5, "\n")
 cat("AIC Mod.6:", aic_mod.6, "\n")
 cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
+
+# Store AIC values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+# Sort AIC values in ascending order
+sorted_indices <- order(aic_values)
+# Print sorted AIC values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+}
 
 cat("BIC Mod.1:", bic_mod.1, "\n")
 cat("BIC Mod.2:", bic_mod.2, "\n")

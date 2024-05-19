@@ -17,7 +17,7 @@ rm(list = ls())
 
 
 
-# Create a data frame with your canopy_QPB data (2017-09-10 to 2022-09-01)
+# Create a data frame with your canopy_QPB data (2017-10-04 (H. Maria, time 0) to 2022-09-01)
 canopy_QPB <- c(1.913568932, 1.551896958, 1.536349726, 1.490548934,
                 1.39148244, 1.294424291, 1.13646499, 1.016906589, 1.246987452,
                 1.185334648, 1.109390578, 1.240990432, 1.181352166, 1.195615482,
