@@ -12,6 +12,7 @@ ggsave(file="Figure 1.jpeg", plot, width = 24, height = 30, units = "cm", dpi = 
 
 
 
+# Canopy ------------------------------------------------------------------
 # Create a data frame with canopy_QPA data (2017-10-04 (H. Maria, time 0) to 2022-09-01)
 canopy_QPA <- c(2.035709058, 1.727578155, 1.716528319, 1.669203747, 
                 1.581599124, 1.645628869, 1.436226353, 1.434460089, 1.479398525, 
@@ -73,7 +74,7 @@ linear_model <- lm(canopy_QPB ~ event, data = data)
 
 library(ggthemes)
   
-ggplot(data, aes(x = event)) +
+p <- ggplot(data, aes(x = event)) +
   geom_point(aes(y = canopy_QPA), shape = 16, color = "#ce1256", size = 5) +
   geom_line(data = data.frame(event = new_data$event, canopy_QPA = predictions), 
             aes(y = canopy_QPA), color = "#ce1256", linewidth=1) +
@@ -94,7 +95,22 @@ ggplot(data, aes(x = event)) +
         axis.title.x = element_text(size = 14, colour = "black"),
         plot.margin = unit(c(1, 1, 1, 1), "cm")) +
   
-  theme(panel.grid.major = element_line(color = "gray30",size = 0.5,linetype = 3)) +
-  theme(panel.grid.minor = element_line(color = "gray30",size = 0.5,linetype = 3))
+  theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  
+  annotate("text", label = "Logistic curve",
+           x = 20,y=0.5,
+           color    = "#ce1256",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") +
 
+annotate("text", label = "Linear model",
+         x = 40,y=1,
+         color    = "#0570b0",
+         size     = 6, 
+         family   = "serif", 
+         fontface = "italic") 
 
+p
+ggsave(file="Figure 1a.jpeg", p, width = 24, height = 30, units = "cm", dpi = 600)
