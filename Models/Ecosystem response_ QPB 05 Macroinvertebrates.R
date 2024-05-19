@@ -17,9 +17,8 @@ rm(list = ls())
 
 
 
-# Create a data frame with Decapoda_QPA data (2017-01-01 to 2022-09-01)
-macros_QPB <- c(0.095935375, 0.647728437, -0.197825743, -0.469378434, -1.063585667, 
-                0.513448822, -0.430157721, -0.132906197, -2.119638341, 0.416040634, 
+# Create a data frame with Decapoda_QPA data (2017-10-05 (after H. Maria, time 0) to 2022-09-01)
+macros_QPB <- c(0.416040634, 
                 0.759091842, 1.909426685, -1.686774259, -0.173728192, 1.748084406, 
                 -0.356049749, -1.608812717, -1.877451187, -1.123304901, 0.010575526, 
                 -0.222518356, -0.392417393, -1.138809088, -0.722981193, 0.235697317, 
@@ -442,6 +441,15 @@ cat("AIC Mod.5:", aic_mod.5, "\n")
 cat("AIC Mod.6:", aic_mod.6, "\n")
 cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
+
+# Store AIC values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+# Sort AIC values in ascending order
+sorted_indices <- order(aic_values)
+# Print sorted AIC values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+}
 
 cat("BIC Mod.1:", bic_mod.1, "\n")
 cat("BIC Mod.2:", bic_mod.2, "\n") # Humped yield curve 

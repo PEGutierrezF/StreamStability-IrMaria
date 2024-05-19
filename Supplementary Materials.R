@@ -289,7 +289,240 @@ p2 <- ggplot(data, aes(x = event)) +
 
 p2
 
-q <- (p + p1) / (p2 + plot_spacer())
+
+
+# Decapoda Abundance  -----------------------------------------------------
+# Create a data frame with Decapoda_QPA data (2017-10-04 (H. Maria, time 0) to 2022-09-01)
+decapoda_QPA <- c(-0.23393578, -0.239203865, -0.086031458, 
+                  0.194384455, 0.449264798, 0.357700178, 0.923433147, -0.010068608, 0.383830498, 
+                  0.645842869, 0.709639939, -0.010001997, 0.180285861, 0.399394425, 0.269734048, 
+                  0.098597297, 0.121989466, 0.408274831, 0.371495165, 0.817862356, 0.500372304, 
+                  0.240039901, 0.083373911, 0.354399016, 0.320034799, 0.140367341, -0.254432235, 
+                  0.003846263, -0.34321992, -0.081858956, 0.105006467, 0.239319973, 0.408686216, 
+                  0.12504962, 0.322919454, 0.718199634, -0.19458057, -0.628874296, -0.699498734, 
+                  -0.333033181, -0.643381145, -0.497259411, -0.638556847, -0.771123635, -0.209821714, 
+                  -0.777532836, -0.725945658, -0.771792055, -0.762260335, -0.393835734, -0.890604404, 
+                  -0.267314505, -0.828057819, -0.435227036, -0.41283978, -0.536717338, -0.534703537, 
+                  -0.537231614, -0.883109826, -0.995781911)
+
+
+event <- seq(1, length(decapoda_QPA))
+data <- data.frame(event, decapoda_QPA)
+
+
+
+
+shrimp_QPB<- c(0.390235065, 
+               0.631231632, -0.043353451, 0.436639122, 0.341128433, 0.673279354, 
+               1.122436756, 0.575412531, 0.992127709, 1.208225252, 1.017854627, 
+               0.16681027, 0.087772451, 0.256537298, 0.409506162, 0.213170875, 
+               0.566073384, 0.586442602, 0.537408582, 0.752616862, 0.080735464, 
+               0.56625312, 0.274781187, 0.17606686, 0.416734634, 0.26722363, 0.107660536, 
+               0.000172464, -0.22189892, -0.125731072, -0.059017824, 0.009271358, 
+               0.950052304, 0.362453294, -0.004009558, 0.119783165, -0.286086287, 
+               -0.573716033, -0.727644859, -0.44757473, -0.539695207, -0.755275737, 
+               -0.746319302, -0.565880826, -0.430242989, -0.711509319, -1.03760404, 
+               -0.351008952, -0.331514746, -0.556119565, -1.272283076, 0.268179237, 
+               0.003355149, -0.86495049, -0.131737915, 0.436245583, 0.425157916, 
+               1.01180779, -0.34408051, -0.815809062)
+
+
+
+event <- seq(1, length(shrimp_QPB))
+data <- data.frame(event, shrimp_QPB)
+
+
+logistic_function <- function(x, A, B, C, D) {
+  A + (B - A) / (1 + exp(-C * (x - D)))
+}
+# Try different starting parameter values
+start_params <- list(A = -1, B = 1, C = 0.1, D = median(data$event))
+# Fit the model using nls.lm algorithm
+mod.4_QPA <- nlsLM(decapoda_QPA ~ logistic_function(event, A, B, C, D),
+               data = data,
+               start = start_params)
+
+
+# Generate predictions using the model
+new_decapoda_QPA <- data.frame(event = seq(1, length(decapoda_QPA), length.out = 100))
+predicted <- predict(mod.4_QPA, newdata = new_decapoda_QPA)
+
+
+# Generate predictions using the model
+new_data <- data.frame(event = seq(1, length(shrimp_QPB), length.out = 100))
+predictions <- predict(mod.4, newdata = new_data)
+
+
+
+# Create a ggplot for visualization
+p3 <- ggplot(data, aes(x = event)) +
+  
+  geom_point(aes(y = decapoda_QPA), shape = 16, colour = "#ce1256", size = 2) +
+  geom_line(data = data.frame(event = new_decapoda_QPA$event, decapoda_QPA = predicted), 
+            aes(x = event, y = decapoda_QPA), color = "#ce1256") +
+  
+  geom_point(aes(y = shrimp_QPB), shape = 16, colour = "#0570b0", size = 2) +
+  geom_line(data = data.frame(event = new_data$event, shrimp_QPB = predictions), 
+            aes(x = event, y = shrimp_QPB), color = "#0570b0") + 
+
+  
+  labs(x = "Sampling event",
+       y = expression(Decapod~abundance~(ind %.% m^{-2} ))
+  ) +
+  
+  geom_rangeframe() + theme_tufte() +
+  
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  
+  annotate("text", label = "Logistic curve",
+           x = 40,y=-1,
+           color    = "#ce1256",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") +
+
+  annotate("text", label = "Logistic curve",
+           x = 15,y=0.75,
+           color    = "#0570b0",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") 
+  
+
+p3
+
+
+
+
+# Macroinvertebrates ------------------------------------------------------
+
+
+
+# Create a data frame with Decapoda_QPA data (2017-10-05 (after H. Maria, time 0) to 2022-09-01)
+macros_QPA <- c(-1.163751591, -1.559647248, -0.530027831, 
+                -1.531476371, -1.819158443, -0.003007521, -1.054552299, -0.490022496, -1.286353913,
+                -0.138261567, -0.003007521, 0.398433437, -0.255182905, -0.352821375, 0.038296285, 
+                0.631207881, -0.414514944, 0.049790664, -0.078042707, -0.084557388, -0.294713744, 
+                -0.335871816, -1.037457865, -0.83832919, -0.745547457, -0.335871816, -0.987860924, 
+                -0.637658495, -0.509825123, -1.531476371, -0.987860924, 0.457158723, -0.015128882, 
+                0.110751364, -1.377325691, -0.758286483, -0.509825123, -1.037457866, 0.378066134, 
+                -0.131388688, -0.784261969, -0.758286483, -0.649087191, 0.784902044, -1.504077397, 
+                0.264902044, 0.188309599, 0.624863222, 0.534266326, 0.505405556, -0.824535868, 
+                0.116113307, -1.202972304, -0.302810954, 0.547965171, 0.348836496, 0.605316467, 
+                -1.979501093, -0.033590944, -0.14518201)
+
+
+event <- seq(1, length(macros_QPA))
+data <- data.frame(event, macros_QPA)
+
+
+
+
+
+# Create a data frame with Decapoda_QPA data (2017-10-05 (after H. Maria, time 0) to 2022-09-01)
+macros_QPB <- c(0.416040634, 
+                0.759091842, 1.909426685, -1.686774259, -0.173728192, 1.748084406, 
+                -0.356049749, -1.608812717, -1.877451187, -1.123304901, 0.010575526, 
+                -0.222518356, -0.392417393, -1.138809088, -0.722981193, 0.235697317, 
+                0.26298946, -0.915665536, -0.241446366, -0.430157721, -0.722981193, 
+                -0.061250208, -2.078816347, -0.993627078, -0.765092678, -0.662963183, 
+                -0.061250208, -0.966958831, -0.831784052, -1.154557445, -0.235097138, 
+                0.30442665, 0.501400483, 0.086802892, -1.138809088, -1.078184466, 
+                0.441832752, -0.294713744, 0.292176462, -0.003007521, -0.033590944, 
+                -0.046091107, 0.132028763, 0.309954708, -0.797507196, -0.604135803, 
+                -0.561118418, 0.072390496, 0.624797603, 0.708050586, -0.758286483, 
+                0.540996501, 0.260283098, -0.262965045, 0.922875611, 0.787638024, 
+                0.193272388, -1.020650747, -0.262965045, 0.348836496)
+
+
+
+event <- seq(1, length(macros_QPB))
+data <- data.frame(event, macros_QPB)
+
+
+# Logarithmic curve (mod.5) -----------------------------------------------
+# Fit a logarithmic curve model
+mod.5_QPA <- nls(macros_QPA ~ a * log(event) + b, data = data, start = list(a = 1, b = 1))
+
+
+# Humped yield curve (mod.2) ----------------------------------------------
+# Define the Nelson-Siegel function
+nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
+  y <- beta0 + (beta1 + beta2) * (1 - exp(-x / tau)) / (x / tau) - beta2 * exp(-x / tau)
+  return(y)
+}
+
+# Initial parameter values
+start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
+# Fit the model using nlsLM
+mod.2 <- nlsLM(macros_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
+               data = data, 
+               start = start_params)
+
+summary(mod.2)
+
+
+
+
+# Create a data frame with predicted values
+pred_data <- data.frame(event = data$event, 
+                        macros_QPA_pred = predict(mod.5_QPA, newdata = data))
+
+# Calculate the predicted values from the model
+predicted_values_QPB <- predict(mod.2, newdata = data.frame(event = event))
+
+
+library(ggthemes)
+# Create a ggplot
+p4<- ggplot(data, aes(x = event)) +
+  geom_point(aes(y = macros_QPA), shape = 16, colour = "#ce1256", size = 2) +
+  geom_line(data = pred_data, aes(x = event, y = macros_QPA_pred), color = "#ce1256") +
+  
+  geom_point(aes(y = macros_QPB), shape = 16, colour = "#0570b0", size = 2) +
+  geom_line(aes(y = predicted_values_QPB), color = "#0570b0") +
+  
+    labs(x = "Sampling event",
+       y = expression(Macroinvertebrate~density~(ind %.% m^{-2} )) 
+  ) +
+  
+  geom_rangeframe() + theme_tufte() +
+  
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  
+  annotate("text", label = "Logarithmic curve",
+           x = 40,y=-1,
+           color    = "#ce1256",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") +
+  
+  annotate("text", label = "Humped yield",
+           x = 15,y=0.75,
+           color    = "#0570b0",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") 
+
+p4
+
+
+
+q <- (p + p1) / (p2 + p3) /
+  (p4 + plot_spacer())
 
 
 #Ecology format
