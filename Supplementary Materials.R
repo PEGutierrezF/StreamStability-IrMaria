@@ -117,7 +117,6 @@ p
 
 
 # Leaflitter fall ---------------------------------------------------------
-
 # Create a data frame with your leaf litter data (2017-10-30 (H. Maria, time 0) to 2022-09-14)
 leaflitter_QPA <- c(
   -2.565069159, -3.022216147, -2.425299443, -2.356670205, -2.167231853, -2.917151971, 
@@ -155,11 +154,11 @@ mod.1.QPB <- lm(leaflitter_QPB ~ event, data = data)
 
 # Create a ggplot
 p1 <- ggplot(data, aes(x = event)) +
-  geom_point(aes(y = leaflitter_QPA), shape = 16, colour = "#ce1256", size = 5) +
+  geom_point(aes(y = leaflitter_QPA), shape = 16, colour = "#ce1256", size = 2) +
   geom_line(data = pred_data, aes(x = event, y = leaflitter_QPA_pred), color = "#ce1256") +
   
-  geom_point(aes(y = leaflitter_QPB), shape = 16, colour = "#0570b0", size = 5) +
-  geom_line(aes(y = mod.1.QPB$fitted.values), color='#0570b0') +  # Trend line without confidence interval
+  geom_point(aes(y = leaflitter_QPB), shape = 16, colour = "#0570b0", size = 2) +
+  geom_line(aes(y = mod.1.QPB$fitted.values), color='#0570b0') +  
 
   
   labs(x = "Sampling event",
@@ -191,4 +190,109 @@ annotate("text", label = "Logarithmic curve",
            fontface = "italic") 
 p1
 
-p + p1
+
+
+# Epilithon ---------------------------------------------------------------
+
+
+# Create a data frame with epilithon_QPA data (2017-10-03 (H. Maria, time 0) to 2022-09-01)
+epilithon_QPA <- c(-0.326974628, 
+                   -0.052401445, -0.424571057, -0.270306082, -0.314461617, -0.77198127, 
+                   -0.525529712, 0.353432899, 0.012869536, 0.010726568, 0.172358217, 
+                   -0.339336835, 0.057037776, -0.309326024, 0.229468207, 0.277150141, 
+                   0.242224405, 0.006403858, -0.036876889, -0.097585005, -0.049060763, 
+                   -0.655417682, -0.33919034, -0.579209274, -0.067344119, -0.275802251, 
+                   -0.106530181, 0.218548616, 0.315346245, -0.104746737, -0.113798581, 
+                   -1.216284093, -0.030794936, 0.128182961, 0.296216546, 0.109570674, 
+                   0.135445071, 0.163041949, 0.135653819, -0.172758478, -0.042531071, 
+                   0.025660758, 0.543062826, 0.494435909, -0.055966918, -0.086641353, 
+                   0.009111772, 0.168652927, 0.589891, 0.359543263, 0.249273612, 
+                   0.190985156, 0.776090885, 0.219440474, 0.449951267, 0.503635106, 
+                   0.160896007, 0.241941622, 0.53811738, 0.148764519)
+
+
+event <- seq(1, length(epilithon_QPA))
+data <- data.frame(event, epilithon_QPA)
+
+
+
+
+
+# Create a data frame with your canopy_QPA data (2017-01-01 to 2022-09-01)
+chlorophyll_QPB <- c(-0.739818027, 
+                     -0.631285253, -1.005281876, -0.586985814, -0.704420806, -1.267086154, 
+                     -0.51728118, -0.499008016, -0.389993121, -0.380058376, -0.19471036, 
+                     -0.818682043, -0.243142403, -0.234457311, -0.351418593, -0.321838209, 
+                     -0.25677644, -0.835178915, -0.517806213, -0.604142102, -0.415562593, 
+                     -1.278258443, -0.887589297, -1.272011892, -0.215530212, -0.198301758, 
+                     -0.462592338, 0.036101327, 0.191078061, -0.683301671, -0.459379957, 
+                     -1.553418692, -0.560293394, -0.198035461, 0.086767025, -0.516006206, 
+                     -0.328713949, 0.433791523, 0.021171656, -0.272604249, 0.083860925, 
+                     -0.10855559, 0.285803829, -0.374389114, 0.269429207, -0.467751563, 
+                     -0.021651399, -0.173116019, 0.265943762, 0.061304029, 0.747564142, 
+                     0.041108448, 0.684064969, 0.517588636, 0.369352134, -0.077452898, 
+                     0.087514826, 0.291396042, 0.53368889, 0.187990095)
+
+
+event <- seq(1, length(chlorophyll_QPB))
+data <- data.frame(event, chlorophyll_QPB)
+
+
+
+
+# Create a new data frame for prediction for Prieta A
+new_data_QPA <- data.frame(event = seq(1, length(epilithon_QPA), length.out = 100))
+new_data_QPA$predicted <- predict(mod.6_QPA, newdata = new_data_QPA)
+
+
+# Create a new data frame for prediction for Prieta B
+new_data_QPB <- data.frame(event = seq(1, length(chlorophyll_QPB), length.out = 100))
+new_data_QPB$predicted <- predict(mod.6, newdata = new_data_QPB)
+
+# Plot the data and fitted curve using ggplot2
+p2 <- ggplot(data, aes(x = event)) +
+  
+  geom_point(aes(y = epilithon_QPA), shape = 16, colour = "#ce1256", size = 2) +
+  geom_line(data = new_data_QPA, aes(x = event, y = predicted), color = "#ce1256") +
+  
+  geom_point(aes(y = chlorophyll_QPB), shape = 16, colour = "#0570b0", size = 2) +
+  geom_line(data = new_data_QPB, aes(x = event, y = predicted), color = "#0570b0") +
+  
+  labs(x = "Sampling event",
+       y = expression(Epilithon~(mg~chl-~italic(a) %.% m^{-2}))
+       ) +
+  
+  geom_rangeframe() + theme_tufte() +
+  
+  theme(axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.text.x = element_text(size = 12, colour = "black"),
+        axis.title.y = element_text(size = 14, colour = "black"), 
+        axis.title.x = element_text(size = 14, colour = "black"),
+        plot.margin = unit(c(1, 1, 1, 1), "cm")) +
+  
+  theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
+  
+  annotate("text", label = "Exponential Curve",
+           x = 15,y=0.5,
+           color    = "#ce1256",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") +
+  
+  annotate("text", label = "Exponential Curve",
+           x = 40,y=-1,
+           color    = "#0570b0",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") 
+
+p2
+
+q <- (p + p1) / (p2 + plot_spacer())
+
+
+#Ecology format
+ggsave(file="Figure 1a.jpeg", q, width = 24, height = 30, units = "cm", dpi = 600)
+
+

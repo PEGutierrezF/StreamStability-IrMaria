@@ -22,8 +22,7 @@ rm(list = ls())
 
 
 # Create a data frame with your canopy_QPA data (2017-01-01 to 2022-09-01)
-chlorophyll_QPB <- c(0.50664315, 0.367207886, -0.014872716, 0.066137971, 0.030785219, 
-                     -0.420636925, -0.532707828, -0.565502931, -0.302866704, -0.739818027, 
+chlorophyll_QPB <- c(-0.739818027, 
                      -0.631285253, -1.005281876, -0.586985814, -0.704420806, -1.267086154, 
                      -0.51728118, -0.499008016, -0.389993121, -0.380058376, -0.19471036, 
                      -0.818682043, -0.243142403, -0.234457311, -0.351418593, -0.321838209, 
@@ -250,21 +249,35 @@ mod.6 <- nls(chlorophyll_QPB ~ exponential(event, A, B, C),
              data = data,
              start = list(A = 1, B = 0.1, C = 0))
 
-# Get summary of the fitted model
-fit_summary <- summary(mod.6)
 
-# Calculate total sum of squares
-total_ss <- sum((data$chlorophyll_QPB - mean(data$chlorophyll_QPB))^2)
+
+# Get summary of the exponential curve fit
+mod.6_summary <- summary(mod.6)
+# Extract residual standard error
+residual_standard_error <- mod.6_summary$sigma
 # Calculate residual sum of squares
-residual_ss <- sum(fit_summary$residuals^2)
-# Calculate R-squared value
-rsquared <- 1 - residual_ss / total_ss
-# Extract p-values
-p_values <- fit_summary$coefficients[, "Pr(>|t|)"]
-# Print the results
-cat("R-squared value:", rsquared, "\n")
-cat("P-values for parameters:\n")
-print(p_values)
+RSS <- sum(residuals(mod.6)^2)
+# Calculate total sum of squares
+TSS <- sum((data$chlorophyll_QPB - mean(data$chlorophyll_QPB))^2)
+# Calculate R-squared
+R_squared <- 1 - (RSS / TSS)
+R_squared
+
+
+
+
+# Extract the residual sum of squares
+RSS <- sum(residuals(mod.6)^2)
+# Calculate the degrees of freedom for residuals
+df_residual <- nrow(data) - length(coef(mod.6))
+# Obtain the total sum of squares
+TSS <- sum((data$chlorophyll_QPB - mean(data$chlorophyll_QPB))^2)
+# Calculate the F-statistic
+F_statistic <- ((TSS - RSS) / 2) / (RSS / df_residual)
+# Calculate the p-value associated with the F-statistic
+p_value <- pf(F_statistic, 2, df_residual, lower.tail = FALSE)
+p_value
+
 
 
 # Create a new data frame for prediction
@@ -432,6 +445,17 @@ cat("AIC Mod.5:", aic_mod.5, "\n")
 cat("AIC Mod.6:", aic_mod.6, "\n")
 cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
+
+# Store AIC values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+# Sort AIC values in ascending order
+sorted_indices <- order(aic_values)
+# Print sorted AIC values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+}
+
+
 
 cat("BIC Mod.1:", bic_mod.1, "\n")
 cat("BIC Mod.2:", bic_mod.2, "\n")
