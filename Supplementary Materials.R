@@ -76,12 +76,12 @@ linear_model <- lm(canopy_QPB ~ event, data = data)
 library(ggthemes)
 
 p <- ggplot(data, aes(x = event)) +
-  geom_point(aes(y = canopy_QPA), shape = 16, color = "#ce1256", size = 5) +
+  geom_point(aes(y = canopy_QPA), shape = 16, color = "#ce1256", size = 2) +
   geom_line(data = data.frame(event = new_data$event, canopy_QPA = predictions), 
-            aes(y = canopy_QPA), color = "#ce1256", linewidth=1) +
+            aes(y = canopy_QPA), color = "#ce1256") +
   
-  geom_point(aes(y = canopy_QPB), shape = 16, colour = "#0570b0", size = 5) +
-  geom_line(aes(y = linear_model$fitted.values), color = "#0570b0", linewidth=1) +
+  geom_point(aes(y = canopy_QPB), shape = 16, colour = "#0570b0", size = 2) +
+  geom_line(aes(y = linear_model$fitted.values), color = "#0570b0") +
   
   labs(x = "Sampling event",
        y = "Canopy openness (%)") +
@@ -567,9 +567,10 @@ p4
 
 q <- (p + p1) / (p2 + p3) /
   (p4 + plot_spacer())
-
+q
 
 #Ecology format
-ggsave(file="Figure 1a.jpeg", q, width = 24, height = 30, units = "cm", dpi = 600)
+ggsave(file="Appendix 1.jpeg", q, width = 24, path = 'figures',
+       height = 30, units = "cm", dpi = 600)
 
 
