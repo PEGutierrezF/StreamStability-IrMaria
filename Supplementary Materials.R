@@ -72,8 +72,9 @@ predictions <- predict(mod.4, newdata = new_data)
 # Linear model for canopy_QPB
 linear_model <- lm(canopy_QPB ~ event, data = data)
 
+
 library(ggthemes)
-  
+
 p <- ggplot(data, aes(x = event)) +
   geom_point(aes(y = canopy_QPA), shape = 16, color = "#ce1256", size = 5) +
   geom_line(data = data.frame(event = new_data$event, canopy_QPA = predictions), 
@@ -83,11 +84,12 @@ p <- ggplot(data, aes(x = event)) +
   geom_line(aes(y = linear_model$fitted.values), color = "#0570b0", linewidth=1) +
   
   
-
-  labs(x = "Sampling event",
-        y = "Canopy openness (%)") +
   
-#  geom_rangeframe() + theme_tufte() +
+  labs(x = "Sampling event",
+       y = "Canopy openness (%)") +
+  
+  ggthemes::geom_rangeframe(y=canopy_QPA) + 
+  ggthemes::theme_tufte() +
   
   theme(axis.text.y = element_text(size = 12, colour = "black"), 
         axis.text.x = element_text(size = 12, colour = "black"),
@@ -98,19 +100,22 @@ p <- ggplot(data, aes(x = event)) +
   theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
+  
   annotate("text", label = "Logistic curve",
-           x = 20,y=0.5,
+           x = 20,y=0,
            color    = "#ce1256",
            size     = 6, 
            family   = "serif", 
            fontface = "italic") +
+  
+  annotate("text", label = "Linear model",
+           x = 40,y=1.2,
+           color    = "#0570b0",
+           size     = 6, 
+           family   = "serif", 
+           fontface = "italic") 
 
-annotate("text", label = "Linear model",
-         x = 40,y=1,
-         color    = "#0570b0",
-         size     = 6, 
-         family   = "serif", 
-         fontface = "italic") 
 
 p
 
@@ -143,10 +148,13 @@ leaflitter_QPA <- c(
 event <- seq(1, length(leaflitter_QPA))
 data <- data.frame(event, leaflitter_QPA)
 
-
+# Fit a logarithmic curve model
+mod.5_Leaf_QPA <- nls(leaflitter_QPA ~ a * log(event) + b, data = data, start = list(a = 1, b = 1))
+# Get summary of the model
+summary(mod.5_Leaf_QPA)
 # Create a data frame with predicted values
 pred_data <- data.frame(event = data$event, 
-                        leaflitter_QPA_pred = predict(mod.5, newdata = data))
+                        leaflitter_QPA_pred = predict(mod.5_Leaf_QPA, newdata = data))
 
 # Linear model for canopy_QPB
 mod.1.QPB <- lm(leaflitter_QPB ~ event, data = data)
@@ -159,12 +167,13 @@ p1 <- ggplot(data, aes(x = event)) +
   
   geom_point(aes(y = leaflitter_QPB), shape = 16, colour = "#0570b0", size = 2) +
   geom_line(aes(y = mod.1.QPB$fitted.values), color='#0570b0') +  
-
+  
   
   labs(x = "Sampling event",
        y = expression(Leaflitter~fall~(g %.% m^{-2} %.% d^{-1}))) +
   
-    geom_rangeframe() + theme_tufte() +
+  geom_rangeframe(y=leaflitter_QPB) + 
+  theme_tufte() +
   
   theme(axis.text.y = element_text(size = 12, colour = "black"), 
         axis.text.x = element_text(size = 12, colour = "black"),
@@ -175,7 +184,9 @@ p1 <- ggplot(data, aes(x = event)) +
   theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   
-annotate("text", label = "Logarithmic curve",
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
+  
+  annotate("text", label = "Logarithmic curve",
            x = 90,y=-2,
            color    = "#ce1256",
            size     = 6, 
@@ -238,16 +249,35 @@ event <- seq(1, length(chlorophyll_QPB))
 data <- data.frame(event, chlorophyll_QPB)
 
 
-
+# Exponential curve (mod.6) -----------------------------------------------
+# Define the exponential function
+exponential <- function(x, A, B, C) {
+  A * exp(B * x) + C
+}
+# Fit the exponential curve
+mod.6_QPA <- nls(epilithon_QPA ~ exponential(event, A, B, C), 
+                 data = data,
+                 start = list(A = 1, B = 0.1, C = 0))
+summary(mod.6_QPA)
 
 # Create a new data frame for prediction for Prieta A
 new_data_QPA <- data.frame(event = seq(1, length(epilithon_QPA), length.out = 100))
 new_data_QPA$predicted <- predict(mod.6_QPA, newdata = new_data_QPA)
 
 
+
+# Exponential curve (mod.6) -----------------------------------------------
+# Define the exponential function
+exponential <- function(x, A, B, C) {
+  A * exp(B * x) + C
+}
+# Fit the exponential curve
+mod.6_QPB <- nls(chlorophyll_QPB ~ exponential(event, A, B, C), 
+             data = data,
+             start = list(A = 1, B = 0.1, C = 0))
 # Create a new data frame for prediction for Prieta B
 new_data_QPB <- data.frame(event = seq(1, length(chlorophyll_QPB), length.out = 100))
-new_data_QPB$predicted <- predict(mod.6, newdata = new_data_QPB)
+new_data_QPB$predicted <- predict(mod.6_QPB, newdata = new_data_QPB)
 
 # Plot the data and fitted curve using ggplot2
 p2 <- ggplot(data, aes(x = event)) +
@@ -260,9 +290,10 @@ p2 <- ggplot(data, aes(x = event)) +
   
   labs(x = "Sampling event",
        y = expression(Epilithon~(mg~chl-~italic(a) %.% m^{-2}))
-       ) +
+  ) +
   
-  geom_rangeframe() + theme_tufte() +
+  geom_rangeframe(y=chlorophyll_QPB) + 
+  theme_tufte() +
   
   theme(axis.text.y = element_text(size = 12, colour = "black"), 
         axis.text.x = element_text(size = 12, colour = "black"),
@@ -273,8 +304,10 @@ p2 <- ggplot(data, aes(x = event)) +
   theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
+  
   annotate("text", label = "Exponential Curve",
-           x = 15,y=0.5,
+           x = 18,y=0.5,
            color    = "#ce1256",
            size     = 6, 
            family   = "serif", 
@@ -339,8 +372,8 @@ logistic_function <- function(x, A, B, C, D) {
 start_params <- list(A = -1, B = 1, C = 0.1, D = median(data$event))
 # Fit the model using nls.lm algorithm
 mod.4_QPA <- nlsLM(decapoda_QPA ~ logistic_function(event, A, B, C, D),
-               data = data,
-               start = start_params)
+                   data = data,
+                   start = start_params)
 
 
 # Generate predictions using the model
@@ -348,9 +381,20 @@ new_decapoda_QPA <- data.frame(event = seq(1, length(decapoda_QPA), length.out =
 predicted <- predict(mod.4_QPA, newdata = new_decapoda_QPA)
 
 
+
+# Define the logistic function
+logistic_function <- function(x, A, B, C, D) {
+  A + (B - A) / (1 + exp(-C * (x - D)))
+}
+mod.4_QPB <- nlsLM(
+  shrimp_QPB ~ logistic_function(event, A, B, C, D),
+  data = data,
+  start = list(A = min(shrimp_QPB), B = max(shrimp_QPB), C = 1, D = median(data$event)),
+  control = nls.lm.control(maxiter = 1000)  # Increase maximum iterations
+)
 # Generate predictions using the model
 new_data <- data.frame(event = seq(1, length(shrimp_QPB), length.out = 100))
-predictions <- predict(mod.4, newdata = new_data)
+predictions <- predict(mod.4_QPB, newdata = new_data)
 
 
 
@@ -364,13 +408,13 @@ p3 <- ggplot(data, aes(x = event)) +
   geom_point(aes(y = shrimp_QPB), shape = 16, colour = "#0570b0", size = 2) +
   geom_line(data = data.frame(event = new_data$event, shrimp_QPB = predictions), 
             aes(x = event, y = shrimp_QPB), color = "#0570b0") + 
-
+  
   
   labs(x = "Sampling event",
        y = expression(Decapod~abundance~(ind %.% m^{-2} ))
   ) +
   
-  geom_rangeframe() + theme_tufte() +
+  geom_rangeframe(y=shrimp_QPB) + theme_tufte() +
   
   theme(axis.text.y = element_text(size = 12, colour = "black"), 
         axis.text.x = element_text(size = 12, colour = "black"),
@@ -381,20 +425,22 @@ p3 <- ggplot(data, aes(x = event)) +
   theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
+  
   annotate("text", label = "Logistic curve",
-           x = 40,y=-1,
+           x = 20,y=-0.75,
            color    = "#ce1256",
            size     = 6, 
            family   = "serif", 
            fontface = "italic") +
-
+  
   annotate("text", label = "Logistic curve",
-           x = 15,y=0.75,
+           x = 40,y=0.5,
            color    = "#0570b0",
            size     = 6, 
            family   = "serif", 
            fontface = "italic") 
-  
+
 
 p3
 
@@ -402,9 +448,6 @@ p3
 
 
 # Macroinvertebrates ------------------------------------------------------
-
-
-
 # Create a data frame with Decapoda_QPA data (2017-10-05 (after H. Maria, time 0) to 2022-09-01)
 macros_QPA <- c(-1.163751591, -1.559647248, -0.530027831, 
                 -1.531476371, -1.819158443, -0.003007521, -1.054552299, -0.490022496, -1.286353913,
@@ -488,11 +531,11 @@ p4<- ggplot(data, aes(x = event)) +
   geom_point(aes(y = macros_QPB), shape = 16, colour = "#0570b0", size = 2) +
   geom_line(aes(y = predicted_values_QPB), color = "#0570b0") +
   
-    labs(x = "Sampling event",
+  labs(x = "Sampling event",
        y = expression(Macroinvertebrate~density~(ind %.% m^{-2} )) 
   ) +
   
-  geom_rangeframe() + theme_tufte() +
+  geom_rangeframe(y=macros_QPB) + theme_tufte() +
   
   theme(axis.text.y = element_text(size = 12, colour = "black"), 
         axis.text.x = element_text(size = 12, colour = "black"),
@@ -503,15 +546,17 @@ p4<- ggplot(data, aes(x = event)) +
   theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
+  
   annotate("text", label = "Logarithmic curve",
-           x = 40,y=-1,
+           x = 40,y=-1.5,
            color    = "#ce1256",
            size     = 6, 
            family   = "serif", 
            fontface = "italic") +
   
   annotate("text", label = "Humped yield",
-           x = 15,y=0.75,
+           x = 20,y= 1,
            color    = "#0570b0",
            size     = 6, 
            family   = "serif", 
