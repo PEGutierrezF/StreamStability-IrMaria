@@ -83,8 +83,6 @@ p <- ggplot(data, aes(x = event)) +
   geom_point(aes(y = canopy_QPB), shape = 16, colour = "#0570b0", size = 5) +
   geom_line(aes(y = linear_model$fitted.values), color = "#0570b0", linewidth=1) +
   
-  
-  
   labs(x = "Sampling event",
        y = "Canopy openness (%)") +
   
@@ -103,14 +101,14 @@ p <- ggplot(data, aes(x = event)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
   
   annotate("text", label = "Logistic curve",
-           x = 20,y=0,
+           x = 15,y=0.25,
            color    = "#ce1256",
            size     = 6, 
            family   = "serif", 
            fontface = "italic") +
   
   annotate("text", label = "Linear model",
-           x = 40,y=1.2,
+           x = 42,y=1.2,
            color    = "#0570b0",
            size     = 6, 
            family   = "serif", 
@@ -172,6 +170,7 @@ p1 <- ggplot(data, aes(x = event)) +
   labs(x = "Sampling event",
        y = expression(Leaflitter~fall~(g %.% m^{-2} %.% d^{-1}))) +
   
+  geom_rangeframe(y=leaflitter_QPA) + 
   geom_rangeframe(y=leaflitter_QPB) + 
   theme_tufte() +
   
@@ -187,7 +186,7 @@ p1 <- ggplot(data, aes(x = event)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
   
   annotate("text", label = "Logarithmic curve",
-           x = 90,y=-2,
+           x = 85,y=-2.2,
            color    = "#ce1256",
            size     = 6, 
            family   = "serif", 
