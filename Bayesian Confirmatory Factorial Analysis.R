@@ -1,18 +1,18 @@
 
+
+
+
+# ---------------------------------------------
+# Bayesian Confirmatory Factorial Analysis
+# 23 May 2024
+# Pablo E. Gutiérrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# ---------------------------------------------
+#  
+
 install.packages('blavaan')
 library(blavaan)
 library(coda)
-
-data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='full',
-                     detectDates = TRUE)
-head(data_pm)
-summary(data_pm)
-
-# Extract Nitrate values from monthly_avg
-nitrate_values <- monthly_avg$Nitrate
-# Add Nitrate column to data_pm
-data_pm$Nitrate <- nitrate_values
-print(data_pm)
 
 
 data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='post_Hurricane',
