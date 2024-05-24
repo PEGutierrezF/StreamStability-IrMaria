@@ -24,7 +24,7 @@ libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "fitdistrplus", "mgcv","ggtext", 'brms','magrittr',
                'readxl', 'optimx', 'minpack.lm','openxlsx',
                'lavaan', 'mvnormalTest', 'semPlot', 'lmtest',
-               'car')
+               'car', 'blavaan', 'coda')
 lapply(libraries, require, character.only = TRUE)
 
 

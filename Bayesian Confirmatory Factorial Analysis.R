@@ -2,28 +2,18 @@
 
 
 
-# ---------------------------------------------
-# Bayesian Confirmatory Factorial Analysis
-# 23 May 2024
-# Pablo E. Gutiérrez-Fonseca
+# --------------------------------------------------------
+# Bayesian Confirmatory Factorial Analysis, Prieta A
+# Date: Fri May 24 2024 11:54:15
+# Pablo E. Gutierrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
-# ---------------------------------------------
-#  
+# --------------------------------------------------------
 
-install.packages('blavaan')
-library(blavaan)
-library(coda)
+
 
 
 data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='post_Hurricane',
                      detectDates = TRUE)
-# Extract Nitrate values from monthly_avg
-# Potassium_values <- phys_QPA$Potassium
-Nitrate_values <- phys_QPA$Nitrate
-# Add Nitrate column to data_pm
-# data_pm$Potassium <- Potassium_values
-data_pm$Nitrate <- Nitrate_values
-
 
 data_pm <- data_pm %>% 
   dplyr::select(-date)
