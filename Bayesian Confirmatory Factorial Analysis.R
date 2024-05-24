@@ -29,23 +29,23 @@ data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
 model <- '
   # Regressions
   leaflitter ~ canopy
-  epilithon ~ canopy + decapod 
+  epilithon ~ decapod + canopy  
   decapod ~ epilithon + leaflitter 
   macroinvertebrates ~ epilithon + leaflitter + decapod 
 '
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
-            n.chains = 4, burnin = 800, sample = 1000,
-            seed = 14, mcmcfile = T)
+            n.chains = 4, burnin = 8000, sample = 10000,
+            seed = 14, control = list(adapt_delta = 0.99), mcmcfile = T)
 
 summary(mod)
 semPaths(semPlotModel_lavaanModel(model))
 
-
 # extract information
-blavInspect(fit, "rhat")
+blavInspect(mod, "rhat")
+blavInspect(mod, "mcobj")
 
-mcmc.list <- blavInspect(fit, what = "mcmc")
+mcmc.list <- blavInspect(mod, what = "mcmc")
 gelman.diag(mcmc.list)
 
 plot(mod)
