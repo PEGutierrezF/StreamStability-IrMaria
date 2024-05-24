@@ -3,7 +3,7 @@
 
 
 # --------------------------------------------------------
-# Bayesian Confirmatory Factorial Analysis, Prieta A
+# Bayesian Confirmatory Factorial Analysis, Prieta B
 # Date: Fri May 24 2024 11:54:15
 # Pablo E. Gutierrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
@@ -12,34 +12,34 @@
 
 
 
-data_pm <- read.xlsx("data/data_cfa.xlsx", sheet='post_Hurricane',
+bayes_cfa_QPB <- read.xlsx("data/data_bcfa.xlsx", sheet='QPB_pre_Hurricane',
                      detectDates = TRUE)
 
-data_pm <- data_pm %>% 
+bayes_cfa_QPB <- bayes_cfa_QPB %>% 
   dplyr::select(-date)
 
-head(data_pm)
+head(bayes_cfa_QPB)
 
 # Interpolate NAs
-data_pm_interpolated <- apply(data_pm, 2, na.approx)
+bayes_cfa_QPB_interp <- apply(bayes_cfa_QPB, 2, na.approx)
 
 # Standardize variables
-data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
+bayes_cfa_QPB_interp_stand <- as.data.frame(scale(bayes_cfa_QPB_interp))
 
-model <- '
+model_QPB <- '
   # Regressions
   leaflitter ~ canopy
-  epilithon ~ decapod + canopy  
+  epilithon ~ canopy + decapod  
   decapod ~ epilithon + leaflitter 
   macroinvertebrates ~ epilithon + leaflitter + decapod 
 '
 # Fit the model
-mod <- bcfa(model, data = data_pm_standardized,
+mod_QPB <- bcfa(model_QPB, data = bayes_cfa_QPB_interp_stand,
             n.chains = 4, burnin = 18000, sample = 20000,
             seed = 14, control = list(adapt_delta = 0.9999, 
                                       max_treedepth=12), mcmcfile = T)
 
-summary(mod)
+summary(mod_QPB)
 semPaths(semPlotModel_lavaanModel(model))
 
 # extract information
