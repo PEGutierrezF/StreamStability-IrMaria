@@ -51,7 +51,7 @@ gelman.diag(mcmc.list)
 
 plot(mod)
 plot(mod,plot.type = "acf")
-plot(data_pm$canopy,data_pm$epilithon)
+plot(bayes_cfa_QPB$canopy,bayes_cfa_QPB$epilithon)
 
 # Autocorrelation ---------------------------------------------------------
 # Extract MCMC samples
