@@ -43,6 +43,7 @@ summary(mod)
 semPaths(semPlotModel_lavaanModel(model))
 
 # extract information
+# https://www.rensvandeschoot.com/tutorials/wambs-blavaan-tutorial/
 blavInspect(mod, "rhat")
 blavInspect(mod, "mcobj")
 
