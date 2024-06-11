@@ -15,6 +15,7 @@ digraph boxes_and_circles{
     'Decapoda abundance'; 'Macroinvertebrate\ndensity'
 
     # several 'edge' statements with numbers
+    edge [minlen = 1, arrowhead=vee]
     'Canopy openness' -> 'Leaf litter' [label = '-0.40 (-0.64; 0.16)']
     'Canopy openness' -> 'Epilithic algae' [label = '-2.85 (-6.94; -0.83)']
     'Leaf litter' -> 'Decapoda abundance' [label = 'N.E.']
@@ -35,6 +36,7 @@ digraph boxes_and_circles{
     'Decapoda abundance '; 'Macroinvertebrate\ndensity '
 
     # several 'edge' statements with numbers
+    edge [minlen = 1, arrowhead=vee]
     'Canopy openness ' -> 'Leaf litter ' [label = 'N.E.']
     'Canopy openness ' -> 'Epilithic algae ' [label = '-1.72 (-4.61 ; -0.67)']
     'Leaf litter ' -> 'Decapoda abundance ' [label = '0.55\n(0.07;1.44)']
@@ -42,13 +44,15 @@ digraph boxes_and_circles{
     'Decapoda abundance ' -> 'Epilithic algae ' [label = '2.66\n(0.39; 8.98)']
     'Leaf litter ' -> 'Macroinvertebrate\ndensity ' [label = 'N.E.']
     'Epilithic algae ' -> 'Macroinvertebrate\ndensity ' [label = 'N.E.']
-    'Decapoda abundance ' -> 'Macroinvertebrate\ndensity ' [label = 'N.E.']
+    'Decapoda abundance ' -> 'Macroinvertebrate\ndensity ' [label = 'N.E.', style = dashed]
 
     { rank = same; 'Leaf litter '; 'Epilithic algae '; }
+
 #} //for the Squared
 }
 ")
 plot
+
 
 library(DiagrammeR) ; library(DiagrammeRsvg) ; library(rsvg) 
 # export graph
