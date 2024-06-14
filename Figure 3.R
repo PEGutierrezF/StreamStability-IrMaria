@@ -10,7 +10,7 @@ digraph boxes_and_circles{
 
   # first subgraph (diagram 1)
     subgraph cluster_1 {
-        fontsize = 18;
+        fontsize = 18;fontname = Arial;
         label = 'A)';
         color=white;
         labelloc = t;
@@ -37,7 +37,7 @@ digraph boxes_and_circles{
 
   # second subgraph (diagram 2)
     subgraph cluster_2 {
-        fontsize = 18;
+        fontsize = 18;fontname = Arial;
         label = 'B)';
         color=white;
         labelloc = t;
@@ -68,7 +68,7 @@ plot
 
 export_svg(plot) %>% 
   charToRaw %>% 
-  rsvg(width = 9000, 
+  rsvg(width = 10000, 
        height = 6000) %>% 
   tiff::writeTIFF("Figure 3.tiff")
 
