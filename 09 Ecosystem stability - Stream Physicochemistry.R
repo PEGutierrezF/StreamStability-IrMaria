@@ -42,3 +42,29 @@ summary(QPB.temp.mod)
 res.QPB.temp.mod <- residuals(QPB.temp.mod)
 1/sd(res.QPB.temp.mod)
 
+
+# Conductivity Prieta A ----------------------------------------------------
+cond_QPA <- env_QPx %>%
+  dplyr::select(date, cond_QPA)
+cond_QPA$date <- as.POSIXct(cond_QPA$date,"%Y-%m-%d",tz = "UTC")
+
+QPA.cond.mod  <- lm(cond_QPA ~ date, data=cond_QPA)
+summary(QPA.cond.mod)
+
+# Temporal stability
+res.QPA.cond.mod <- residuals(QPA.cond.mod)
+1/sd(res.QPA.cond.mod)
+
+
+# Conductivity Prieta A ----------------------------------------------------
+cond_QPB <- env_QPx %>%
+  dplyr::select(date, cond_QPB)
+cond_QPB$date <- as.POSIXct(cond_QPB$date,"%Y-%m-%d",tz = "UTC")
+head(cond_QPB)
+
+QPB.cond.mod  <- lm(cond_QPB ~ date, data=cond_QPB)
+summary(QPB.cond.mod)
+
+# Temporal stability
+res.QPB.cond.mod <- residuals(QPB.cond.mod)
+1/sd(res.QPB.cond.mod)
