@@ -19,22 +19,22 @@ rm(list=ls())
 
 macroinvertebrates <- read.xlsx("data/data_stability_metrics.xlsx", 
                                 sheet='macro_density', detectDates = TRUE)
-head(macroinvertebrates)
-macroiv <- na.omit(macroinvertebrates)
-head(macroiv)
+
+macroinvertebrates$date <- as.POSIXct(macroinvertebrates$date,"%Y-%m-%d",tz = "UTC")
+macroinvertebrates <- na.omit(macroinvertebrates)
+
 
 
 ################################################################
 # Linear model Macroinvertebrate abundance Prieta A -----------
 ################################################################
 
-QPA.macroinv.mod  <- lm(QPA_miv ~ date, data=macroiv)
+QPA.macroinv.mod  <- lm(QPA_miv ~ date, data=macroinvertebrates)
 summary(QPA.macroinv.mod)
 
-macroiv$QPAresid<- QPA.macroinv.mod$resid
-head(macroiv)
-
-1/apply(macroiv, 2, sd)
+# Temporal stability
+residuals <- residuals(QPA.macroinv.mod)
+1/sd(residuals)
 
 
 # Autocorrelation
@@ -63,13 +63,12 @@ qpa.miv
 ################################################################
 # Linear model Macroinvertebrate abundance Prieta B ------------
 ################################################################
-QPB.macroinv.mod  <- lm(QPB_miv ~ date, data=macroiv)
+QPB.macroinv.mod  <- lm(QPB_miv ~ date, data=macroinvertebrates)
 summary(QPB.macroinv.mod)
 
-macroiv$QPAresid<- QPB.macroinv.mod$resid
-head(macroiv)
-
-1/apply(macroiv, 2, sd)
+# Temporal stability
+residuals <- residuals(QPB.macroinv.mod)
+1/sd(residuals)
 
 
 # Autocorrelation
