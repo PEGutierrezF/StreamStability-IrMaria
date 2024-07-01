@@ -19,8 +19,9 @@ rm(list=ls())
 
 decapod <- read.xlsx("data/data_stability_metrics.xlsx", sheet='decapoda_abundance', detectDates = TRUE)
 head(decapod)
+
+decapod$date <- as.POSIXct(decapod$date,"%Y-%m-%d",tz = "UTC")
 decapod <- na.omit(decapod)
-head(decapod)
 
 ################################################################
 # Linear model Decapoda abundance Prieta A ---------------------
@@ -29,10 +30,9 @@ head(decapod)
 QPA.shrimp.mod  <- lm(QPA_shrimp ~ date, data=decapod)
 summary(QPA.shrimp.mod)
 
-decapod$QPAresid <- QPA.shrimp.mod$resid
-decapod
-
-1/apply(decapod, 2, sd)
+# Temporal stability
+residuals <- residuals(QPA.shrimp.mod)
+1/sd(residuals)
 
 
 # Autocorrelation
@@ -63,14 +63,13 @@ qpa.s
 # Linear model Decapoda abundance Prieta B ---------------------
 ################################################################
 
-
 QPB.shrimp.mod <- lm(QPB_shrimp ~ date, data=decapod)
 summary(QPB.shrimp.mod)
 
-decapod$QPBresid<- QPB.shrimp.mod$resid
-decapod
+# Temporal stability
+residuals <- residuals(QPB.shrimp.mod)
+1/sd(residuals)
 
-1/apply(decapod, 2, sd)
 
 qpb.s <- ggplot(decapod, aes(date, y=QPB_shrimp))+
   geom_point(size = 3) + 

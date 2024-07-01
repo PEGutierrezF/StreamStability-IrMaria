@@ -17,23 +17,24 @@ rm(list=ls())
 
 
 
-chla <- read.xlsx("data/all_data.xlsx", sheet='epilithic_algae', detectDates = TRUE)
+chla <- read.xlsx("data/data_stability_metrics.xlsx", sheet='epilithic_algae', detectDates = TRUE)
 head(chla)
-chla <- na.omit(chla)
 
+chla$date <- as.POSIXct(chla$date,"%Y-%m-%d",tz = "UTC")
+chla <- na.omit(chla)
 
 ################################################################
 # Linear model Chlorophyll-a Prieta A --------------------------
 ################################################################
 
 
-QPA.chla.mod  <- lm(QPA_chla~ date_chla, data=chla)
+QPA.chla.mod  <- lm(QPA_chla~ date, data=chla)
 summary(QPA.chla.mod)
 
-chla$QPAChlaresid<- QPA.chla.mod$resid
-chla
+# Temporal stability
+residuals <- residuals(QPA.chla.mod)
+1/sd(residuals)
 
-1/apply(chla, 2, sd)
 
 c1 <- ggplot(chla, aes(date_chla, y=QPA_chla))+
   geom_point(size = 3) + 
@@ -58,14 +59,13 @@ c1
 # Linear model Chlorophyll-a Prieta B --------------------------
 ################################################################
 
-
-QPB.chla.mod  <- lm(QPB_chla~ date_chla, data=chla)
+QPB.chla.mod  <- lm(QPB_chla~ date, data=chla)
 summary(QPB.chla.mod)
 
-chla$QPB.chla.resid<- QPB.chla.mod$resid
-chla
+# Temporal stability
+residuals <- residuals(QPB.chla.mod)
+1/sd(residuals)
 
-1/apply(chla, 2, sd)
 
 c2 <- ggplot(chla, aes(date_chla, y=QPB_chla))+
   geom_point(size = 3) + 

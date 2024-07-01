@@ -79,8 +79,9 @@ leaflitter$QPBresid<- QPBleaf.mod$resid
 leaflitter
 
 1/apply(leaflitter, 2, sd)
-
-
+# Temporal stability
+residuals <- residuals(QPBleaf.mod)
+1/sd(residuals)
 
 # Plot --------------------------------------------------------------------
 
