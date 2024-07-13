@@ -88,7 +88,7 @@ p <- c + geom_vline(data = vh_line, aes(xintercept = xintercept),
 
 # Individual strip color  -------------------------------------------------
 
-g <- ggplot_gtable(ggplot_build(p))
+g <- ggplot_gtable(ggplot_build(c))
 stripr <- which(grepl('strip-t', g$layout$name)) # strip-t changes colors
 fills <- c("#fecc5c","#74c476","#74c476","#74a9cf", "#74a9cf") #colorblind safe
 k <- 1

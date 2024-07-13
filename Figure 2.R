@@ -45,7 +45,7 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
 
 
 
-a <- ggplot(data_long, aes(x = date_QPA, y = Value)) + 
+stream_env <- ggplot(data_long, aes(x = date_QPA, y = Value)) + 
   geom_point(shape = 21, fill = "#bdd7e7", color = "#2171b5", size = 3) +
   geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
@@ -81,7 +81,9 @@ a <- ggplot(data_long, aes(x = date_QPA, y = Value)) +
   facet_grid(stream ~ variable, 
            labeller = labeller(variable = as_labeller(variable_new, label_parsed),
                                stream  = streams_new)) 
-a
+stream_env
+
+ggsave("Figure 2.jpeg", stream_env, path = "figures", width=9, height=6,dpi=300)
 
 
 
