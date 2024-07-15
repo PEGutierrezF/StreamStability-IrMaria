@@ -154,6 +154,38 @@ summary(mod.5_Leaf_QPA)
 pred_data <- data.frame(event = data$event, 
                         leaflitter_QPA_pred = predict(mod.5_Leaf_QPA, newdata = data))
 
+
+
+
+# Create a data frame with your leaf litter data (2017-10-30 to 2022-09-14)
+leaflitter_QPB <- c(-0.881529659, -0.946126372, 
+                    -1.439828476, -1.023895647, -1.155725351, -1.592679052, -0.788258216, 
+                    -1.643160676, -1.073264013, -1.256619939, -0.840765857, -0.502305706, 
+                    -0.598869913, -0.70151056, -1.162473227, -0.817998155, -0.947264438, 
+                    -0.849296553, -0.70151056, -1.49645676, -0.894219391, -0.936551829, 
+                    -0.977840436, -1.102238876, -1.236164349, -1.344213624, -1.110259713, 
+                    -1.592403782, -0.818693844, -1.517424033, -0.136211136, 0.801695445, 
+                    -0.899936415, -1.181668619, -0.829219278, -0.510525117, -0.276555603, 
+                    -0.270391739, -0.763202415, -0.514927158, -0.207406064, -0.514130386, 
+                    -0.787170279, -0.998968675, -0.728808123, -0.590584485, -1.133567269, 
+                    -1.020126191, -1.035483352, -1.252052964, -1.701579112, -1.237738968, 
+                    -0.133874299, -0.235070008, -1.495950815, -0.966139987, -1.988234189, 
+                    -1.168609357, -0.495524754, -0.401234574, 0.007524237, 0.332921197, 
+                    -0.007038695, -0.198511569, -0.576370464, -0.527011486, -0.493142973, 
+                    1.263124688, -0.167082689, -1.013624257, -0.867645692, -0.867645692, 
+                    -0.736701466, -0.880997605, -1.098401749, -1.459996491, -1.170577593, 
+                    -1.380474715, -1.19369576, -0.988797152, -1.517067507, -0.395008864, 
+                    -0.545772984, -0.7124547, 0.229161465, 0.434497298, 0.34879403, 0.491349127, 
+                    0.042851553, -0.568133448, -0.298349883, -0.404337914, -0.330591928, 
+                    -0.757347211, -0.6529513, 0.082377342, -0.445387166, -0.55238588, 
+                    -0.830664876, -0.169119952, -1.225903184, -0.005588603, -1.445335184, 
+                    -1.307996861, 3.002915516, -1.324100558, -1.006813101, -0.470105039, 
+                    0.018336743, 0.440986107, -0.19981113, -0.183622175, -0.208732115, 
+                    -0.410167047, -0.732243959, -0.694876234, -0.122126395, -0.374055086)
+
+event <- seq(1, length(leaflitter_QPB))
+data <- data.frame(event, leaflitter_QPB)
+
 # Linear model for canopy_QPB
 mod.1.QPB <- lm(leaflitter_QPB ~ event, data = data)
 
@@ -569,8 +601,32 @@ q <- (p + p1) / (p2 + p3) /
   (p4 + plot_spacer())
 q
 
+
+# Plot 2 ------------------------------------------------------------------
+## Function to extract legend
+library(gridExtra)
+g_legend <- function(a.gplot){ 
+  tmp <- ggplot_gtable(ggplot_build(a.gplot)) 
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box") 
+  legend <- tmp$grobs[[leg]] 
+  legend
+} 
+
+
+legend <- g_legend(p + theme(legend.position = c(0.25, 0.6)) +
+                     theme(legend.key.size = unit(0.6, "cm"))+
+                     theme(legend.title=element_text(size=14)) + # legend title size
+                     theme(legend.text = element_text(color = "black", size = 12)))
+
+Fig <-grid.arrange(p + theme(legend.position='hidden'), p1 + theme(legend.position='hidden'), 
+                   p2 + theme(legend.position='hidden'), p3 + theme(legend.position='hidden'),
+                   p4 + theme(legend.position='hidden'), legend,
+                   nrow=3)
+
+
+
 #Ecology format
-ggsave(file="Appendix 1.jpeg", q, width = 24, path = 'figures',
+ggsave(file="Appendix 1a.jpeg", Fig, width = 24, path = 'figures',
        height = 30, units = "cm", dpi = 600)
 
 
