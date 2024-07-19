@@ -98,6 +98,7 @@ p <- ggplot(data, aes(x = event)) +
   theme(panel.grid.major = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   theme(panel.grid.minor = element_line(color = "gray70",size = 0.5,linetype = 3)) +
   
+  theme(legend.key.width = unit(1.2, "cm")) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +  # Add vertical line at x = 0
   
   annotate("text", label = "Logistic curve",
@@ -610,14 +611,15 @@ g_legend <- function(a.gplot){
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box") 
   legend <- tmp$grobs[[leg]] 
   legend
-} 
+ } 
 
-
-legend <- g_legend(p + theme(legend.position = c(0.25, 0.6)) +
+legend <- g_legend(px + theme(legend.position = c(0.25, 0.6)) +
                      theme(legend.key.size = unit(1, "cm"), #separate
                            legend.key.width = unit(3, 'cm'))+ #line width
-                     guides(color = guide_legend(override.aes = list(size=5)))+
-                   theme(legend.title=element_text(size=24)) + # legend title size
+                     guides(color = guide_legend(override.aes = list(size = 6)))+
+                     
+                     guides(shape = guide_legend(override.aes = list(size=4)))+ 
+                     theme(legend.title=element_text(size=24)) + # legend title size
                      theme(legend.text = element_text(color = "black", 
                                                       size = 22)))
 
