@@ -153,36 +153,18 @@ mod.3.plot.algae
 ###########################################################################
 # Logistic curve (mod.4) --------------------------------------------------
 # Define the logistic function
-# Define the logistic function
 logistic_function <- function(x, A, B, C, D) {
   A + (B - A) / (1 + exp(-C * (x - D)))
 }
 
-# Define the objective function for optimization
-objective_function <- function(params) {
-  predicted <- logistic_function(data$event, params[1], params[2], params[3], params[4])
-  sum((data$epilithon_QPA - predicted)^2)
-}
 
-# Use optim with the BFGS optimizer
-initial_params <- c(min(data$epilithon_QPA), max(data$epilithon_QPA), 1, median(data$event))
-result <- optim(par = initial_params, fn = objective_function, method = "BFGS")
+# Try different starting parameter values
+start_params <- list(A = min(data$epilithon_QPA), B = max(data$epilithon_QPA), C = 0.1, D = median(data$event))
 
-# Fitted parameter values
-fitted_params <- result$par
-
-# Calculate predicted values using fitted parameters
-data$predicted <- logistic_function(data$event, fitted_params[1], fitted_params[2], fitted_params[3], fitted_params[4])
-
-# Calculate R-squared
-SST <- sum((data$epilithon_QPA - mean(data$epilithon_QPA))^2)
-SSE <- sum((data$epilithon_QPA - data$predicted)^2)
-rsquared <- 1 - (SSE / SST)
-
-# Print the fitted parameters and R-squared
-print("Fitted Parameters:")
-print(fitted_params)
-print(paste("R-squared:", round(rsquared, 4)))
+# Fit the model using nlsLM algorithm
+mod.4 <- nlsLM(epilithon_QPA ~ logistic_function(event, A, B, C, D),
+             data = data,
+             start = start_params)
 
 mod.4.plot <- ggplot(data, aes(x = event, y = epilithon_QPA)) +
   geom_point() +
@@ -253,8 +235,6 @@ exponential <- function(x, A, B, C) {
 mod.6 <- nls(epilithon_QPA ~ exponential(event, A, B, C), 
              data = data,
              start = list(A = 1, B = 0.1, C = 0))
-summary(mod.6_QPA)
-
 
 # Get summary of the exponential curve fit
 mod.6_summary <- summary(mod.6)
@@ -393,87 +373,33 @@ mod.8.plot
 
 
 ###########################################################################
-# Goodness-of-fit diagnostics based on the log-likelihood -----------------
-# Calculate log-likelihood for all models
-log_likelihood_mod.1 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.1), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.1))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-log_likelihood_mod.2 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.2), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.2))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-log_likelihood_mod.3 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.3), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.3))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-log_likelihood_mod.4 <- sum(dnorm(data$epilithon_QPA, mean = data$predicted, sd = sqrt(sum((data$epilithon_QPA - data$predicted)^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-log_likelihood_mod.5 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.5), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.5))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-log_likelihood_mod.6 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.6), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.6))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-log_likelihood_mod.7 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.7), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.7))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-log_likelihood_mod.8 <- sum(dnorm(data$epilithon_QPA, mean = fitted(mod.8), sd = sqrt(sum((data$epilithon_QPA - fitted(mod.8))^2) / (length(data$epilithon_QPA) - 2)), log = TRUE))
-
-
-
-# Calculate AIC and BIC for mod.1
-aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
-bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$leaflitter_QPA)) * length(coef(mod.1))
-
-# Calculate AIC and BIC for mod.2
-aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
-bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$leaflitter_QPA)) * length(coef(mod.2))
-
-# Calculate AIC and BIC for mod.3
-aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
-bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$leaflitter_QPA)) * length(coef(mod.3))
-
-# Calculate AIC and BIC for mod.4
-aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
-bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$leaflitter_QPA)) * length(coef(mod.4))
-
-# Calculate AIC and BIC for mod.5
-aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
-bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$leaflitter_QPA)) * length(coef(mod.5))
-
-# Calculate AIC and BIC for mod.6
-aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
-bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$leaflitter_QPA)) * length(coef(mod.6))
-
-# Calculate AIC and BIC for mod.7
-aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
-bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$leaflitter_QPA)) * length(coef(mod.7))
-
-# Calculate AIC and BIC for mod.8
-aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
-bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$leaflitter_QPA)) * length(coef(mod.8))
-
-
-# Compare log-likelihoods, AIC, and BIC
-cat("Log-Likelihood Mod.1:", log_likelihood_mod.1, "\n")
-cat("Log-Likelihood Mod.2:", log_likelihood_mod.2, "\n")
-cat("Log-Likelihood Mod.3:", log_likelihood_mod.3, "\n")
-cat("Log-Likelihood Mod.4:", log_likelihood_mod.4, "\n")
-cat("Log-Likelihood Mod.5:", log_likelihood_mod.5, "\n")
-cat("Log-Likelihood Mod.6:", log_likelihood_mod.6, "\n")
-cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
-cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
-
-cat("AIC Mod.1:", aic_mod.1, "\n")
-cat("AIC Mod.2:", aic_mod.2, "\n")
-cat("AIC Mod.3:", aic_mod.3, "\n")
-cat("AIC Mod.4:", aic_mod.4, "\n")
-cat("AIC Mod.5:", aic_mod.5, "\n")
-cat("AIC Mod.6:", aic_mod.6, "\n")
-cat("AIC Mod.7:", aic_mod.7, "\n")
-cat("AIC Mod.8:", aic_mod.8, "\n")
-
-# Store AIC values in a vector
-aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
-# Sort AIC values in ascending order
-sorted_indices <- order(aic_values)
-# Print sorted AIC values and corresponding model numbers
-for (i in sorted_indices) {
-  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+# Function to compute AICc
+AICc <- function(fit, return.K = FALSE) {
+  n <- length(residuals(fit))
+  k <- length(coef(fit)) + 1  # Including the intercept
+  aic <- -2 * logLik(fit) + 2 * k
+  aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)
+  if (return.K) return(k) else return(aicc)
 }
 
+n <- length(data$epilithon_QPA)  # Number of observations
 
-cat("BIC Mod.1:", bic_mod.1, "\n")
-cat("BIC Mod.2:", bic_mod.2, "\n")
-cat("BIC Mod.3:", bic_mod.3, "\n")
-cat("BIC Mod.4:", bic_mod.4, "\n")
-cat("BIC Mod.5:", bic_mod.5, "\n")
-cat("BIC Mod.6:", bic_mod.6, "\n")
-cat("BIC Mod.7:", bic_mod.7, "\n")
-cat("BIC Mod.8:", bic_mod.8, "\n")
+aic_mod.1 <- AICc(mod.1)
+aic_mod.2 <- AICc(mod.2)
+aic_mod.3 <- AICc(mod.3)
+aic_mod.4 <- AICc(mod.4)
+aic_mod.5 <- AICc(mod.5)
+aic_mod.6 <- AICc(mod.6)
+aic_mod.7 <- AICc(mod.7)
+aic_mod.8 <- AICc(mod.8)
 
+# Store AICc values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+
+# Sort AICc values in ascending order
+sorted_indices <- order(aic_values)
+
+# Print sorted AICc values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AICc Mod.", i, ":", aic_values[i], "\n")
+}
