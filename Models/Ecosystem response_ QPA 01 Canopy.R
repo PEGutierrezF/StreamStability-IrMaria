@@ -245,14 +245,24 @@ mod.5.plot
 ###########################################################################
 # Exponential curve (mod.6) -----------------------------------------------
 # Define the exponential function
-exponential <- function(x, A, B, C) {
-  A * exp(B * x) + C
+# Define the exponential model function
+exp_model <- function(event, a, b) {
+  a * exp(b * event)
 }
 
-# Fit the exponential curve
-mod.6 <- nls(canopy_QPA ~ exponential(event, A, B, C), 
-           data = data,
-           start = list(A = 1, B = 0.1, C = 0))
+# Fit the model using nls
+mod.6 <- nls(canopy_QPA ~ exp_model(event, a, b), data = data,
+           start = list(a = 1, b = 0.01))
+
+# Get model parameters
+params <- coef(mod.6)
+a <- params['a']
+b <- params['b']
+
+# Print the parameters
+cat("Estimated parameters:\n")
+cat("a =", a, "\n")
+cat("b =", b, "\n")
 
 # Get summary of the fitted model
 fit_summary <- summary(mod.6)
@@ -434,6 +444,16 @@ cat("AIC Mod.5:", aic_mod.5, "\n")
 cat("AIC Mod.6:", aic_mod.6, "\n")
 cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
+
+# Store AIC values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+# Sort AIC values in ascending order
+sorted_indices <- order(aic_values)
+# Print sorted AIC values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+}
+
 
 cat("BIC Mod.1:", bic_mod.1, "\n")
 cat("BIC Mod.2:", bic_mod.2, "\n") # Humped yield curve 

@@ -160,10 +160,39 @@ logistic_function <- function(x, A, B, C, D) {
   A + (B - A) / (1 + exp(-C * (x - D)))
 }
 
-# Fit a logistic curve model
-mod.4 <- nls(leaflitter_QPA ~ logistic_function(event, A, B, C, D),
+# Define the objective function for optimization
+objective_function <- function(params, x, y) {
+  A <- params[1]
+  B <- params[2]
+  C <- params[3]
+  D <- params[4]
+  sum((y - logistic_function(x, A, B, C, D))^2)
+}
+
+# Initial guesses for the parameters
+initial_params <- c(A = min(leaflitter_QPA), B = max(leaflitter_QPA), C = 1, D = median(event))
+
+# Fit the logistic model using nlsLM
+mod.4 <- nlsLM(leaflitter_QPA ~ logistic_function(event, A, B, C, D),
              data = data,
-             start = list(A = min(leaflitter_QPA), B = max(leaflitter_QPA), C = 1, D = median(event)))
+             start = initial_params,
+             lower = c(min(leaflitter_QPA), min(leaflitter_QPA), 0, min(event)),
+             upper = c(max(leaflitter_QPA), max(leaflitter_QPA), 10, max(event)))
+
+
+# Extract the fitted parameters
+params <- coef(fit)
+A <- params['A']
+B <- params['B']
+C <- params['C']
+D <- params['D']
+
+# Print the estimated parameters
+cat("Estimated parameters:\n")
+cat("A =", A, "\n")
+cat("B =", B, "\n")
+cat("C =", C, "\n")
+cat("D =", D, "\n")
 
 # Get model summary
 summary(mod.4)
@@ -262,10 +291,13 @@ exponential <- function(x, A, B, C) {
   A * exp(B * x) + C
 }
 
-# Fit the exponential curve
-mod.6 <- nls(leaflitter_QPA ~ exponential(event, A, B, C), 
-             data = data,
-             start = list(A = 1, B = 0.1, C = 0))
+# Fit the exponential curve using nlsLM with increased iterations
+mod.6 <- nlsLM(leaflitter_QPA ~ exponential(event, A, B, C),
+               data = data,
+               start = list(A = 1, B = 0.1, C = 0),
+               lower = c(-Inf, -Inf, -Inf),
+               upper = c(Inf, Inf, Inf),
+               control = nls.lm.control(maxiter = 200)) # Increase maximum iterations
 
 # Get summary of the fitted model
 fit_summary <- summary(mod.6)
@@ -446,6 +478,16 @@ cat("AIC Mod.5:", aic_mod.5, "\n")
 cat("AIC Mod.6:", aic_mod.6, "\n")
 cat("AIC Mod.7:", aic_mod.7, "\n")
 cat("AIC Mod.8:", aic_mod.8, "\n")
+
+# Store AIC values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+# Sort AIC values in ascending order
+sorted_indices <- order(aic_values)
+# Print sorted AIC values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+}
+
 
 cat("BIC Mod.1:", bic_mod.1, "\n")
 cat("BIC Mod.2:", bic_mod.2, "\n")

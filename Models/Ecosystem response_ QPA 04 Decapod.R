@@ -319,7 +319,6 @@ gompertz_asymmetric <- function(x, A, b, c, d) {
   return(y)
 }
 
-
 # Fit the nonlinear model using nlsLM
 mod.7 <- nlsLM(
   decapoda_QPA ~ gompertz_asymmetric(event, A, b, c, d),
