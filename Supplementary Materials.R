@@ -614,9 +614,11 @@ g_legend <- function(a.gplot){
 
 
 legend <- g_legend(p + theme(legend.position = c(0.25, 0.6)) +
-                     theme(legend.key.size = unit(0.6, "cm"))+
-                     theme(legend.title=element_text(size=14)) + # legend title size
-                     theme(legend.text = element_text(color = "black", size = 12)))
+                     theme(legend.key.size = unit(1, "cm"), #separate
+                           legend.key.width = unit(3, 'cm'))+ #line width
+                     theme(legend.title=element_text(size=24)) + # legend title size
+                     theme(legend.text = element_text(color = "black", 
+                                                      size = 22)))
 
 Fig <-grid.arrange(p + theme(legend.position='hidden'), p1 + theme(legend.position='hidden'), 
                    p2 + theme(legend.position='hidden'), p3 + theme(legend.position='hidden'),
