@@ -231,15 +231,10 @@ p_values <- 2 * (1 - pt(abs(t_values), df = length(data$event) - length(coefs)))
 
 # Display results
 cat("R-squared:", r_squared, "\n")
-cat("Parameter estimates:\n")
-print(coefs)
-cat("Standard errors:\n")
-print(std_errors)
-cat("t-values:\n")
-print(t_values)
-cat("p-values:","\n")
-print(p_values)
-
+cat("Parameter estimates:\n",coefs)
+cat("Standard errors:\n",std_errors)
+cat("t-values:\n", t_values)
+cat("p-values:",p_values,"\n")
 
 # Create a data frame with predicted values
 pred_data <- data.frame(event = data$event, 

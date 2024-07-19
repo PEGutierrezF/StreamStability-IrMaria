@@ -2,12 +2,12 @@
 
 
 
-
-
-
-
-
-
+# --------------------------------------------------------
+# Long-term ecosystem response: Macroinvertebrate density
+# Date: Fri Jul 19 2024 17:33:45
+# Pablo E. Gutierrez-Fonseca
+# pabloe.gutierrezfonseca@gmail.com
+# --------------------------------------------------------
 
 
 
@@ -214,15 +214,10 @@ p_values <- 2 * (1 - pt(abs(t_values), df = length(data$event) - length(coefs)))
 
 # Display results
 cat("R-squared:", r_squared, "\n")
-cat("Parameter estimates:\n")
-print(coefs)
-cat("Standard errors:\n")
-print(std_errors)
-cat("t-values:\n")
-print(t_values)
-cat("p-values:","\n")
-print(p_values)
-
+cat("Parameter estimates:\n",coefs)
+cat("Standard errors:\n",std_errors)
+cat("t-values:\n", t_values)
+cat("p-values:",p_values,"\n")
 
 # Create a data frame with predicted values
 pred_data <- data.frame(event = data$event, 
@@ -250,19 +245,15 @@ mod.5.plot.macros <- ggplot(data, aes(x = event, y = macros_QPA)) +
 mod.5.plot.macros
 
 
-
-
 ###########################################################################
 # Exponential curve (mod.6) -----------------------------------------------
 # Define the exponential function
-exponential <- function(x, A, B, C) {
-  A * exp(B * x) + C
-}
+# Fit the exponential curve using nlsLM with adjusted starting values
+mod.6 <- nlsLM(macros_QPA ~ exponential(event, A, B, C), 
+               data = data,
+               start = list(A = 1, B = 0.1, C = 0),
+               control = nls.lm.control(maxiter = 1000))
 
-# Fit the exponential curve
-mod.6 <- nls(macros_QPA ~ exponential(event, A, B, C), 
-             data = data,
-             start = list(A = 1, B = 0.1, C = 0))
 
 # Get summary of the fitted model
 fit_summary <- summary(mod.6)
@@ -300,15 +291,15 @@ mod.6.plot
 
 ###########################################################################
 # Gompertz asymmetric sigmoid model curve (mod.7) -------------------------
-# Gompertz function
-gompertz_asymmetric <- function(x, A, b, c, d) {
-  y = A * exp(-b * exp(-c * x)) + d
-  return(y)
-}
-
+# Fit the Gompertz model using nlsLM with adjusted starting values and control settings
 mod.7 <- nlsLM(macros_QPA ~ gompertz_asymmetric(event, A, b, c, d),
                data = data,
-               start = list(A = 1, b = 1, c = 1, d = 0))
+               start = list(A = 1, b = 0.1, c = 0.01, d = 0),
+               control = nls.lm.control(maxiter = 1000, ftol = 1e-6, ptol = 1e-6))
+
+# Check the summary of the model
+summary(mod.7)
+
 
 rss <- sum(residuals(mod.7)^2)
 tss <- sum((data$macros_QPA - mean(data$macros_QPA))^2)
@@ -381,80 +372,34 @@ mod.8.plot
   (mod.5.plot + mod.6.plot + mod.7.plot + mod.8.plot)
 
 
-
-
-
 ###########################################################################
-# Goodness-of-fit diagnostics based on the log-likelihood -----------------
-# Calculate log-likelihood for all models
-log_likelihood_mod.1 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.1), sd = sqrt(sum((data$macros_QPA - fitted(mod.1))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
-log_likelihood_mod.2 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.2), sd = sqrt(sum((data$macros_QPA - fitted(mod.2))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
-log_likelihood_mod.3 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.3), sd = sqrt(sum((data$macros_QPA - fitted(mod.3))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
-log_likelihood_mod.4 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.4), sd = sqrt(sum((data$macros_QPA - fitted(mod.4))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
-log_likelihood_mod.5 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.5), sd = sqrt(sum((data$macros_QPA - fitted(mod.5))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
-log_likelihood_mod.6 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.6), sd = sqrt(sum((data$macros_QPA - fitted(mod.6))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
-log_likelihood_mod.7 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.7), sd = sqrt(sum((data$macros_QPA - fitted(mod.7))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
-log_likelihood_mod.8 <- sum(dnorm(data$macros_QPA, mean = fitted(mod.8), sd = sqrt(sum((data$macros_QPA - fitted(mod.8))^2) / (length(data$macros_QPA) - 2)), log = TRUE))
+# Function to compute AICc
+AICc <- function(fit, return.K = FALSE) {
+  n <- length(residuals(fit))
+  k <- length(coef(fit)) + 1  # Including the intercept
+  aic <- -2 * logLik(fit) + 2 * k
+  aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)
+  if (return.K) return(k) else return(aicc)
+}
 
+n <- length(data$macros_QPA)  # Number of observations
 
-# Calculate AIC and BIC for mod.1
-aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
-bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$macros_QPA)) * length(coef(mod.1))
+aic_mod.1 <- AICc(mod.1)
+aic_mod.2 <- AICc(mod.2)
+aic_mod.3 <- AICc(mod.3)
+aic_mod.4 <- AICc(mod.4)
+aic_mod.5 <- AICc(mod.5)
+aic_mod.6 <- AICc(mod.6)
+aic_mod.7 <- AICc(mod.7)
+aic_mod.8 <- AICc(mod.8)
 
-# Calculate AIC and BIC for mod.2
-aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
-bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$macros_QPA)) * length(coef(mod.2))
+# Store AICc values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
 
-# Calculate AIC and BIC for mod.3
-aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
-bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$macros_QPA)) * length(coef(mod.3))
+# Sort AICc values in ascending order
+sorted_indices <- order(aic_values)
 
-# Calculate AIC and BIC for mod.4
-aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
-bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$macros_QPA)) * length(coef(mod.4))
-
-# Calculate AIC and BIC for mod.5
-aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
-bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$macros_QPA)) * length(coef(mod.5))
-
-# Calculate AIC and BIC for mod.6
-aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
-bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$macros_QPA)) * length(coef(mod.6))
-
-# Calculate AIC and BIC for mod.7
-aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
-bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$macros_QPA)) * length(coef(mod.7))
-
-# Calculate AIC and BIC for mod.8
-aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
-bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$macros_QPA)) * length(coef(mod.8))
-
-
-# Compare log-likelihoods, AIC, and BIC
-cat("Log-Likelihood Mod.1:", log_likelihood_mod.1, "\n")
-cat("Log-Likelihood Mod.2:", log_likelihood_mod.2, "\n")
-cat("Log-Likelihood Mod.3:", log_likelihood_mod.3, "\n")
-cat("Log-Likelihood Mod.4:", log_likelihood_mod.4, "\n")
-cat("Log-Likelihood Mod.5:", log_likelihood_mod.5, "\n")
-cat("Log-Likelihood Mod.6:", log_likelihood_mod.6, "\n")
-cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
-cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
-
-cat("AIC Mod.1:", aic_mod.1, "\n")
-cat("AIC Mod.2:", aic_mod.2, "\n") # Humped yield curve  
-cat("AIC Mod.3:", aic_mod.3, "\n")
-cat("AIC Mod.4:", aic_mod.4, "\n")
-cat("AIC Mod.5:", aic_mod.5, "\n")
-cat("AIC Mod.6:", aic_mod.6, "\n")
-cat("AIC Mod.7:", aic_mod.7, "\n")
-cat("AIC Mod.8:", aic_mod.8, "\n")
-
-cat("BIC Mod.1:", bic_mod.1, "\n")
-cat("BIC Mod.2:", bic_mod.2, "\n") # Humped yield curve 
-cat("BIC Mod.3:", bic_mod.3, "\n")
-cat("BIC Mod.4:", bic_mod.4, "\n")
-cat("BIC Mod.5:", bic_mod.5, "\n")
-cat("BIC Mod.6:", bic_mod.6, "\n")
-cat("BIC Mod.7:", bic_mod.7, "\n")
-cat("BIC Mod.8:", bic_mod.8, "\n")
-
+# Print sorted AICc values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AICc Mod.", i, ":", aic_values[i], "\n")
+}
