@@ -2,10 +2,6 @@
 
 
 
-
-
-
-
 # ---------------------------------------------
 # Long-term ecosystem response: Chlorophyll-a Quebrada Prieta B
 # 17 Aug 2023
@@ -76,13 +72,18 @@ nelson_siegel <- function(x, beta0, beta1, beta2, tau) {
 }
 
 # Initial parameter values
-start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 1)
-# Fit the model using nlsLM
+start_params <- c(beta0 = 0.5, beta1 = -0.5, beta2 = 0.5, tau = 10)
+
+# Fit the model using nlsLM with increased maximum iterations and refined starting values
 mod.2 <- nlsLM(chlorophyll_QPB ~ nelson_siegel(event, beta0, beta1, beta2, tau), 
                data = data, 
-               start = start_params)
+               start = start_params,
+               control = nls.lm.control(maxiter = 1000, ftol = 1e-6, ptol = 1e-6))
 
+# Check the summary of the model
 summary(mod.2)
+
+
 # Extract R-squared and p-value
 # Calculate the R-squared value manually
 fitted_values <- fitted(mod.2)
@@ -153,38 +154,30 @@ logistic_function <- function(x, A, B, C, D) {
   A + (B - A) / (1 + exp(-C * (x - D)))
 }
 
-# Define the objective function for optimization
-objective_function <- function(params) {
-  predicted <- logistic_function(data$event, params[1], params[2], params[3], params[4])
-  sum((data$chlorophyll_QPA - predicted)^2)
-}
+# Starting parameter values
+start_params <- list(A = min(chlorophyll_QPB), 
+                     B = max(chlorophyll_QPB), 
+                     C = 0.1, 
+                     D = median(event))
 
-# Use optim with the BFGS optimizer
-initial_params <- c(min(data$chlorophyll_QPB), max(data$chlorophyll_QPB), 1, median(data$event))
-result <- optim(par = initial_params, fn = objective_function, method = "BFGS")
 
-# Fitted parameter values
-fitted_params <- result$par
+# Fit the logistic model
+mod.4 <- try(nlsLM(chlorophyll_QPB ~ logistic_function(event, A, B, C, D),
+                   data = data,
+                   start = start_params,
+                   control = nls.lm.control(maxiter = 1000, ftol = 1e-6, ptol = 1e-6)),
+             silent = TRUE)
 
-# Calculate predicted values using fitted parameters
-data$predicted <- logistic_function(data$event, fitted_params[1], fitted_params[2], fitted_params[3], fitted_params[4])
+# Generate predictions
+data$predicted <- predict(mod.4, newdata = data)
 
-# Calculate R-squared
-SST <- sum((data$chlorophyll_QPB - mean(data$chlorophyll_QPB))^2)
-SSE <- sum((data$chlorophyll_QPB - data$predicted)^2)
-rsquared <- 1 - (SSE / SST)
-
-# Print the fitted parameters and R-squared
-print("Fitted Parameters:")
-print(fitted_params)
-print(paste("R-squared:", round(rsquared, 4)))
-
-mod.4.plot <- ggplot(data, aes(x = event, y = chlorophyll_QPB)) +
-  geom_point() +
-  geom_line(aes(x = event, y = predicted), color = "blue") +
+# Create the plot with ggplot2
+mod.4.plot <- ggplot(data, aes(x = event)) +
+  geom_point(aes(y = chlorophyll_QPB), color = "black") +  # Original data points
+  geom_line(aes(y = predicted), color = "blue") +  # Fitted logistic curve
   labs(title = "Custom Logistic Regression",
        x = "Event",
-       y = "Chlorophyll QPA") +
+       y = "Chlorophyll QPB") +
   theme_minimal()
 
 mod.4.plot
@@ -249,7 +242,7 @@ mod.6 <- nls(chlorophyll_QPB ~ exponential(event, A, B, C),
              data = data,
              start = list(A = 1, B = 0.1, C = 0))
 
-
+summary(mod.6)
 
 # Get summary of the exponential curve fit
 mod.6_summary <- summary(mod.6)
@@ -262,8 +255,6 @@ TSS <- sum((data$chlorophyll_QPB - mean(data$chlorophyll_QPB))^2)
 # Calculate R-squared
 R_squared <- 1 - (RSS / TSS)
 R_squared
-
-
 
 
 # Extract the residual sum of squares
@@ -297,16 +288,22 @@ mod.6.plot
 
 ###########################################################################
 # Gompertz asymmetric sigmoid model curve (mod.7) -------------------------
-# Gompertz function
+# Define the Gompertz function
 gompertz_asymmetric <- function(x, A, b, c, d) {
   y = A * exp(-b * exp(-c * x)) + d
   return(y)
 }
 
+# Initial parameter values
+start_params <- list(A = max(chlorophyll_QPB), b = 1, c = 0.1, d = min(chlorophyll_QPB))
 
-mod.7 <- nlsLM(chlorophyll_QPB ~ gompertz_asymmetric(event, A, b, c, d),
-               data = data,
-               start = list(A = 1, b = 1, c = 1, d = 0))
+# Fit the Gompertz asymmetric model with modified control parameters
+mod.7 <- try(nlsLM(chlorophyll_QPB ~ gompertz_asymmetric(event, A, b, c, d),
+                   data = data,
+                   start = start_params,
+                   control = nls.lm.control(maxiter = 1000, ftol = 1e-6, ptol = 1e-6)),
+             silent = TRUE)
+
 
 rss <- sum(residuals(mod.7)^2)
 tss <- sum((data$canopy_QPA - mean(data$chlorophyll_QPB))^2)
@@ -380,90 +377,34 @@ mod.8.plot
 
 
 ###########################################################################
-# Goodness-of-fit diagnostics based on the log-likelihood -----------------
-# Calculate log-likelihood for all models
-log_likelihood_mod.1 <- sum(dnorm(data$chlorophyll_QPB, mean = fitted(mod.1), sd = sqrt(sum((data$chlorophyll_QPB - fitted(mod.1))^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-log_likelihood_mod.2 <- sum(dnorm(data$chlorophyll_QPB, mean = fitted(mod.2), sd = sqrt(sum((data$chlorophyll_QPB - fitted(mod.2))^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-log_likelihood_mod.3 <- sum(dnorm(data$chlorophyll_QPB, mean = fitted(mod.3), sd = sqrt(sum((data$chlorophyll_QPB - fitted(mod.3))^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-log_likelihood_mod.4 <- sum(dnorm(data$chlorophyll_QPB, mean = data$predicted, sd = sqrt(sum((data$chlorophyll_QPB - data$predicted)^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-log_likelihood_mod.5 <- sum(dnorm(data$chlorophyll_QPB, mean = fitted(mod.5), sd = sqrt(sum((data$chlorophyll_QPB - fitted(mod.5))^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-log_likelihood_mod.6 <- sum(dnorm(data$chlorophyll_QPB, mean = fitted(mod.6), sd = sqrt(sum((data$chlorophyll_QPB - fitted(mod.6))^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-log_likelihood_mod.7 <- sum(dnorm(data$chlorophyll_QPB, mean = fitted(mod.7), sd = sqrt(sum((data$chlorophyll_QPB - fitted(mod.7))^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-log_likelihood_mod.8 <- sum(dnorm(data$chlorophyll_QPB, mean = fitted(mod.8), sd = sqrt(sum((data$chlorophyll_QPB - fitted(mod.8))^2) / (length(data$chlorophyll_QPB) - 2)), log = TRUE))
-
-
-# Calculate AIC and BIC for mod.1
-aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
-bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$chlorophyll_QPB)) * length(coef(mod.1))
-
-# Calculate AIC and BIC for mod.2
-aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
-bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$chlorophyll_QPB)) * length(coef(mod.2))
-
-# Calculate AIC and BIC for mod.3
-aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
-bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$chlorophyll_QPB)) * length(coef(mod.3))
-
-# Calculate AIC and BIC for mod.4
-num_params <- length(fitted_params)
-aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * num_params
-num_params <- length(fitted_params)
-bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$chlorophyll_QPB)) * num_params
-
-# Calculate AIC and BIC for mod.5
-aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
-bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$chlorophyll_QPB)) * length(coef(mod.5))
-
-# Calculate AIC and BIC for mod.6
-aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
-bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$chlorophyll_QPB)) * length(coef(mod.6))
-
-# Calculate AIC and BIC for mod.7
-aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
-bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$chlorophyll_QPB)) * length(coef(mod.7))
-
-# Calculate AIC and BIC for mod.8
-aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
-bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$chlorophyll_QPB)) * length(coef(mod.8))
-
-
-# Compare log-likelihoods, AIC, and BIC
-cat("Log-Likelihood Mod.1:", log_likelihood_mod.1, "\n")
-cat("Log-Likelihood Mod.2:", log_likelihood_mod.2, "\n")
-cat("Log-Likelihood Mod.3:", log_likelihood_mod.3, "\n")
-cat("Log-Likelihood Mod.4:", log_likelihood_mod.4, "\n")
-cat("Log-Likelihood Mod.5:", log_likelihood_mod.5, "\n")
-cat("Log-Likelihood Mod.6:", log_likelihood_mod.6, "\n")
-cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
-cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
-
-cat("AIC Mod.1:", aic_mod.1, "\n")
-cat("AIC Mod.2:", aic_mod.2, "\n")
-cat("AIC Mod.3:", aic_mod.3, "\n")
-cat("AIC Mod.4:", aic_mod.4, "\n")
-cat("AIC Mod.5:", aic_mod.5, "\n")
-cat("AIC Mod.6:", aic_mod.6, "\n")
-cat("AIC Mod.7:", aic_mod.7, "\n")
-cat("AIC Mod.8:", aic_mod.8, "\n")
-
-# Store AIC values in a vector
-aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
-# Sort AIC values in ascending order
-sorted_indices <- order(aic_values)
-# Print sorted AIC values and corresponding model numbers
-for (i in sorted_indices) {
-  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+# Function to compute AICc
+AICc <- function(fit, return.K = FALSE) {
+  n <- length(residuals(fit))
+  k <- length(coef(fit)) + 1  # Including the intercept
+  aic <- -2 * logLik(fit) + 2 * k
+  aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)
+  if (return.K) return(k) else return(aicc)
 }
 
+n <- length(data$epilithon_QPA)  # Number of observations
 
+aic_mod.1 <- AICc(mod.1)
+aic_mod.2 <- AICc(mod.2)
+aic_mod.3 <- AICc(mod.3)
+aic_mod.4 <- AICc(mod.4)
+aic_mod.5 <- AICc(mod.5)
+aic_mod.6 <- AICc(mod.6)
+aic_mod.7 <- AICc(mod.7)
+aic_mod.8 <- AICc(mod.8)
 
-cat("BIC Mod.1:", bic_mod.1, "\n")
-cat("BIC Mod.2:", bic_mod.2, "\n")
-cat("BIC Mod.3:", bic_mod.3, "\n")
-cat("BIC Mod.4:", bic_mod.4, "\n")
-cat("BIC Mod.5:", bic_mod.5, "\n")
-cat("BIC Mod.6:", bic_mod.6, "\n")
-cat("BIC Mod.7:", bic_mod.7, "\n")
-cat("BIC Mod.8:", bic_mod.8, "\n")
+# Store AICc values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
 
+# Sort AICc values in ascending order
+sorted_indices <- order(aic_values)
+
+# Print sorted AICc values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AICc Mod.", i, ":", aic_values[i], "\n")
+}
 
