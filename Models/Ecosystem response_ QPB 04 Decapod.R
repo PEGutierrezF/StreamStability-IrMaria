@@ -3,7 +3,7 @@
 
 
 # ---------------------------------------------
-# Long-term ecosystem response: Shrimp abundance Quebrada Prieta B
+# Long-term ecosystem response: Decapoda abundance Quebrada Prieta B
 # 23 Aug 2023
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
@@ -295,20 +295,26 @@ mod.6.plot
 
 ###########################################################################
 # Gompertz asymmetric sigmoid model curve (mod.7) -------------------------
-# Gompertz function
+# Define the Gompertz function
 gompertz_asymmetric <- function(x, A, b, c, d) {
-  y = A * exp(-b * exp(-c * x)) + d
-  return(y)
+  A * exp(-b * exp(-c * x)) + d
 }
 
+# Initial parameter values
+initial_params <- list(A = max(shrimp_QPB) - min(shrimp_QPB), 
+                       b = 1, 
+                       c = 0.1, 
+                       d = min(shrimp_QPB))
 
-# Fit the nonlinear model using nlsLM
+# Fit the nonlinear model using nlsLM with adjusted initial parameters
 mod.7 <- nlsLM(
   shrimp_QPB ~ gompertz_asymmetric(event, A, b, c, d),
   data = data,
-  start = list(A = 1, b = 1, c = 1, d = 0),
-  control = nls.lm.control(maxiter = 100, ftol = 1e-6)
+  start = initial_params,
+  control = nls.lm.control(maxiter = 200, ftol = 1e-6)
 )
+
+
 # Calculate the residual sum of squares (rss)
 rss <- sum(residuals(mod.7)^2)
 # Calculate the total sum of squares (tss)
@@ -388,88 +394,34 @@ mod.8.plot
 
 
 ###########################################################################
-# Goodness-of-fit diagnostics based on the log-likelihood -----------------
-# Calculate log-likelihood for all models
-log_likelihood_mod.1 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.1), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.1))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-log_likelihood_mod.2 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.2), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.2))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-log_likelihood_mod.3 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.3), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.3))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-log_likelihood_mod.4 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.4), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.4))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-log_likelihood_mod.5 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.5), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.5))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-log_likelihood_mod.6 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.6), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.6))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-log_likelihood_mod.7 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.7), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.7))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-log_likelihood_mod.8 <- sum(dnorm(data$shrimp_QPB, mean = fitted(mod.8), sd = sqrt(sum((data$shrimp_QPB - fitted(mod.8))^2) / (length(data$shrimp_QPB) - 2)), log = TRUE))
-
-
-# Calculate AIC and BIC for mod.1
-aic_mod.1 <- -2 * log_likelihood_mod.1 + 2 * length(coef(mod.1))
-bic_mod.1 <- -2 * log_likelihood_mod.1 + log(length(data$shrimp_QPB)) * length(coef(mod.1))
-
-# Calculate AIC and BIC for mod.2
-aic_mod.2 <- -2 * log_likelihood_mod.2 + 2 * length(coef(mod.2))
-bic_mod.2 <- -2 * log_likelihood_mod.2 + log(length(data$shrimp_QPB)) * length(coef(mod.2))
-
-# Calculate AIC and BIC for mod.3
-aic_mod.3 <- -2 * log_likelihood_mod.3 + 2 * length(coef(mod.3))
-bic_mod.3 <- -2 * log_likelihood_mod.3 + log(length(data$shrimp_QPB)) * length(coef(mod.3))
-
-# Calculate AIC and BIC for mod.4
-aic_mod.4 <- -2 * log_likelihood_mod.4 + 2 * length(coef(mod.4))
-bic_mod.4 <- -2 * log_likelihood_mod.4 + log(length(data$shrimp_QPB)) * length(coef(mod.4))
-
-# Calculate AIC and BIC for mod.5
-aic_mod.5 <- -2 * log_likelihood_mod.5 + 2 * length(coef(mod.5))
-bic_mod.5 <- -2 * log_likelihood_mod.5 + log(length(data$shrimp_QPB)) * length(coef(mod.5))
-
-# Calculate AIC and BIC for mod.6
-aic_mod.6 <- -2 * log_likelihood_mod.6 + 2 * length(coef(mod.6))
-bic_mod.6 <- -2 * log_likelihood_mod.6 + log(length(data$shrimp_QPB)) * length(coef(mod.6))
-
-# Calculate AIC and BIC for mod.7
-aic_mod.7 <- -2 * log_likelihood_mod.7 + 2 * length(coef(mod.7))
-bic_mod.7 <- -2 * log_likelihood_mod.7 + log(length(data$shrimp_QPB)) * length(coef(mod.7))
-
-# Calculate AIC and BIC for mod.8
-aic_mod.8 <- -2 * log_likelihood_mod.8 + 2 * length(coef(mod.8))
-bic_mod.8 <- -2 * log_likelihood_mod.8 + log(length(data$shrimp_QPB)) * length(coef(mod.8))
-
-
-# Compare log-likelihoods, AIC, and BIC
-cat("Log-Likelihood Mod.1:", log_likelihood_mod.1, "\n")
-cat("Log-Likelihood Mod.2:", log_likelihood_mod.2, "\n")
-cat("Log-Likelihood Mod.3:", log_likelihood_mod.3, "\n")
-cat("Log-Likelihood Mod.4:", log_likelihood_mod.4, "\n")
-cat("Log-Likelihood Mod.5:", log_likelihood_mod.5, "\n")
-cat("Log-Likelihood Mod.6:", log_likelihood_mod.6, "\n")
-cat("Log-Likelihood Mod.7:", log_likelihood_mod.7, "\n")
-cat("Log-Likelihood Mod.8:", log_likelihood_mod.8, "\n")
-
-
-cat("AIC Mod.1:", aic_mod.1, "\n")
-cat("AIC Mod.2:", aic_mod.2, "\n")
-cat("AIC Mod.3:", aic_mod.3, "\n")
-cat("AIC Mod.4:", aic_mod.4, "\n")
-cat("AIC Mod.5:", aic_mod.5, "\n")
-cat("AIC Mod.6:", aic_mod.6, "\n")
-cat("AIC Mod.7:", aic_mod.7, "\n")
-cat("AIC Mod.8:", aic_mod.8, "\n")
-
-# Store AIC values in a vector
-aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
-# Sort AIC values in ascending order
-sorted_indices <- order(aic_values)
-# Print sorted AIC values and corresponding model numbers
-for (i in sorted_indices) {
-  cat("AIC Mod.", i, ":", aic_values[i], "\n")
+# Function to compute AICc
+AICc <- function(fit, return.K = FALSE) {
+  n <- length(residuals(fit))
+  k <- length(coef(fit)) + 1  # Including the intercept
+  aic <- -2 * logLik(fit) + 2 * k
+  aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)
+  if (return.K) return(k) else return(aicc)
 }
 
+n <- length(data$decapoda_QPB)  # Number of observations
 
-cat("BIC Mod.1:", bic_mod.1, "\n")
-cat("BIC Mod.2:", bic_mod.2, "\n")
-cat("BIC Mod.3:", bic_mod.3, "\n")
-cat("BIC Mod.4:", bic_mod.4, "\n")
-cat("BIC Mod.5:", bic_mod.5, "\n")
-cat("BIC Mod.6:", bic_mod.6, "\n")
-cat("BIC Mod.7:", bic_mod.7, "\n")
-cat("BIC Mod.8:", bic_mod.8, "\n")
+aic_mod.1 <- AICc(mod.1)
+aic_mod.2 <- AICc(mod.2)
+aic_mod.3 <- AICc(mod.3)
+aic_mod.4 <- AICc(mod.4)
+aic_mod.5 <- AICc(mod.5)
+aic_mod.6 <- AICc(mod.6)
+aic_mod.7 <- AICc(mod.7)
+aic_mod.8 <- AICc(mod.8)
 
+# Store AICc values in a vector
+aic_values <- c(aic_mod.1, aic_mod.2, aic_mod.3, aic_mod.4, aic_mod.5, aic_mod.6, aic_mod.7, aic_mod.8)
+
+# Sort AICc values in ascending order
+sorted_indices <- order(aic_values)
+
+# Print sorted AICc values and corresponding model numbers
+for (i in sorted_indices) {
+  cat("AICc Mod.", i, ":", aic_values[i], "\n")
+}
 

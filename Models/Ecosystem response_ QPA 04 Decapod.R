@@ -3,7 +3,7 @@
 
 
 # ---------------------------------------------
-# Long-term ecosystem response: Shrimp abundance Quebrada Prieta A
+# Long-term ecosystem response: Decapoda abundance Quebrada Prieta A
 # 17 Aug 2023
 # Pablo E. Gutiérrez-Fonseca
 # pabloe.gutierrezfonseca@gmail.com
