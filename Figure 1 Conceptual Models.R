@@ -14,9 +14,11 @@ p <- ggplot(data, aes(x, y)) +
   scale_y_continuous(limits = c(-2, 2), breaks = 0, labels = "0") +  # Set y-axis limits, show only zero
   scale_x_continuous(limits = c(-1, 5), breaks = -1:5) +  # Set x-axis limits and breaks
  # geom_hline(yintercept = 0, size = 1, color = "black") +  # Highlight the zero line on y-axis with size = 1
+  geom_rect(aes(xmin=0, xmax=0.1, ymin=-2, ymax=2), 
+            fill="gray90") +
+  
   annotate("segment", x = -1, y = 0, xend = 5, yend = 0, 
            linetype = "solid", color = "black", size = 1) +
-  
   geom_vline(xintercept = -1, size = 1, color = "black") +  # Highlight the -1 line on x-axis with size = 1
   
   theme_minimal() +
