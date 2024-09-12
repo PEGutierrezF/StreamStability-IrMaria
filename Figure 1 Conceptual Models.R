@@ -84,6 +84,34 @@ grid.text("Increase", x = unit(0.11, "npc"), y = unit(0.75, "npc"),
 grid.text("Decrease", x = unit(0.11, "npc"), y = unit(0.35, "npc"), 
           rot = 90, gp = gpar(fontsize = 14, fontfamily = "Arial"))
 
-install.packages('svglite')
-library(svglite)
-ggsave(file="test.svg", plot=q, width=10, height=8)
+
+
+# File path for saving
+file_path <- "figures/Figure_1_Models_with_text.tiff"
+
+# Open the TIFF device
+tiff(file_path, 
+     width = 10, 
+     height = 8, 
+     units = "in", 
+     res = 300, 
+     compression = "lzw")
+
+# Print the plot
+print(p18)
+
+# Add rotated text using grid.text()
+grid.text("Increase", 
+          x = unit(0.08, "npc"), 
+          y = unit(0.75, "npc"), 
+          rot = 90, 
+          gp = gpar(fontsize = 14, fontfamily = "Arial"))
+
+grid.text("Decrease", 
+          x = unit(0.08, "npc"), 
+          y = unit(0.30, "npc"), 
+          rot = 90, 
+          gp = gpar(fontsize = 14, fontfamily = "Arial"))
+
+# Close the TIFF device to save the file
+dev.off()
