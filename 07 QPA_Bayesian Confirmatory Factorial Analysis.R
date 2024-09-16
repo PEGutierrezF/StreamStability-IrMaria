@@ -33,11 +33,17 @@ model <- '
   decapod ~ epilithon + leaflitter 
   macroinvertebrates ~ epilithon + leaflitter + decapod 
 '
+
+priors <- list(
+  # Normal priors for regression coefficients
+  dp = "normal(0, 10)" # This sets a normal(0, 10) prior on all regression parameters
+)
+
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
-            n.chains = 4, burnin = 18000, sample = 20000,
+            n.chains = 4, burnin = 8000, sample = 10000,
             seed = 14, control = list(adapt_delta = 0.9999, 
-                                      max_treedepth=12), mcmcfile = T)
+            dp = priors$dp, max_treedepth=12), mcmcfile = T)
 
 summary(mod)
 semPaths(semPlotModel_lavaanModel(model))
