@@ -30,10 +30,10 @@ data_long <- traj_QPA %>%
 
 
 
-variable_new <- c("Cond"= "textstyle('Conductivity')~(mu*S/cm)", 
-                  "DOC"="textstyle('DOC')",
-                  "Nitrate"="textstyle('Nitrate')",  #Chlorophyll-')*italic('a')
-                  "Potassium"="textstyle('Potassium')",
+variable_new <- c("Cond" = "textstyle('Conductivity')~(mu*S~cm^{-1})", 
+                  "DOC" = "textstyle('DOC')~(mg*C~L^{-1})",
+                  "Nitrate"= "textstyle('Nitrate')~(mg*N~L^{-1})",  #Chlorophyll-')*italic('a')
+                  "Potassium"="textstyle('Potassium')~(mg*K~L^{-1})",
                   "Temp"= "textstyle(Temperature)~(degree*C)")
 
 
@@ -71,7 +71,7 @@ stream_env <- ggplot(data_long, aes(x = date_QPA, y = Value)) +
   #geom_vline(aes(xintercept=as.POSIXct("2022-03-1")), # Stream FRE
   #        col= "red",linetype=4, alpha=0.9, size = 1) +
   
-  theme(strip.text.x = element_text(size = 14, color = "black"),
+  theme(strip.text.x = element_text(size = 11, color = "black"),
         strip.text.y = element_text(size = 14, color = "black"),
         strip.placement = "outside") +
   theme(strip.background=element_rect(color= "black", fill="gray85")) +
@@ -83,7 +83,7 @@ stream_env <- ggplot(data_long, aes(x = date_QPA, y = Value)) +
                                stream  = streams_new)) 
 stream_env
 
-ggsave("Figure 2.jpeg", stream_env, path = "figures", width=9, height=6,dpi=300)
+ggsave("SI Appendix, Fig. S1.tiff", stream_env, path = "figures", width=9, height=6,dpi=300)
 
 
 
