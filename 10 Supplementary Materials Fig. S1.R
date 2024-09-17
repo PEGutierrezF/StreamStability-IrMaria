@@ -28,7 +28,7 @@ data_long <- traj_QPA %>%
                names_pattern = "(.*)_(QPA|QPB)",
                values_to = "Value")
 
-
+data_long$date_QPA <- as.POSIXct(data_long$date_QPA,"%Y-%m-%d",tz = "UTC")
 
 variable_new <- c("Cond" = "textstyle('Conductivity')~(mu*S~cm^{-1})", 
                   "DOC" = "textstyle('DOC')~(mg*C~L^{-1})",
@@ -64,10 +64,10 @@ stream_env <- ggplot(data_long, aes(x = date_QPA, y = Value)) +
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-  #  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
-  #           col= "red",linetype=4, alpha=0.9, size = 1) +
-  geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
-             col= "blue",linetype=4, alpha=0.9, size = 1) +
+    geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
+             col= "#ce1256",linetype=4, alpha=0.9, size = 1) +
+  geom_vline(aes(xintercept=as.POSIXct("2017-09-5")), # Hurricane Irma
+             col= "#0570b0",linetype=4, alpha=0.9, size = 1) +
   #geom_vline(aes(xintercept=as.POSIXct("2022-03-1")), # Stream FRE
   #        col= "red",linetype=4, alpha=0.9, size = 1) +
   
