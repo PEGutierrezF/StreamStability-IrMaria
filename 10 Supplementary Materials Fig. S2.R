@@ -55,10 +55,10 @@ streams_new <- c("QPA"="Prieta A", "QPB"="Prieta B")
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
-#  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
- #           col= "red",linetype=4, alpha=0.9, size = 1) +
+  geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
+            col= "#e41a1c",linetype=4, alpha=0.9, size = 1) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-6")), # Hurricane Irma
-            col= "blue",linetype=4, alpha=0.9, size = 1) +
+            col= "#386cb0",linetype=4, alpha=0.9, size = 1) +
   #geom_vline(aes(xintercept=as.POSIXct("2022-03-1")), # Stream FRE
    #        col= "red",linetype=4, alpha=0.9, size = 1) +
 

@@ -15,8 +15,7 @@
 # cleans global environment
 rm(list = ls())
 
-traj_QPA <- read.xlsx("data/data_trajectories.xlsx", sheet='var_environ',
-                      detectDates = TRUE)
+traj_QPA <- read.xlsx("data/data_trajectories.xlsx", sheet='var_environ',detectDates = TRUE)
 
 traj_QPA <- traj_QPA %>% 
   dplyr::select(1:11)
@@ -65,9 +64,9 @@ stream_env <- ggplot(data_long, aes(x = date_QPA, y = Value)) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   
     geom_vline(aes(xintercept=as.POSIXct("2017-09-21")), # Hurricane Maria
-             col= "#ce1256",linetype=4, alpha=0.9, size = 1) +
+             col= "#e41a1c",linetype=4, alpha=0.9, size = 1) +
   geom_vline(aes(xintercept=as.POSIXct("2017-09-5")), # Hurricane Irma
-             col= "#0570b0",linetype=4, alpha=0.9, size = 1) +
+             col= "#386cb0",linetype=4, alpha=0.9, size = 1) +
   #geom_vline(aes(xintercept=as.POSIXct("2022-03-1")), # Stream FRE
   #        col= "red",linetype=4, alpha=0.9, size = 1) +
   
