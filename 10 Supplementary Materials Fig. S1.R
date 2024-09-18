@@ -17,6 +17,8 @@ rm(list = ls())
 
 traj_QPA <- read.xlsx("data/data_trajectories.xlsx", sheet='var_environ',detectDates = TRUE)
 
+traj_QPA <- read.xlsx("data/data_trajectories.xlsx",sheet='var_environ', detectDates = TRUE)
+
 traj_QPA <- traj_QPA %>% 
   dplyr::select(1:11)
 
