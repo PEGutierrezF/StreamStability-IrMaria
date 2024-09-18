@@ -15,9 +15,12 @@
 # cleans global environment
 rm(list = ls())
 
-traj_QPA <- read.xlsx("data/data_trajectories.xlsx", sheet='var_environ',detectDates = TRUE)
+install.packages("openxlsx")
+library(readxl)
 
-traj_QPA <- read.xlsx("data/data_trajectories.xlsx",sheet='var_environ', detectDates = TRUE)
+traj_QPA <- read_excel("data/data_trajectories.xlsx", sheet='var_environ')
+
+# traj_QPA <- openxlsx::read.xlsx("data/data_trajectories.xlsx",sheet='var_environ', detectDates = TRUE)
 
 traj_QPA <- traj_QPA %>% 
   dplyr::select(1:11)

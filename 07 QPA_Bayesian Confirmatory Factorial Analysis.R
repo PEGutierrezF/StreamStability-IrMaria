@@ -12,8 +12,7 @@
 
 
 
-data_pm <- read.xlsx("data/data_bcfa.xlsx", sheet='QPA_post_Hurricane',
-                     detectDates = TRUE)
+data_pm <- read_excel("data/data_bcfa.xlsx", sheet='QPA_post_Hurricane')
 
 data_pm <- data_pm %>% 
   dplyr::select(-date)
