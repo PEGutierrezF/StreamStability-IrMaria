@@ -201,7 +201,7 @@ p1 <- ggplot(data, aes(x = event)) +
   
   
   labs(x = "Sampling event",
-       y = expression(Leaflitter~fall~(g %.% m^{-2} %.% d^{-1}))) +
+       y = expression(Leaf~litter~fall~(g %.% m^{-2} %.% d^{-1}))) +
   
   geom_rangeframe(y=leaflitter_QPA) + 
   geom_rangeframe(y=leaflitter_QPB) + 
