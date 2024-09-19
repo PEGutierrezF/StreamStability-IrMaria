@@ -16,6 +16,10 @@ p <- ggplot(data, aes(x, y)) +
  # geom_hline(yintercept = 0, size = 1, color = "black") +  # Highlight the zero line on y-axis with size = 1
   geom_rect(aes(xmin=0, xmax=0.1, ymin=-2, ymax=2), 
             fill="gray90") +
+
+# 95% confidence intervals  
+  annotate("rect", fill = "gray90", xmin = -1, xmax = 5,
+           ymin = -0.10, ymax = 0.10) +
   
   annotate("segment", x = -1, y = 0, xend = 5, yend = 0, 
            linetype = "solid", color = "black", size = 1) +
@@ -23,7 +27,7 @@ p <- ggplot(data, aes(x, y)) +
   
   theme_minimal() +
   xlab("Years since hurricane") +
-  ylab("Changes in Magnitude") +
+  ylab("Changes in magnitude") +
 
   theme(
     panel.grid.major = element_blank(),  
@@ -77,8 +81,13 @@ p17 <- p16 + geom_segment(aes(x = 4.5, y = -2, xend = 4.5, yend = 2),
                       linetype="dotted",color = "gray80", size=0.5)
 p18 <- p17 + geom_segment(aes(x = 5, y = -2, xend = 5, yend = 2), 
                       linetype="dotted",color = "gray80", size=0.5)
-p18
 
+p19 <- p18 + geom_segment(aes(x = -1, y = 0.10, xend = 0, yend = 0.10), 
+                          linetype="dashed",color = "black", size=0.5)
+
+p20 <- p19 + geom_segment(aes(x = -1, y = -0.10, xend = 0, yend = -0.10), 
+                          linetype="dashed",color = "black", size=0.5)
+p18
 
 # Add rotated text using grid.text() with the same font family
 grid.text("Increase", x = unit(0.11, "npc"), y = unit(0.75, "npc"), 
