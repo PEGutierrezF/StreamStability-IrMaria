@@ -29,7 +29,7 @@ px <- ggplot(data = legend_data, aes(x = event, y = canopy, color = model)) +
        y = "Canopy openness (%)",
        color = "Stream") +
   
-  ggthemes::geom_rangeframe(data = data.frame(event = data$event, y = PrietaA$canopy), aes(y = y)) + 
+#  ggthemes::geom_rangeframe(data = data.frame(event = data$event, y = PrietaA$canopy), aes(y = y)) + 
   ggthemes::theme_tufte() +
   
   theme(axis.text.y = element_text(size = 12, colour = "black"), 

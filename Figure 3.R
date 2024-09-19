@@ -619,9 +619,10 @@ legend <- g_legend(px + theme(legend.position = c(0.25, 0.6)) +
                      guides(color = guide_legend(override.aes = list(size = 6)))+
                      
                      guides(shape = guide_legend(override.aes = list(size=4)))+ 
-                     theme(legend.title=element_text(size=24)) + # legend title size
+                     theme(legend.title=element_text(color='black',
+                                                       size=20)) + # legend title size
                      theme(legend.text = element_text(color = "black", 
-                                                      size = 22)))
+                                                      size = 18)))
 
 Fig <-grid.arrange(p + theme(legend.position='hidden'), p1 + theme(legend.position='hidden'), 
                    p2 + theme(legend.position='hidden'), p3 + theme(legend.position='hidden'),
@@ -631,7 +632,7 @@ Fig <-grid.arrange(p + theme(legend.position='hidden'), p1 + theme(legend.positi
 
 
 #Ecology format
-ggsave(file="Appendix 1a.jpeg", Fig, width = 24, path = 'figures',
+ggsave(file="Figure 3.tiff", Fig, width = 24, path = 'figures',
        height = 30, units = "cm", dpi = 600)
 
 
