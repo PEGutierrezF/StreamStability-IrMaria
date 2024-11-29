@@ -70,3 +70,8 @@ par(mfrow=c(3, 4))  # Adjust the layout if needed
 for (i in 1:ncol(as.matrix(chain))) {
   acf(mcmc_samples[, i], main=paste("ACF for Parameter", i))
 }
+
+
+# extra relationships -----------------------------------------------------
+
+plot(epilithon~canopy, data=data_pm)
