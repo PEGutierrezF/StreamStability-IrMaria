@@ -54,7 +54,7 @@ stream_env <- ggplot(data_long, aes(x = date_QPA, y = Value)) +
   geom_smooth(se = T, size=1.7, color= "gray20", method = "gam", formula = y ~s(x)) + 
   geom_hline(yintercept = 0, color="gray20") +
   
-  xlab('Year') + ylab("Change in magnitude") + 
+  xlab('Year') + ylab("Change in magnitude (LRR)") + 
   theme(axis.title.x = element_text(size = 14, angle = 0)) + # axis x
   theme(axis.title.y = element_text(size = 14, angle = 90)) + # axis 7
   theme(axis.text.x=element_text(angle=0, size=10, vjust=0.5, color="black")) + #subaxis x
