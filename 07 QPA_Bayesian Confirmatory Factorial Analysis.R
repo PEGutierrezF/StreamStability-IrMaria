@@ -75,3 +75,4 @@ for (i in 1:ncol(as.matrix(chain))) {
 # extra relationships -----------------------------------------------------
 
 plot(epilithon~canopy, data=data_pm)
+plot(decapod~epilithon, data=data_pm)
