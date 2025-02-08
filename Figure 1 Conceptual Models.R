@@ -14,7 +14,7 @@ p <- ggplot(data, aes(x, y)) +
   scale_y_continuous(limits = c(-2, 2), breaks = 0, labels = "0") +  # Set y-axis limits, show only zero
   scale_x_continuous(limits = c(-1, 5), breaks = -1:5) +  # Set x-axis limits and breaks
  # geom_hline(yintercept = 0, size = 1, color = "black") +  # Highlight the zero line on y-axis with size = 1
-  geom_rect(aes(xmin=0, xmax=0.1, ymin=-2, ymax=2), 
+  geom_rect(aes(xmin=0, xmax=0.05, ymin=-2, ymax=2), 
             fill="gray90") +
 
 # 95% confidence intervals  
