@@ -82,4 +82,4 @@ if(!dir.exists("figures")) {
 export_svg(plot) %>% 
   charToRaw %>% 
   rsvg(width = 10000, height = 6000) %>% 
-  tiff::writeTIFF("figures/Figure_2.tiff", bits.per.sample = 8L)
+  tiff::writeTIFF("figures/Figure_3.tiff", bits.per.sample = 8L)
