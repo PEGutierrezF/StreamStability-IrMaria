@@ -1,5 +1,4 @@
 /* This file is based on LERSIL.stan by Ben Goodrich.
-
    https://github.com/bgoodri/LERSIL */
 functions { // you can use these in R following `rstan::expose_stan_functions("foo.stan")`
   // mimics lav_mvnorm_cluster_implied22l():
@@ -71,13 +70,13 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     Mu_WB_tilde = rep_vector(0, p_tilde);
     if (N_within > 0) {
       for (i in 1:N_within) {
- Mu_WB_tilde[within_idx[i]] = W_tilde[within_idx[i], 1];
- B_tilde[within_idx[i], 1] = 0;
+	Mu_WB_tilde[within_idx[i]] = W_tilde[within_idx[i], 1];
+	B_tilde[within_idx[i], 1] = 0;
       }
     }
     if (N_both > 0) {
       for (i in 1:N_both) {
- Mu_WB_tilde[both_idx[i]] = B_tilde[both_idx[i], 1] + W_tilde[both_idx[i], 1];
+	Mu_WB_tilde[both_idx[i]] = B_tilde[both_idx[i], 1] + W_tilde[both_idx[i], 1];
       }
     }
     // around line 71 of lav_mvnorm_cluster.R
@@ -122,48 +121,48 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
       array[N_wo_b] int uord_notbidx;
       if (!cluswise) Y2Yc += cov_d[clz]; // variability between clusters of same size, will always equal 0 for clusterwise
       if (N_between > 0) {
- for (k in 1:N_between) {
-   uord_bidx[k] = k;
- }
- if (N_wo_b > 0) {
-   for (k in 1:N_wo_b) {
-     uord_notbidx[k] = N_between + k;
-   }
- }
- Y2Yc_zz = Y2Yc[uord_bidx, uord_bidx];
- Y2Yc_yz = Y2Yc[uord_notbidx, uord_bidx];
- Y2Yc_yy = Y2Yc[uord_notbidx, uord_notbidx];
+	for (k in 1:N_between) {
+	  uord_bidx[k] = k;
+	}
+	if (N_wo_b > 0) {
+	  for (k in 1:N_wo_b) {
+	    uord_notbidx[k] = N_between + k;
+	  }
+	}
+	Y2Yc_zz = Y2Yc[uord_bidx, uord_bidx];
+	Y2Yc_yz = Y2Yc[uord_notbidx, uord_bidx];
+	Y2Yc_yy = Y2Yc[uord_notbidx, uord_notbidx];
       } else {
- Y2Yc_yy = Y2Yc;
+	Y2Yc_yy = Y2Yc;
       }
       Sigma_j = (nj * Sigma_b_z) + Sigma_w;
       Sigma_j_inv = inverse_spd(Sigma_j); // FIXME npd exceptions for within-only
       Sigma_j_ld = log_determinant(Sigma_j);
       L[clz] = Sigma_zz_ld + Sigma_j_ld;
       if (N_between > 0) {
- Sigma_ji_yz_zi = Sigma_j_inv * Sigma_yz_zi;
- Vinv_11 = Sigma_zz_inv + nj * (Sigma_yz_zi' * Sigma_ji_yz_zi);
- q_zz = sum(Vinv_11 .* Y2Yc_zz);
- q_yz = -nj * sum(Sigma_ji_yz_zi .* Y2Yc_yz);
+	Sigma_ji_yz_zi = Sigma_j_inv * Sigma_yz_zi;
+	Vinv_11 = Sigma_zz_inv + nj * (Sigma_yz_zi' * Sigma_ji_yz_zi);
+	q_zz = sum(Vinv_11 .* Y2Yc_zz);
+	q_yz = -nj * sum(Sigma_ji_yz_zi .* Y2Yc_yz);
       } else {
- q_zz = 0;
- q_yz = 0;
+	q_zz = 0;
+	q_yz = 0;
       }
-      q_yyc = -nj * sum(Sigma_j_inv .* Y2Yc_yy);
+      q_yyc =  -nj * sum(Sigma_j_inv .* Y2Yc_yy);
       B[clz] = q_zz + 2 * q_yz - q_yyc;
       if (cluswise) {
- matrix[N_wo_b, nj] Y_j;
- if (N_between > 0) {
-   for (i in 1:nj) {
-     Y_j[, i] = YX[r1 - 1 + i, notbidx] - mean_d[clz, uord_notbidx]; // would be nice to have to_matrix() here
-   }
- } else {
-   for (i in 1:nj) {
-     Y_j[, i] = YX[r1 - 1 + i] - mean_d[clz]; // would be nice to have to_matrix() here
-   }
- }
- r1 += nj; // for next iteration through loop
- q_W[clz] = sum(Sigma_w_inv .* tcrossprod(Y_j));
+	matrix[N_wo_b, nj] Y_j;
+	if (N_between > 0) {
+	  for (i in 1:nj) {
+	    Y_j[, i] = YX[r1 - 1 + i, notbidx] - mean_d[clz, uord_notbidx]; // would be nice to have to_matrix() here
+	  }
+	} else {
+	  for (i in 1:nj) {
+	    Y_j[, i] = YX[r1 - 1 + i] - mean_d[clz]; // would be nice to have to_matrix() here
+	  }
+	}
+	r1 += nj; // for next iteration through loop
+	q_W[clz] = sum(Sigma_w_inv .* tcrossprod(Y_j));
       }
     }
     if (!cluswise) {
@@ -177,21 +176,13 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     return loglik;
   }
   /*
-
     Fills in the elements of a coefficient matrix containing some mix of
-
     totally free, free subject to a sign constraint, and fixed elements
-
     @param free_elements vector of unconstrained elements
-
     @param skeleton matrix of the same dimensions as the output whose elements are
-
       positive_infinity(): if output element is totally free
-
       other: if output element is fixed to that number
-
     @return matrix of coefficients
-
   */
   matrix fill_matrix(vector free_elements, matrix skeleton, array[,] int eq_skeleton, int pos_start, int spos_start) {
     int R = rows(skeleton);
@@ -203,16 +194,16 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     for (c in 1:C) for (r in 1:R) {
       real rc = skeleton[r, c];
       if (is_inf(rc)) { // free
- int eq = eq_skeleton[pos, 1];
- int wig = eq_skeleton[pos, 3];
- if (eq == 0 || wig == 1) {
-   out[r,c] = free_elements[freepos];
-   freepos += 1;
- } else {
-   eqelem = eq_skeleton[pos, 2];
-   out[r,c] = free_elements[eqelem];
- }
- pos += 1;
+	int eq = eq_skeleton[pos, 1];
+	int wig = eq_skeleton[pos, 3];
+	if (eq == 0 || wig == 1) {
+	  out[r,c] = free_elements[freepos];
+	  freepos += 1;
+	} else {
+	  eqelem = eq_skeleton[pos, 2];
+	  out[r,c] = free_elements[eqelem];
+	}
+	pos += 1;
       } else out[r,c] = skeleton[r, c]; // fixed, so do not bump pos
     }
     return out;
@@ -224,24 +215,22 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     vector[num_elements(pri_mean)] out;
     for (r in 1:R) {
       if (pos <= num_elements(pri_mean)) {
- int eq = eq_skeleton[r, 1];
- int wig = eq_skeleton[r, 3];
- if (eq == 0) {
-   out[pos] = pri_mean[pos];
-   pos += 1;
- } else if (wig == 1) {
-   eqelem = eq_skeleton[r, 2];
-   out[pos] = free_elements[eqelem];
-   pos += 1;
- }
+	int eq = eq_skeleton[r, 1];
+	int wig = eq_skeleton[r, 3];
+	if (eq == 0) {
+	  out[pos] = pri_mean[pos];
+	  pos += 1;
+	} else if (wig == 1) {
+	  eqelem = eq_skeleton[r, 2];
+	  out[pos] = free_elements[eqelem];
+	  pos += 1;
+	}
       }
     }
     return out;
   }
   /*
-
    * This is a bug-free version of csr_to_dense_matrix and has the same arguments
-
    */
   matrix to_dense_matrix(int m, int n, vector w, array[] int v, array[] int u) {
     matrix[m, n] out = rep_matrix(0, m, n);
@@ -270,10 +259,10 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
       if (sign_mat[i,1]) {
         int lookupval = sign_mat[i,2];
         if (free_elements[lookupval] < 0) {
-   out[i] = -free_elements[i];
- } else {
-   out[i] = free_elements[i];
- }
+	  out[i] = -free_elements[i];
+	} else {
+	  out[i] = free_elements[i];
+	}
       } else {
         out[i] = free_elements[i];
       }
@@ -286,12 +275,12 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     for (i in 1:npar) {
       if (sign_mat[i,1]) {
         int lookupval1 = sign_mat[i,2];
- int lookupval2 = sign_mat[i,3];
+	int lookupval2 = sign_mat[i,3];
         if (sign(load_par1[lookupval1]) * sign(load_par2[lookupval2]) < 0) {
-   out[i] = -free_elements[i];
- } else {
-   out[i] = free_elements[i];
- }
+	  out[i] = -free_elements[i];
+	} else {
+	  out[i] = free_elements[i];
+	}
       } else {
         out[i] = free_elements[i];
       }
@@ -307,12 +296,12 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     for (g in 1:ngrp) {
       for (c in 1:(R-1)) for (r in (c+1):R) {
         if (is_inf(matskel[g,r,c])) {
-   if (wskel[pos,1] == 0) {
-     out[freepos] = sdmat[g,r,r] * sdmat[g,c,c] * cormat[g,r,c];
-     freepos += 1;
-   }
-   pos += 1;
- }
+	  if (wskel[pos,1] == 0) {
+	    out[freepos] = sdmat[g,r,r] * sdmat[g,c,c] * cormat[g,r,c];
+	    freepos += 1;
+	  }
+	  pos += 1;
+	}
       }
     }
     return out;
@@ -338,43 +327,43 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
       grpidx = grpnum[mm];
       Nmis = p - Nobs[mm];
       if (Nobs[mm] < p) {
- matrix[Nobs[mm], Nobs[mm]] Sig22 = Sigma[grpidx, obsidx[1:Nobs[mm]], obsidx[1:Nobs[mm]]];
- matrix[Nmis, Nmis] Sig11 = Sigma[grpidx, obsidx[(Nobs[mm] + 1):p], obsidx[(Nobs[mm] + 1):p]];
- matrix[Nmis, Nobs[mm]] Sig12 = Sigma[grpidx, obsidx[(Nobs[mm] + 1):p], obsidx[1:Nobs[mm]]];
- matrix[Nobs[mm], Nobs[mm]] S22inv = inverse_spd(Sig22);
- matrix[Nmis, Nmis] T2p11 = Sig11 - (Sig12 * S22inv * Sig12');
+	matrix[Nobs[mm], Nobs[mm]] Sig22 = Sigma[grpidx, obsidx[1:Nobs[mm]], obsidx[1:Nobs[mm]]];
+	matrix[Nmis, Nmis] Sig11 = Sigma[grpidx, obsidx[(Nobs[mm] + 1):p], obsidx[(Nobs[mm] + 1):p]];
+	matrix[Nmis, Nobs[mm]] Sig12 = Sigma[grpidx, obsidx[(Nobs[mm] + 1):p], obsidx[1:Nobs[mm]]];
+	matrix[Nobs[mm], Nobs[mm]] S22inv = inverse_spd(Sig22);
+	matrix[Nmis, Nmis] T2p11 = Sig11 - (Sig12 * S22inv * Sig12');
         // partition into observed/missing, compute Sigmas, add to out
- for (jj in r1:r2) {
-   vector[Nmis] ymis;
-   ymis = Mu[grpidx, obsidx[(Nobs[mm] + 1):p]] + (Sig12 * S22inv * (YXstar[jj, 1:Nobs[mm]] - Mu[grpidx, obsidx[1:Nobs[mm]]]));
-   for (kk in 1:Nobs[mm]) {
-     YXfull[jj, obsidx[kk]] = YXstar[jj, kk];
-   }
-   for (kk in (Nobs[mm] + 1):p) {
-     YXfull[jj, obsidx[kk]] = ymis[kk - Nobs[mm]];
-   }
- }
- T2pat = crossprod(YXfull[r1:r2,]);
- // correction for missing cells/conditional covariances
- for (jj in 1:Nmis) {
-   for (kk in jj:Nmis) {
-     T2pat[obsidx[Nobs[mm] + jj], obsidx[Nobs[mm] + kk]] = T2pat[obsidx[Nobs[mm] + jj], obsidx[Nobs[mm] + kk]] + (r2 - r1 + 1) * T2p11[jj, kk];
-     if (kk > jj) {
-       T2pat[obsidx[Nobs[mm] + kk], obsidx[Nobs[mm] + jj]] = T2pat[obsidx[Nobs[mm] + jj], obsidx[Nobs[mm] + kk]];
-     }
-   }
- }
+	for (jj in r1:r2) {
+	  vector[Nmis] ymis;
+	  ymis = Mu[grpidx, obsidx[(Nobs[mm] + 1):p]] + (Sig12 * S22inv * (YXstar[jj, 1:Nobs[mm]] - Mu[grpidx, obsidx[1:Nobs[mm]]]));
+	  for (kk in 1:Nobs[mm]) {
+	    YXfull[jj, obsidx[kk]] = YXstar[jj, kk];
+	  }
+	  for (kk in (Nobs[mm] + 1):p) {
+	    YXfull[jj, obsidx[kk]] = ymis[kk - Nobs[mm]];
+	  }
+	}
+	T2pat = crossprod(YXfull[r1:r2,]);
+	// correction for missing cells/conditional covariances
+	for (jj in 1:Nmis) {
+	  for (kk in jj:Nmis) {
+	    T2pat[obsidx[Nobs[mm] + jj], obsidx[Nobs[mm] + kk]] = T2pat[obsidx[Nobs[mm] + jj], obsidx[Nobs[mm] + kk]] + (r2 - r1 + 1) * T2p11[jj, kk];
+	    if (kk > jj) {
+	      T2pat[obsidx[Nobs[mm] + kk], obsidx[Nobs[mm] + jj]] = T2pat[obsidx[Nobs[mm] + jj], obsidx[Nobs[mm] + kk]];
+	    }
+	  }
+	}
       } else {
- // complete data
- for (jj in r1:r2) {
-   for (kk in 1:Nobs[mm]) {
-     YXfull[jj, obsidx[kk]] = YXstar[jj, kk];
-   }
- }
- T2pat = crossprod(YXfull[r1:r2,]);
+	// complete data
+	for (jj in r1:r2) {
+	  for (kk in 1:Nobs[mm]) {
+	    YXfull[jj, obsidx[kk]] = YXstar[jj, kk];
+	  }
+	}
+	T2pat = crossprod(YXfull[r1:r2,]);
       }
       for (i in 1:p) {
- out[grpidx,i,1] += sum(YXfull[r1:r2,i]);
+	out[grpidx,i,1] += sum(YXfull[r1:r2,i]);
       }
       out[grpidx,,2:(p+1)] += T2pat;
     }
@@ -413,14 +402,14 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     for (i in 1:2) out[i] = rep_vector(0, p_tilde);
     if (Nx > 0) {
       for (i in 1:nr) {
- ov_mean += YXstar[i, Xvar[1:Nx]];
+	ov_mean += YXstar[i, Xvar[1:Nx]];
       }
       ov_mean *= pow(nclus[1], -1);
       out[1, 1:Nx] = ov_mean;
     }
     if (Nx_between > 0) {
       for (cc in 1:nclus[2]) {
- ov_mean_d += mean_d[cc, 1:Nx_between];
+	ov_mean_d += mean_d[cc, 1:Nx_between];
       }
       ov_mean_d *= pow(nclus[2], -1);
       out[2, 1:Nx_between] = ov_mean_d;
@@ -436,7 +425,7 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     for (i in 1:3) out[i] = rep_matrix(0, p_tilde, p_tilde);
     if (Nx > 0) {
       for (i in 1:nr) {
- cov_w += tcrossprod(to_matrix(YXstar[i, Xvar[1:Nx]] - mean_vecs[1, 1:Nx]));
+	cov_w += tcrossprod(to_matrix(YXstar[i, Xvar[1:Nx]] - mean_vecs[1, 1:Nx]));
       }
       cov_w *= pow(nclus[1], -1);
       cov_w_inv[1:Nx, 1:Nx] = inverse_spd(cov_w);
@@ -446,7 +435,7 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     }
     if (Nx_between > 0) {
       for (cc in 1:nclus[2]) {
- cov_mean_d += tcrossprod(to_matrix(mean_d[cc, 1:Nx_between] - mean_vecs[2, 1:Nx_between]));
+	cov_mean_d += tcrossprod(to_matrix(mean_d[cc, 1:Nx_between] - mean_vecs[2, 1:Nx_between]));
       }
       cov_mean_d *= pow(nclus[2], -1);
       out[1, 1:Nx_between, 1:Nx_between] = cov_mean_d;
@@ -458,18 +447,18 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
     vector[nclus[2]] out = rep_vector(0, nclus[2]);
     for (cc in 1:nclus[2]) {
       if (Nx > 0) {
- out[cc] += multi_normal_suff(mean_d[cc, Xvar[1:Nx]], cov_w[1:Nx, 1:Nx], mean_d[cc, Xvar[1:Nx]], cov_w_inv[1:(Nx + 1), 1:(Nx + 1)], cluster_size[cc]);
+	out[cc] += multi_normal_suff(mean_d[cc, Xvar[1:Nx]], cov_w[1:Nx, 1:Nx], mean_d[cc, Xvar[1:Nx]], cov_w_inv[1:(Nx + 1), 1:(Nx + 1)], cluster_size[cc]);
       }
       if (Nx_between > 0) {
- out[cc] += multi_normal_lpdf(mean_d[cc, 1:Nx_between] | ov_mean_d[1:Nx_between], cov_mean_d[1:Nx_between, 1:Nx_between]);
+	out[cc] += multi_normal_lpdf(mean_d[cc, 1:Nx_between] | ov_mean_d[1:Nx_between], cov_mean_d[1:Nx_between, 1:Nx_between]);
       }
     }
     return out;
   }
   // fill covariance matrix with blocks
   array[] matrix fill_cov(array[] matrix covmat, array[,] int blkse, array[] int nblk,
-     array[] matrix mat_1, array[] matrix mat_2, array[] matrix mat_3,
-     array[] matrix mat_4, array[] matrix mat_5) {
+			  array[] matrix mat_1, array[] matrix mat_2, array[] matrix mat_3,
+			  array[] matrix mat_4, array[] matrix mat_5) {
     array[dims(covmat)[1]] matrix[dims(covmat)[2], dims(covmat)[3]] out = covmat;
     for (k in 1:sum(nblk)) {
       int blkidx = blkse[k, 6];
@@ -478,22 +467,22 @@ functions { // you can use these in R following `rstan::expose_stan_functions("f
       int srow = blkse[k, 1];
       int erow = blkse[k, 2];
       if (arrayidx == 1) {
- out[blkgrp, srow:erow, srow:erow] = mat_1[blkidx];
+	out[blkgrp, srow:erow, srow:erow] = mat_1[blkidx];
       } else if (arrayidx == 2) {
- out[blkgrp, srow:erow, srow:erow] = mat_2[blkidx];
+	out[blkgrp, srow:erow, srow:erow] = mat_2[blkidx];
       } else if (arrayidx == 3) {
- out[blkgrp, srow:erow, srow:erow] = mat_3[blkidx];
+	out[blkgrp, srow:erow, srow:erow] = mat_3[blkidx];
       } else if (arrayidx == 4) {
- out[blkgrp, srow:erow, srow:erow] = mat_4[blkidx];
+	out[blkgrp, srow:erow, srow:erow] = mat_4[blkidx];
       } else {
- out[blkgrp, srow:erow, srow:erow] = mat_5[blkidx];
+	out[blkgrp, srow:erow, srow:erow] = mat_5[blkidx];
       }
     }
     return out;
   }
 }
 data {
-  // see https://books.google.com/books?id=9AC-s50RjacC&lpg=PP1&dq=LISREL&pg=PA2#v=onepage&q=LISREL&f=false
+  // see p. 2 https://books.google.com/books?id=9AC-s50RjacC
   int<lower=0> p; // number of manifest response variables
   int<lower=0> p_c; // number of manifest level 2 variables
   int<lower=0> q; // number of manifest predictors
@@ -534,7 +523,7 @@ data {
   int<lower=0, upper=1> use_suff; // should we compute likelihood via mvn sufficient stats?
   int<lower=0, upper=1> do_test; // should we do everything in generated quantities?
   array[Np] vector[multilev ? p_tilde : p + q - Nord] YXbar; // sample means of continuous manifest variables
-  array[Np] matrix[multilev ? (p_tilde + 1) : (p + q - Nord + 1), multilev ? (p_tilde + 1) : (p + q - Nord + 1)] S; // sample covariance matrix among all continuous manifest variables NB!! multiply by (N-1) to use wishart lpdf!!
+  array[Np] matrix[multilev ? (p_tilde + 1) : (p + q - Nord + 1), multilev ? (p_tilde + 1) : (p + q - Nord + 1)] S;     // sample covariance matrix among all continuous manifest variables NB!! multiply by (N-1) to use wishart lpdf!!
   array[sum(nclus[,2])] int<lower=1> cluster_size; // number of obs per cluster
   array[Ng] int<lower=1> ncluster_sizes; // number of unique cluster sizes
   array[sum(ncluster_sizes)] int<lower=1> cluster_sizes; // unique cluster sizes
@@ -563,19 +552,17 @@ data {
   vector[multilev ? sum(ncluster_sizes) : Ng] log_lik_x; // ll of fixed x variables by unique cluster size
   vector[multilev ? sum(nclus[,2]) : Ng] log_lik_x_full; // ll of fixed x variables by cluster
   /* sparse matrix representations of skeletons of coefficient matrices,
-
      which is not that interesting but necessary because you cannot pass
-
      missing values into the data block of a Stan program from R */
-  int<lower=0> len_w1; // max number of free elements in Lambda_y per grp
-  array[Ng] int<lower=0> wg1; // number of free elements in Lambda_y per grp
-  array[Ng] vector[len_w1] w1; // values of free elements in Lambda_y
-  array[Ng, len_w1] int<lower=1> v1; // index  of free elements in Lambda_y
-  array[Ng, p + 1] int<lower=1> u1; // index  of free elements in Lambda_y
+  int<lower=0> len_w1;        // max number of free elements in Lambda_y per grp
+  array[Ng] int<lower=0> wg1;           // number of free elements in Lambda_y per grp
+  array[Ng] vector[len_w1] w1;          // values of free elements in Lambda_y
+  array[Ng, len_w1] int<lower=1> v1;    // index  of free elements in Lambda_y
+  array[Ng, p + 1] int<lower=1> u1;     // index  of free elements in Lambda_y
   array[sum(wg1), 3] int<lower=0> w1skel;
   array[sum(wg1), 2] int<lower=0> lam_y_sign;
-  int<lower=0> len_lam_y; // number of free elements minus equality constraints
-  array[len_lam_y] real lambda_y_mn; // prior
+  int<lower=0> len_lam_y;     // number of free elements minus equality constraints
+  array[len_lam_y] real lambda_y_mn;           // prior
   array[len_lam_y] real<lower=0> lambda_y_sd;
   // same things but for B
   int<lower=0> len_w4;
@@ -658,6 +645,7 @@ data {
   array[Ng, len_w14] int<lower=0> v14;
   array[Ng, use_cov ? 1 : m + n + 1] int<lower=1> u14;
   array[sum(wg14), 3] int<lower=0> w14skel;
+  array[sum(wg14), 3] int<lower=0> alph_sign;
   int<lower=0> len_alph;
   array[len_alph] real alpha_mn;
   array[len_alph] real<lower=0> alpha_sd;
@@ -764,6 +752,7 @@ data {
   array[Ng, len_w14_c] int<lower=0> v14_c;
   array[Ng, m_c + 1] int<lower=1> u14_c;
   array[sum(wg14_c), 3] int<lower=0> w14skel_c;
+  array[sum(wg14_c), 3] int<lower=0> alph_sign_c;
   int<lower=0> len_alph_c;
   array[len_alph_c] real alpha_mn_c;
   array[len_alph_c] real<lower=0> alpha_sd_c;
@@ -849,8 +838,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     for (i in 1:p) {
       for (j in 1:m) {
         if (is_inf(Lambda_y_skeleton[g,i,j])) {
-   if (w1skel[pos[1],2] == 0 || w1skel[pos[1],3] == 1) len_free[1] += 1;
-   pos[1] += 1;
+	  if (w1skel[pos[1],2] == 0 || w1skel[pos[1],3] == 1) len_free[1] += 1;
+	  pos[1] += 1;
         }
       }
     }
@@ -859,10 +848,10 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start4[g,2] = pos[4];
     for (i in 1:m) {
       for (j in 1:m) {
- if (is_inf(B_skeleton[g,i,j])) {
-   if (w4skel[pos[4],2] == 0 || w4skel[pos[4],3] == 1) len_free[4] += 1;
-   pos[4] += 1;
- }
+	if (is_inf(B_skeleton[g,i,j])) {
+	  if (w4skel[pos[4],2] == 0 || w4skel[pos[4],3] == 1) len_free[4] += 1;
+	  pos[4] += 1;
+	}
       }
     }
     // same thing but for Theta_skeleton
@@ -870,8 +859,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start5[g,2] = pos[5];
     for (i in 1:p) {
       if (is_inf(Theta_skeleton[g,i,i])) {
- if (w5skel[pos[5],2] == 0 || w5skel[pos[5],3] == 1) len_free[5] += 1;
- pos[5] += 1;
+	if (w5skel[pos[5],2] == 0 || w5skel[pos[5],3] == 1) len_free[5] += 1;
+	pos[5] += 1;
       }
     }
     // same thing but for Theta_r_skeleton
@@ -879,10 +868,10 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start7[g,2] = pos[7];
     for (i in 1:(p-1)) {
       for (j in (i+1):p) {
- if (is_inf(Theta_r_skeleton[g,j,i])) {
-   if (w7skel[pos[7],2] == 0 || w7skel[pos[7],3] == 1) len_free[7] += 1;
-   pos[7] += 1;
- }
+	if (is_inf(Theta_r_skeleton[g,j,i])) {
+	  if (w7skel[pos[7],2] == 0 || w7skel[pos[7],3] == 1) len_free[7] += 1;
+	  pos[7] += 1;
+	}
       }
     }
     // same thing but for Psi_skeleton
@@ -890,8 +879,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start9[g,2] = pos[9];
     for (i in 1:m) {
       if (is_inf(Psi_skeleton[g,i,i])) {
- if (w9skel[pos[9],2] == 0 || w9skel[pos[9],3] == 1) len_free[9] += 1;
- pos[9] += 1;
+	if (w9skel[pos[9],2] == 0 || w9skel[pos[9],3] == 1) len_free[9] += 1;
+	pos[9] += 1;
       }
     }
     // same thing but for Psi_r_skeleton
@@ -899,14 +888,14 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start10[g,2] = pos[10];
     for (i in 1:(m-1)) {
       for (j in (i+1):m) {
- if (is_inf(Psi_r_skeleton[g,j,i])) {
-   if (w10skel[pos[10],2] == 0 || w10skel[pos[10],3] == 1) len_free[10] += 1;
-   pos[10] += 1;
- }
- if (is_inf(Psi_r_skeleton_f[g,j,i])) {
-   if (w11skel[pos[11],2] == 0 || w11skel[pos[11],3] == 1) len_free[11] += 1;
-   pos[11] += 1;
- }
+	if (is_inf(Psi_r_skeleton[g,j,i])) {
+	  if (w10skel[pos[10],2] == 0 || w10skel[pos[10],3] == 1) len_free[10] += 1;
+	  pos[10] += 1;
+	}
+	if (is_inf(Psi_r_skeleton_f[g,j,i])) {
+	  if (w11skel[pos[11],2] == 0 || w11skel[pos[11],3] == 1) len_free[11] += 1;
+	  pos[11] += 1;
+	}
       }
     }
     if (!use_cov) {
@@ -915,19 +904,19 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
       g_start13[g,1] = len_free[13] + 1;
       g_start13[g,2] = pos[13];
       for (i in 1:(p+q)) {
- if (is_inf(Nu_skeleton[g,i,1])) {
-   if (w13skel[pos[13],2] == 0 || w13skel[pos[13],3] == 1) len_free[13] += 1;
-   pos[13] += 1;
- }
+	if (is_inf(Nu_skeleton[g,i,1])) {
+	  if (w13skel[pos[13],2] == 0 || w13skel[pos[13],3] == 1) len_free[13] += 1;
+	  pos[13] += 1;
+	}
       }
       // same thing but for Alpha_skeleton
       g_start14[g,1] = len_free[14] + 1;
       g_start14[g,2] = pos[14];
       for (i in 1:(m+n)) {
- if (is_inf(Alpha_skeleton[g,i,1])) {
-   if (w14skel[pos[14],2] == 0 || w14skel[pos[14],3] == 1) len_free[14] += 1;
-   pos[14] += 1;
- }
+	if (is_inf(Alpha_skeleton[g,i,1])) {
+	  if (w14skel[pos[14],2] == 0 || w14skel[pos[14],3] == 1) len_free[14] += 1;
+	  pos[14] += 1;
+	}
       }
     }
     // same thing but for Tau_skeleton
@@ -935,8 +924,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start15[g,2] = pos[15];
     for (i in 1:(sum(nlevs) - Nord)) {
       if (is_inf(Tau_skeleton[g,i,1])) {
- if (w15skel[pos[15],2] == 0 || w15skel[pos[15],3] == 1) len_free[15] += 1;
- pos[15] += 1;
+	if (w15skel[pos[15],2] == 0 || w15skel[pos[15],3] == 1) len_free[15] += 1;
+	pos[15] += 1;
       }
     }
     // now level 2
@@ -946,8 +935,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     for (i in 1:p_c) {
       for (j in 1:m_c) {
         if (is_inf(Lambda_y_skeleton_c[g,i,j])) {
-   if (w1skel_c[pos_c[1],2] == 0 || w1skel_c[pos_c[1],3] == 1) len_free_c[1] += 1;
-   pos_c[1] += 1;
+	  if (w1skel_c[pos_c[1],2] == 0 || w1skel_c[pos_c[1],3] == 1) len_free_c[1] += 1;
+	  pos_c[1] += 1;
         }
       }
     }
@@ -956,10 +945,10 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start4_c[g,2] = pos_c[4];
     for (i in 1:m_c) {
       for (j in 1:m_c) {
- if (is_inf(B_skeleton_c[g,i,j])) {
-   if (w4skel_c[pos_c[4],2] == 0 || w4skel_c[pos_c[4],3] == 1) len_free_c[4] += 1;
-   pos_c[4] += 1;
- }
+	if (is_inf(B_skeleton_c[g,i,j])) {
+	  if (w4skel_c[pos_c[4],2] == 0 || w4skel_c[pos_c[4],3] == 1) len_free_c[4] += 1;
+	  pos_c[4] += 1;
+	}
       }
     }
     // same thing but for Theta_skeleton
@@ -967,8 +956,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start5_c[g,2] = pos_c[5];
     for (i in 1:p_c) {
       if (is_inf(Theta_skeleton_c[g,i,i])) {
- if (w5skel_c[pos_c[5],2] == 0 || w5skel_c[pos_c[5],3] == 1) len_free_c[5] += 1;
- pos_c[5] += 1;
+	if (w5skel_c[pos_c[5],2] == 0 || w5skel_c[pos_c[5],3] == 1) len_free_c[5] += 1;
+	pos_c[5] += 1;
       }
     }
     // same thing but for Theta_r_skeleton
@@ -976,10 +965,10 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start7_c[g,2] = pos_c[7];
     for (i in 1:(p_c-1)) {
       for (j in (i+1):p_c) {
- if (is_inf(Theta_r_skeleton_c[g,j,i])) {
-   if (w7skel_c[pos_c[7],2] == 0 || w7skel_c[pos_c[7],3] == 1) len_free_c[7] += 1;
-   pos_c[7] += 1;
- }
+	if (is_inf(Theta_r_skeleton_c[g,j,i])) {
+	  if (w7skel_c[pos_c[7],2] == 0 || w7skel_c[pos_c[7],3] == 1) len_free_c[7] += 1;
+	  pos_c[7] += 1;
+	}
       }
     }
     // same thing but for Psi_skeleton
@@ -987,8 +976,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start9_c[g,2] = pos_c[9];
     for (i in 1:m_c) {
       if (is_inf(Psi_skeleton_c[g,i,i])) {
- if (w9skel_c[pos_c[9],2] == 0 || w9skel_c[pos_c[9],3] == 1) len_free_c[9] += 1;
- pos_c[9] += 1;
+	if (w9skel_c[pos_c[9],2] == 0 || w9skel_c[pos_c[9],3] == 1) len_free_c[9] += 1;
+	pos_c[9] += 1;
       }
     }
     // same thing but for Psi_r_skeleton
@@ -996,14 +985,14 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start10_c[g,2] = pos_c[10];
     for (i in 1:(m_c-1)) {
       for (j in (i+1):m_c) {
- if (is_inf(Psi_r_skeleton_c[g,j,i])) {
-   if (w10skel_c[pos_c[10],2] == 0 || w10skel_c[pos_c[10],3] == 1) len_free_c[10] += 1;
-   pos_c[10] += 1;
- }
- if (is_inf(Psi_r_skeleton_f_c[g,j,i])) {
-   if (w11skel_c[pos_c[11],2] == 0 || w11skel_c[pos_c[11],3] == 1) len_free_c[11] += 1;
-   pos_c[11] += 1;
- }
+	if (is_inf(Psi_r_skeleton_c[g,j,i])) {
+	  if (w10skel_c[pos_c[10],2] == 0 || w10skel_c[pos_c[10],3] == 1) len_free_c[10] += 1;
+	  pos_c[10] += 1;
+	}
+	if (is_inf(Psi_r_skeleton_f_c[g,j,i])) {
+	  if (w11skel_c[pos_c[11],2] == 0 || w11skel_c[pos_c[11],3] == 1) len_free_c[11] += 1;
+	  pos_c[11] += 1;
+	}
       }
     }
     // same thing but for Nu_skeleton
@@ -1012,8 +1001,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start13_c[g,2] = pos_c[13];
     for (i in 1:p_c) {
       if (is_inf(Nu_skeleton_c[g,i,1])) {
- if (w13skel_c[pos_c[13],2] == 0 || w13skel_c[pos_c[13],3] == 1) len_free_c[13] += 1;
- pos_c[13] += 1;
+	if (w13skel_c[pos_c[13],2] == 0 || w13skel_c[pos_c[13],3] == 1) len_free_c[13] += 1;
+	pos_c[13] += 1;
       }
     }
     // same thing but for Alpha_skeleton
@@ -1021,8 +1010,8 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
     g_start14_c[g,2] = pos_c[14];
     for (i in 1:m_c) {
       if (is_inf(Alpha_skeleton_c[g,i,1])) {
- if (w14skel_c[pos_c[14],2] == 0 || w14skel_c[pos_c[14],3] == 1) len_free_c[14] += 1;
- pos_c[14] += 1;
+	if (w14skel_c[pos_c[14],2] == 0 || w14skel_c[pos_c[14],3] == 1) len_free_c[14] += 1;
+	pos_c[14] += 1;
       }
     }
   }
@@ -1034,7 +1023,7 @@ transformed data { // (re)construct skeleton matrices in Stan (not that interest
       Sstar[patt] = rep_matrix(0, p + q, p + q);
       Sstar[patt, 1:Nobs[patt], 1:Nobs[patt]] = S[patt, Obsvar[patt, 1:Nobs[patt]], Obsvar[patt, 1:Nobs[patt]]];
       for (j in 1:Nobs[patt]) {
- YXbarstar[patt,j] = YXbar[patt, Obsvar[patt,j]];
+	YXbarstar[patt,j] = YXbar[patt, Obsvar[patt,j]];
       }
     }
   }
@@ -1106,15 +1095,15 @@ transformed parameters {
   vector[len_free_c[4]] b_primn_c;
   vector[len_free_c[13]] nu_primn_c;
   vector[len_free_c[14]] alpha_primn_c;
-  array[Ng] matrix[p, m] Lambda_y_A; // = Lambda_y * (I - B)^{-1}
+  array[Ng] matrix[p, m] Lambda_y_A;     // = Lambda_y * (I - B)^{-1}
   array[Ng] matrix[p_c, m_c] Lambda_y_A_c;
   array[Ng] vector[p + q] Mu;
-  array[Ng] matrix[p + q, p + q] Sigma; // model covariance matrix
-  array[Ng] matrix[p + q, p + q] Sigmainv_grp; // model covariance matrix
+  array[Ng] matrix[p + q, p + q] Sigma;  // model covariance matrix
+  array[Ng] matrix[p + q, p + q] Sigmainv_grp;  // model covariance matrix
   array[Ng] real logdetSigma_grp;
-  array[Np] matrix[p + q + 1, p + q + 1] Sigmainv; // for updating S^-1 by missing data pattern
+  array[Np] matrix[p + q + 1, p + q + 1] Sigmainv;  // for updating S^-1 by missing data pattern
   array[Ng] vector[p_c] Mu_c;
-  array[Ng] matrix[p_c, p_c] Sigma_c; // level 2 model covariance matrix
+  array[Ng] matrix[p_c, p_c] Sigma_c;  // level 2 model covariance matrix
   array[Ng] matrix[N_both + N_within, N_both + N_within] S_PW;
   array[Ntot] vector[p + q] YXstar;
   array[Ntot] vector[Nord] YXostar; // ordinal data
@@ -1158,10 +1147,10 @@ transformed parameters {
   if (sum(nblk_c) > 0) {
     Psi_r_c = fill_cov(Psi_r_c, blkse_c, nblk_c, Psi_r_mat_1_c, Psi_r_mat_2_c, Psi_r_mat_3_c, Psi_r_mat_4_c, Psi_r_mat_5_c);
   }
-  // see https://books.google.com/books?id=9AC-s50RjacC&lpg=PP1&dq=LISREL&pg=PA3#v=onepage&q=LISREL&f=false
+  // see p. 3 https://books.google.com/books?id=9AC-s50RjacC
   for (g in 1:Ng) {
     if (m > 0) {
-      Lambda_y_A[g] = mdivide_right(Lambda_y[g], I - B[g]); // = Lambda_y * (I - B)^{-1}
+      Lambda_y_A[g] = mdivide_right(Lambda_y[g], I - B[g]);     // = Lambda_y * (I - B)^{-1}
       Psi[g] = quad_form_sym(Psi_r[g], Psi_sd[g]);
     }
     if (!use_cov) {
@@ -1173,7 +1162,7 @@ transformed parameters {
       Sigma[g, 1:p, 1:p] = quad_form_sym(Theta_r[g], Theta_sd[g]);
       if (m > 0) {
         Sigma[g, 1:p, 1:p] += quad_form_sym(Psi[g], transpose(Lambda_y_A[g]));
- if (!use_cov) Mu[g, 1:p] += to_vector(Lambda_y_A[g] * Alpha[g, 1:m, 1]);
+	if (!use_cov) Mu[g, 1:p] += to_vector(Lambda_y_A[g] * Alpha[g, 1:m, 1]);
       }
     }
     if (m_c > 0) {
@@ -1185,7 +1174,7 @@ transformed parameters {
       Sigma_c[g, 1:p_c, 1:p_c] = quad_form_sym(Theta_r_c[g], Theta_sd_c[g]);
       if (m_c > 0) {
         Sigma_c[g, 1:p_c, 1:p_c] += quad_form_sym(Psi_c[g], transpose(Lambda_y_A_c[g]));
- Mu_c[g, 1:p_c] += to_vector(Lambda_y_A_c[g] * Alpha_c[g, 1:m_c, 1]);
+	Mu_c[g, 1:p_c] += to_vector(Lambda_y_A_c[g] * Alpha_c[g, 1:m_c, 1]);
       }
     }
     if (nclus[g,2] > 1) {
@@ -1202,34 +1191,34 @@ transformed parameters {
       int vecpos = 1;
       Tau_un[g] = fill_matrix(Tau_ufree, Tau_skeleton[g], w15skel, g_start15[g,1], g_start15[g,2]);
       for (i in 1:Nord) {
- for (j in 1:(nlevs[i] - 1)) {
-   real rc = Tau_skeleton[g, vecpos, 1];
-   int eq = w15skel[opos, 1];
-   int wig = w15skel[opos, 3];
-   if (is_inf(rc)) {
-     if (eq == 0 || wig == 1) {
-       if (j == 1) {
-  Tau[g, vecpos, 1] = Tau_un[g, vecpos, 1];
-       } else {
-  Tau[g, vecpos, 1] = Tau[g, (vecpos - 1), 1] + exp(Tau_un[g, vecpos, 1]);
-       }
-       Tau_free[ofreepos] = Tau[g, vecpos, 1];
-       // this is used if a prior goes on Tau_free, instead of Tau_ufree:
-       //if (j > 1) {
-       //  tau_jacobian += Tau_un[g, vecpos, 1]; // see https://mc-stan.org/docs/2_24/reference-manual/ordered-vector.html
-       // }
-       ofreepos += 1;
-     } else if (eq == 1) {
-       int eqent = w15skel[opos, 2];
-       Tau[g, vecpos, 1] = Tau_free[eqent];
-     }
-     opos += 1;
-   } else {
-     // fixed value
-     Tau[g, vecpos, 1] = Tau_un[g, vecpos, 1];
-   }
-   vecpos += 1;
- }
+	for (j in 1:(nlevs[i] - 1)) {
+	  real rc = Tau_skeleton[g, vecpos, 1];
+	  int eq = w15skel[opos, 1];
+	  int wig = w15skel[opos, 3];
+	  if (is_inf(rc)) {
+	    if (eq == 0 || wig == 1) {
+	      if (j == 1) {
+		Tau[g, vecpos, 1] = Tau_un[g, vecpos, 1];
+	      } else {
+		Tau[g, vecpos, 1] = Tau[g, (vecpos - 1), 1] + exp(Tau_un[g, vecpos, 1]);
+	      }
+	      Tau_free[ofreepos] = Tau[g, vecpos, 1];
+	      // this is used if a prior goes on Tau_free, instead of Tau_ufree:
+	      //if (j > 1) {
+	      //  tau_jacobian += Tau_un[g, vecpos, 1]; // see https://mc-stan.org/docs/2_24/reference-manual/ordered-vector.html
+	      // }
+	      ofreepos += 1;
+	    } else if (eq == 1) {
+	      int eqent = w15skel[opos, 2];
+	      Tau[g, vecpos, 1] = Tau_free[eqent];
+	    }
+	    opos += 1;
+	  } else {
+	    // fixed value
+	    Tau[g, vecpos, 1] = Tau_un[g, vecpos, 1];
+	  }
+	  vecpos += 1;
+	}
       }
     }
   }
@@ -1262,32 +1251,32 @@ transformed parameters {
     int idxvec = 0;
     for (patt in 1:Np) {
       for (i in startrow[patt]:endrow[patt]) {
- for (j in 1:Nordobs[patt]) {
-   int obspos = OrdObsvar[patt,j];
-   int vecpos = YXo[i,obspos] - 1;
-   idxvec += 1;
-   if (obspos > 1) vecpos += sum(nlevs[1:(obspos - 1)]) - (obspos - 1);
-   if (YXo[i,obspos] == 1) {
-     YXostar[i,obspos] = -10 + (Tau[grpnum[patt], (vecpos + 1), 1] + 10) .* z_aug[idxvec];
-     tau_jacobian += log(abs(Tau[grpnum[patt], (vecpos + 1), 1] + 10)); // must add log(U) to tau_jacobian
-   } else if (YXo[i,obspos] == nlevs[obspos]) {
-     YXostar[i,obspos] = Tau[grpnum[patt], vecpos, 1] + (10 - Tau[grpnum[patt], vecpos, 1]) .* z_aug[idxvec];
-     tau_jacobian += log(abs(10 - Tau[grpnum[patt], vecpos, 1]));
-   } else {
-     YXostar[i,obspos] = Tau[grpnum[patt], vecpos, 1] + (Tau[grpnum[patt], (vecpos + 1), 1] - Tau[grpnum[patt], vecpos, 1]) .* z_aug[idxvec];
-     tau_jacobian += Tau_un[grpnum[patt], (vecpos + 1), 1]; // jacobian is log(exp(Tau_un))
-   }
-   YXstar[i, ordidx[obspos]] = YXostar[i, obspos];
- }
+	for (j in 1:Nordobs[patt]) {
+	  int obspos = OrdObsvar[patt,j];
+	  int vecpos = YXo[i,obspos] - 1;
+	  idxvec += 1;
+	  if (obspos > 1) vecpos += sum(nlevs[1:(obspos - 1)]) - (obspos - 1);
+	  if (YXo[i,obspos] == 1) {
+	    YXostar[i,obspos] = -30 + (Tau[grpnum[patt], (vecpos + 1), 1] + 30) .* z_aug[idxvec];
+	    tau_jacobian += log(abs(Tau[grpnum[patt], (vecpos + 1), 1] + 30));  // must add log(U) to tau_jacobian
+	  } else if (YXo[i,obspos] == nlevs[obspos]) {
+	    YXostar[i,obspos] = Tau[grpnum[patt], vecpos, 1] + (30 - Tau[grpnum[patt], vecpos, 1]) .* z_aug[idxvec];
+	    tau_jacobian += log(abs(30 - Tau[grpnum[patt], vecpos, 1]));
+	  } else {
+	    YXostar[i,obspos] = Tau[grpnum[patt], vecpos, 1] + (Tau[grpnum[patt], (vecpos + 1), 1] - Tau[grpnum[patt], vecpos, 1]) .* z_aug[idxvec];
+	    tau_jacobian += Tau_un[grpnum[patt], (vecpos + 1), 1]; // jacobian is log(exp(Tau_un))
+	  }
+	  YXstar[i, ordidx[obspos]] = YXostar[i, obspos];
+	}
       }
     }
   }
   if (Ncont > 0) {
     for (patt in 1:Np) {
       for (i in startrow[patt]:endrow[patt]) {
- for (j in 1:Ncont) {
-   YXstar[i, contidx[j]] = YX[i,j];
- }
+	for (j in 1:Ncont) {
+	  YXstar[i, contidx[j]] = YX[i,j];
+	}
       }
     }
   }
@@ -1295,9 +1284,9 @@ transformed parameters {
   if (missing) {
     for (patt in 1:Np) {
       for (i in startrow[patt]:endrow[patt]) {
- for (j in 1:Nobs[patt]) {
-   YXstar[i,j] = YXstar[i, Obsvar[patt,j]];
- }
+	for (j in 1:Nobs[patt]) {
+	  YXstar[i,j] = YXstar[i, Obsvar[patt,j]];
+	}
       }
     }
   }
@@ -1323,34 +1312,34 @@ model { // N.B.: things declared in the model block do not get saved in the outp
     int grpidx;
     int r1 = 1; // index clusters per group
     int r2 = 0;
-    int rr1 = 1; // index units per group
+    int rr1 = 1;  // index units per group
     int rr2 = 0;
     int r3 = 1; // index unique cluster sizes per group
     int r4 = 0;
     for (mm in 1:Np) {
       grpidx = grpnum[mm];
       if (grpidx > 1) {
- r1 += nclus[(grpidx - 1), 2];
- rr1 += nclus[(grpidx - 1), 1];
- r3 += ncluster_sizes[(grpidx - 1)];
+	r1 += nclus[(grpidx - 1), 2];
+	rr1 += nclus[(grpidx - 1), 1];
+	r3 += ncluster_sizes[(grpidx - 1)];
       }
       r2 += nclus[grpidx, 2];
       rr2 += nclus[grpidx, 1];
       r4 += ncluster_sizes[grpidx];
       target += twolevel_logdens(mean_d[r3:r4], cov_d[r3:r4], S_PW[grpidx], YX[rr1:rr2],
-     nclus[grpidx,], cluster_size[r1:r2], cluster_sizes[r3:r4],
-     ncluster_sizes[grpidx], cluster_size_ns[r3:r4], Mu[grpidx],
-     Sigma[grpidx], Mu_c[grpidx], Sigma_c[grpidx],
-     ov_idx1, ov_idx2, within_idx, between_idx, both_idx,
-     p_tilde, N_within, N_between, N_both);
+				 nclus[grpidx,], cluster_size[r1:r2], cluster_sizes[r3:r4],
+				 ncluster_sizes[grpidx], cluster_size_ns[r3:r4], Mu[grpidx],
+				 Sigma[grpidx], Mu_c[grpidx], Sigma_c[grpidx],
+				 ov_idx1, ov_idx2, within_idx, between_idx, both_idx,
+				 p_tilde, N_within, N_between, N_both);
       if (Nx[grpidx] + Nx_between[grpidx] > 0) target += -log_lik_x;
     }
   } else if (use_cov && !pri_only) {
     for (g in 1:Ng) {
       target += wishart_lpdf((N[g] - 1) * Sstar[g] | N[g] - 1, Sigma[g]);
       if (Nx[g] > 0) {
- array[Nx[g]] int xvars = Xdatvar[g, 1:Nx[g]];
- target += -wishart_lpdf((N[g] - 1) * Sstar[g, xvars, xvars] | N[g] - 1, Sigma[g, xvars, xvars]);
+	array[Nx[g]] int xvars = Xdatvar[g, 1:Nx[g]];
+	target += -wishart_lpdf((N[g] - 1) * Sstar[g, xvars, xvars] | N[g] - 1, Sigma[g, xvars, xvars]);
       }
     }
   } else if (has_data && !pri_only) {
@@ -1368,18 +1357,18 @@ model { // N.B.: things declared in the model block do not get saved in the outp
       r1 = startrow[mm];
       r2 = endrow[mm];
       if (!use_suff) {
- target += multi_normal_lpdf(YXstar[r1:r2,1:Nobs[mm]] | Mu[grpidx, obsidx[1:Nobs[mm]]], Sigma[grpidx, obsidx[1:Nobs[mm]], obsidx[1:Nobs[mm]]]);
- if (Nx[mm] > 0) {
-   target += -multi_normal_lpdf(YXstar[r1:r2,xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
- }
+	target += multi_normal_lpdf(YXstar[r1:r2,1:Nobs[mm]] | Mu[grpidx, obsidx[1:Nobs[mm]]], Sigma[grpidx, obsidx[1:Nobs[mm]], obsidx[1:Nobs[mm]]]);
+	if (Nx[mm] > 0) {
+	  target += -1.0 * multi_normal_lpdf(YXstar[r1:r2,xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
+	}
       } else {
- // sufficient stats
- target += multi_normal_suff(YXbarstar[mm, 1:Nobs[mm]], Sstar[mm, 1:Nobs[mm], 1:Nobs[mm]], Mu[grpidx, obsidx[1:Nobs[mm]]], Sigmainv[mm, 1:(Nobs[mm] + 1), 1:(Nobs[mm] + 1)], r2 - r1 + 1);
- if (Nx[mm] > 0 && !missing) {
-   target += -multi_normal_suff(YXbarstar[mm, xdatidx[1:Nx[mm]]], Sstar[mm, xdatidx[1:Nx[mm]], xdatidx[1:Nx[mm]]], Mu[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigmainv[mm], xidx, Nx[mm], p + q, logdetSigma_grp[grpidx]), r2 - r1 + 1);
- } else if (Nx[mm] > 0) {
-   target += -multi_normal_lpdf(YXstar[r1:r2,xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
- }
+	// sufficient stats
+	target += multi_normal_suff(YXbarstar[mm, 1:Nobs[mm]], Sstar[mm, 1:Nobs[mm], 1:Nobs[mm]], Mu[grpidx, obsidx[1:Nobs[mm]]], Sigmainv[mm, 1:(Nobs[mm] + 1), 1:(Nobs[mm] + 1)], r2 - r1 + 1);
+	if (Nx[mm] > 0 && !missing) {
+	  target += -1.0 * multi_normal_suff(YXbarstar[mm, xdatidx[1:Nx[mm]]], Sstar[mm, xdatidx[1:Nx[mm]], xdatidx[1:Nx[mm]]], Mu[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigmainv[mm], xidx, Nx[mm], p + q, logdetSigma_grp[grpidx]), r2 - r1 + 1);
+	} else if (Nx[mm] > 0) {
+	  target += -1.0 * multi_normal_lpdf(YXstar[r1:r2,xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
+	}
       }
     }
     if (ord) {
@@ -1388,16 +1377,15 @@ model { // N.B.: things declared in the model block do not get saved in the outp
   }
   /* prior densities in log-units */
   target += normal_lpdf(Lambda_y_free | lambda_y_primn, lambda_y_sd);
-  target += normal_lpdf(B_free | b_primn, b_sd);
-  target += normal_lpdf(Nu_free | nu_primn, nu_sd);
-  target += normal_lpdf(Alpha_free | alpha_primn, alpha_sd);
-  target += normal_lpdf(Tau_ufree | tau_primn, tau_sd);
+  target += normal_lpdf(B_free        | b_primn, b_sd);
+  target += normal_lpdf(Nu_free       | nu_primn, nu_sd);
+  target += normal_lpdf(Alpha_free    | alpha_primn, alpha_sd);
+  target += normal_lpdf(Tau_ufree      | tau_primn, tau_sd);
   target += normal_lpdf(Lambda_y_free_c | lambda_y_primn_c, lambda_y_sd_c);
-  target += normal_lpdf(B_free_c | b_primn_c, b_sd_c);
-  target += normal_lpdf(Nu_free_c | nu_primn_c, nu_sd_c);
-  target += normal_lpdf(Alpha_free_c | alpha_primn_c, alpha_sd_c);
+  target += normal_lpdf(B_free_c        | b_primn_c, b_sd_c);
+  target += normal_lpdf(Nu_free_c       | nu_primn_c, nu_sd_c);
+  target += normal_lpdf(Alpha_free_c    | alpha_primn_c, alpha_sd_c);
   /* transform sd parameters to var or prec, depending on
-
      what the user wants. */
   Theta_pri = Theta_sd_free;
   if (len_free[5] > 0 && theta_pow != 1) {
@@ -1421,15 +1409,15 @@ model { // N.B.: things declared in the model block do not get saved in the outp
       int blkidx = blkse[k, 6];
       int arrayidx = blkse[k, 5];
       if (arrayidx == 1) {
- target += lkj_corr_lpdf(Psi_r_mat_1[blkidx] | blkse[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_1[blkidx] | blkse[k,7]);
       } else if (arrayidx == 2) {
- target += lkj_corr_lpdf(Psi_r_mat_2[blkidx] | blkse[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_2[blkidx] | blkse[k,7]);
       } else if (arrayidx == 3) {
- target += lkj_corr_lpdf(Psi_r_mat_3[blkidx] | blkse[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_3[blkidx] | blkse[k,7]);
       } else if (arrayidx == 4) {
- target += lkj_corr_lpdf(Psi_r_mat_4[blkidx] | blkse[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_4[blkidx] | blkse[k,7]);
       } else {
- target += lkj_corr_lpdf(Psi_r_mat_5[blkidx] | blkse[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_5[blkidx] | blkse[k,7]);
       }
     }
   }
@@ -1459,15 +1447,15 @@ model { // N.B.: things declared in the model block do not get saved in the outp
       int blkidx = blkse_c[k, 6];
       int arrayidx = blkse_c[k, 5];
       if (arrayidx == 1) {
- target += lkj_corr_lpdf(Psi_r_mat_1_c[blkidx] | blkse_c[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_1_c[blkidx] | blkse_c[k,7]);
       } else if (arrayidx == 2) {
- target += lkj_corr_lpdf(Psi_r_mat_2_c[blkidx] | blkse_c[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_2_c[blkidx] | blkse_c[k,7]);
       } else if (arrayidx == 3) {
- target += lkj_corr_lpdf(Psi_r_mat_3_c[blkidx] | blkse_c[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_3_c[blkidx] | blkse_c[k,7]);
       } else if (arrayidx == 4) {
- target += lkj_corr_lpdf(Psi_r_mat_4_c[blkidx] | blkse_c[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_4_c[blkidx] | blkse_c[k,7]);
       } else {
- target += lkj_corr_lpdf(Psi_r_mat_5_c[blkidx] | blkse_c[k,7]);
+	target += lkj_corr_lpdf(Psi_r_mat_5_c[blkidx] | blkse_c[k,7]);
       }
     }
   } else if (len_free_c[10] > 0) {
@@ -1475,10 +1463,11 @@ model { // N.B.: things declared in the model block do not get saved in the outp
   }
 }
 generated quantities { // these matrices are saved in the output but do not figure into the likelihood
-  // see https://books.google.com/books?id=9AC-s50RjacC&lpg=PP1&dq=LISREL&pg=PA34#v=onepage&q=LISREL&f=false
+  // see p. 34 https://books.google.com/books?id=9AC-s50RjacC
   // sign constraints and correlations
   vector[len_free[1]] ly_sign;
   vector[len_free[4]] bet_sign;
+  vector[len_free[14]] al_sign;
   array[Ng] matrix[m, m] PSmat;
   array[Ng] matrix[m, m] PS;
   vector[len_free[7]] Theta_cov;
@@ -1489,6 +1478,7 @@ generated quantities { // these matrices are saved in the output but do not figu
   // level 2
   vector[len_free_c[1]] ly_sign_c;
   vector[len_free_c[4]] bet_sign_c;
+  vector[len_free_c[14]] al_sign_c;
   array[Ng] matrix[m_c, m_c] PSmat_c;
   array[Ng] matrix[m_c, m_c] PS_c;
   vector[len_free_c[7]] Theta_cov_c;
@@ -1528,11 +1518,13 @@ generated quantities { // these matrices are saved in the output but do not figu
   // first deal with sign constraints:
   ly_sign = sign_constrain_load(Lambda_y_free, len_free[1], lam_y_sign);
   bet_sign = sign_constrain_reg(B_free, len_free[4], b_sign, Lambda_y_free, Lambda_y_free);
+  al_sign = sign_constrain_reg(Alpha_free, len_free[14], alph_sign, Lambda_y_free, rep_vector(1, len_free[1]));
   if (len_free[10] > 0) {
     P_r = sign_constrain_reg(Psi_r_free, len_free[10], psi_r_sign, Lambda_y_free, Lambda_y_free);
   }
   ly_sign_c = sign_constrain_load(Lambda_y_free_c, len_free_c[1], lam_y_sign_c);
   bet_sign_c = sign_constrain_reg(B_free_c, len_free_c[4], b_sign_c, Lambda_y_free_c, Lambda_y_free_c);
+  al_sign_c = sign_constrain_reg(Alpha_free_c, len_free_c[14], alph_sign_c, Lambda_y_free_c, rep_vector(1, len_free_c[1]));
   if (len_free_c[10] > 0) {
     P_r_c = sign_constrain_reg(Psi_r_free_c, len_free_c[10], psi_r_sign_c, Lambda_y_free_c, Lambda_y_free_c);
   }
@@ -1559,7 +1551,6 @@ generated quantities { // these matrices are saved in the output but do not figu
   Theta_var = Theta_sd_free .* Theta_sd_free;
   if (m > 0 && len_free[11] > 0) {
     /* iden is created so that we can re-use cor2cov, even though
-
        we don't need to multiply to get covariances */
     array[Ng] matrix[m, m] iden;
     for (g in 1:Ng) {
@@ -1597,176 +1588,176 @@ generated quantities { // these matrices are saved in the output but do not figu
     int clusidx;
     if (do_test && use_cov) {
       for (g in 1:Ng) {
- Sigma_rep_sat[g] = wishart_rng(N[g] - 1, Sigma[g]);
+	Sigma_rep_sat[g] = wishart_rng(N[g] - 1, Sigma[g]);
       }
     } else if (do_test && has_data) {
       // generate level 2 data, then level 1
       if (multilev) {
- array[p_tilde - N_between] int notbidx;
- notbidx = between_idx[(N_between + 1):p_tilde];
- r1 = 1;
- rr1 = 1;
- clusidx = 1;
- r2 = 1;
- for (gg in 1:Ng) {
-   matrix[p_c, p_c] Sigma_c_chol = cholesky_decompose(Sigma_c[gg]);
-   matrix[p + q, p + q] Sigma_chol = cholesky_decompose(Sigma[gg]);
-   S_PW_rep[gg] = rep_matrix(0, N_both + N_within, N_both + N_within);
-   S_PW_rep_full[gg] = rep_matrix(0, p_tilde, p_tilde);
-   S_B_rep[gg] = rep_matrix(0, p_tilde, p_tilde);
-   ov_mean_rep[gg] = rep_vector(0, p_tilde);
-   for (cc in 1:nclus[gg, 2]) {
-     vector[p_c] YXstar_rep_c;
-     vector[p_tilde] YXstar_rep_tilde;
-     YXstar_rep_c = multi_normal_cholesky_rng(Mu_c[gg], Sigma_c_chol);
-     YXstar_rep_tilde = calc_B_tilde(Sigma_c[gg], YXstar_rep_c, ov_idx2, p_tilde)[,1];
-     for (ii in r1:(r1 + cluster_size[clusidx] - 1)) {
-       vector[N_within + N_both] Ywb_rep;
-       Ywb_rep = multi_normal_cholesky_rng(Mu[gg], Sigma_chol);
-       YXstar_rep[ii] = YXstar_rep_tilde;
-       for (ww in 1:(p_tilde - N_between)) {
-  YXstar_rep[ii, notbidx[ww]] += Ywb_rep[ww];
-       }
-       ov_mean_rep[gg] += YXstar_rep[ii];
-     }
-     for (jj in 1:p_tilde) {
-       mean_d_rep[clusidx, jj] = mean(YXstar_rep[r1:(r1 + cluster_size[clusidx] - 1), jj]);
+	array[p_tilde - N_between] int notbidx;
+	notbidx = between_idx[(N_between + 1):p_tilde];
+	r1 = 1;
+	rr1 = 1;
+	clusidx = 1;
+	r2 = 1;
+	for (gg in 1:Ng) {
+	  matrix[p_c, p_c] Sigma_c_chol = cholesky_decompose(Sigma_c[gg]);
+	  matrix[p + q, p + q] Sigma_chol = cholesky_decompose(Sigma[gg]);
+	  S_PW_rep[gg] = rep_matrix(0, N_both + N_within, N_both + N_within);
+	  S_PW_rep_full[gg] = rep_matrix(0, p_tilde, p_tilde);
+	  S_B_rep[gg] = rep_matrix(0, p_tilde, p_tilde);
+	  ov_mean_rep[gg] = rep_vector(0, p_tilde);
+	  for (cc in 1:nclus[gg, 2]) {
+	    vector[p_c] YXstar_rep_c;
+	    vector[p_tilde] YXstar_rep_tilde;
+	    YXstar_rep_c = multi_normal_cholesky_rng(Mu_c[gg], Sigma_c_chol);
+	    YXstar_rep_tilde = calc_B_tilde(Sigma_c[gg], YXstar_rep_c, ov_idx2, p_tilde)[,1];
+	    for (ii in r1:(r1 + cluster_size[clusidx] - 1)) {
+	      vector[N_within + N_both] Ywb_rep;
+	      Ywb_rep = multi_normal_cholesky_rng(Mu[gg], Sigma_chol);
+	      YXstar_rep[ii] = YXstar_rep_tilde;
+	      for (ww in 1:(p_tilde - N_between)) {
+		YXstar_rep[ii, notbidx[ww]] += Ywb_rep[ww];
+	      }
+	      ov_mean_rep[gg] += YXstar_rep[ii];
+	    }
+	    for (jj in 1:p_tilde) {
+	      mean_d_rep[clusidx, jj] = mean(YXstar_rep[r1:(r1 + cluster_size[clusidx] - 1), jj]);
             }
-     r1 += cluster_size[clusidx];
-     clusidx += 1;
-   } // cc
-   ov_mean_rep[gg] *= pow(nclus[gg, 1], -1);
-   xbar_b_rep[gg] = ov_mean_rep[gg];
-   r1 -= nclus[gg, 1]; // reset for S_PW
-   clusidx -= nclus[gg, 2];
-   if (N_between > 0) {
-     S2_rep[gg] = rep_matrix(0, N_between, N_between);
-     for (ii in 1:N_between) {
-       xbar_b_rep[gg, between_idx[ii]] = mean(mean_d_rep[clusidx:(clusidx + nclus[gg, 2] - 1), between_idx[ii]]);
-     }
-   }
-   for (cc in 1:nclus[gg, 2]) {
-     for (ii in r1:(r1 + cluster_size[clusidx] - 1)) {
-       S_PW_rep_full[gg] += tcrossprod(to_matrix(YXstar_rep[ii] - mean_d_rep[clusidx]));
-     }
-     S_B_rep[gg] += cluster_size[clusidx] * tcrossprod(to_matrix(mean_d_rep[clusidx] - ov_mean_rep[gg]));
-     if (N_between > 0) {
-       S2_rep[gg] += tcrossprod(to_matrix(mean_d_rep[clusidx, between_idx[1:N_between]] - xbar_b_rep[gg, between_idx[1:N_between]]));
-     }
-     r1 += cluster_size[clusidx];
-     clusidx += 1;
-   }
-   S_PW_rep_full[gg] *= pow(nclus[gg, 1] - nclus[gg, 2], -1);
-   S_B_rep[gg] *= pow(nclus[gg, 2] - 1, -1);
-   S2_rep[gg] *= pow(nclus[gg, 2], -1);
-   // mods to between-only variables:
-   if (N_between > 0) {
-     array[N_between] int betonly = between_idx[1:N_between];
-     S_PW_rep_full[gg, betonly, betonly] = rep_matrix(0, N_between, N_between);
-     // Y2: mean_d_rep; Y2c: mean_d_rep - ov_mean_rep
-     for (ii in 1:N_between) {
-       for (jj in 1:(N_both + N_within)) {
-  S_B_rep[gg, between_idx[ii], between_idx[(N_between + jj)]] *= (gs[gg] * nclus[gg, 2] * pow(nclus[gg, 1], -1));
-  S_B_rep[gg, between_idx[(N_between + jj)], between_idx[ii]] = S_B_rep[gg, between_idx[ii], between_idx[(N_between + jj)]];
-       }
-     }
-     S_B_rep[gg, betonly, betonly] = rep_matrix(0, N_between, N_between);
-     for (cc in 1:nclus[gg, 2]) {
-       S_B_rep[gg, betonly, betonly] += tcrossprod(to_matrix(mean_d_rep[cc, betonly] - ov_mean_rep[gg, betonly]));
-     }
-     S_B_rep[gg, betonly, betonly] *= gs[gg] * pow(nclus[gg, 2], -1);
-   }
-   cov_b_rep[gg] = pow(gs[gg], -1) * (S_B_rep[gg] - S_PW_rep_full[gg]);
-   if (N_between > 0) {
-     cov_b_rep[gg, between_idx[1:N_between], between_idx[1:N_between]] = S2_rep[gg];
-   }
-   rr1 = r1 - nclus[gg, 1];
-   r2 = clusidx - nclus[gg, 2];
-   Mu_rep_sat[gg] = rep_vector(0, N_within + N_both);
-   if (N_within > 0) {
-     for (j in 1:N_within) {
-       xbar_b_rep[gg, within_idx[j]] = 0;
-       Mu_rep_sat[gg, within_idx[j]] = ov_mean_rep[gg, within_idx[j]];
-     }
-   }
-   S_PW_rep[gg] = S_PW_rep_full[gg, notbidx, notbidx];
-   if (Nx[gg] > 0 || Nx_between[gg] > 0) {
-     array[2] vector[p_tilde] mnvecs;
-     array[3] matrix[p_tilde, p_tilde] covmats;
-     mnvecs = calc_mean_vecs(YXstar_rep[rr1:(r1 - 1)], mean_d_rep[r2:(clusidx - 1)], nclus[gg], Xvar[gg], Xbetvar[gg], Nx[gg], Nx_between[gg], p_tilde);
-     covmats = calc_cov_mats(YXstar_rep[rr1:(r1 - 1)], mean_d_rep[r2:(clusidx - 1)], mnvecs, nclus[gg], Xvar[gg], Xbetvar[gg], Nx[gg], Nx_between[gg], p_tilde);
-     log_lik_x_rep[r2:(clusidx - 1)] = calc_log_lik_x(mean_d_rep[r2:(clusidx - 1)],
-            mnvecs[2], covmats[1],
-            covmats[2], covmats[3],
-            nclus[gg], cluster_size[r2:(clusidx - 1)],
-            Xvar[gg], Xbetvar[gg], Nx[gg], Nx_between[gg]);
-   } // Nx[gg] > 0
- } // gg
+	    r1 += cluster_size[clusidx];
+	    clusidx += 1;
+	  } // cc
+	  ov_mean_rep[gg] *= pow(nclus[gg, 1], -1);
+	  xbar_b_rep[gg] = ov_mean_rep[gg];
+	  r1 -= nclus[gg, 1]; // reset for S_PW
+	  clusidx -= nclus[gg, 2];
+	  if (N_between > 0) {
+	    S2_rep[gg] = rep_matrix(0, N_between, N_between);
+	    for (ii in 1:N_between) {
+	      xbar_b_rep[gg, between_idx[ii]] = mean(mean_d_rep[clusidx:(clusidx + nclus[gg, 2] - 1), between_idx[ii]]);
+	    }
+	  }
+	  for (cc in 1:nclus[gg, 2]) {
+	    for (ii in r1:(r1 + cluster_size[clusidx] - 1)) {
+	      S_PW_rep_full[gg] += tcrossprod(to_matrix(YXstar_rep[ii] - mean_d_rep[clusidx]));
+	    }
+	    S_B_rep[gg] += cluster_size[clusidx] * tcrossprod(to_matrix(mean_d_rep[clusidx] - ov_mean_rep[gg]));
+	    if (N_between > 0) {
+	      S2_rep[gg] += tcrossprod(to_matrix(mean_d_rep[clusidx, between_idx[1:N_between]] - xbar_b_rep[gg, between_idx[1:N_between]]));
+	    }
+	    r1 += cluster_size[clusidx];
+	    clusidx += 1;
+	  }
+	  S_PW_rep_full[gg] *= pow(nclus[gg, 1] - nclus[gg, 2], -1);
+	  S_B_rep[gg] *= pow(nclus[gg, 2] - 1, -1);
+	  S2_rep[gg] *= pow(nclus[gg, 2], -1);
+	  // mods to between-only variables:
+	  if (N_between > 0) {
+	    array[N_between] int betonly = between_idx[1:N_between];
+	    S_PW_rep_full[gg, betonly, betonly] = rep_matrix(0, N_between, N_between);
+	    // Y2: mean_d_rep; Y2c: mean_d_rep - ov_mean_rep
+	    for (ii in 1:N_between) {
+	      for (jj in 1:(N_both + N_within)) {
+		S_B_rep[gg, between_idx[ii], between_idx[(N_between + jj)]] *= (gs[gg] * nclus[gg, 2] * pow(nclus[gg, 1], -1));
+		S_B_rep[gg, between_idx[(N_between + jj)], between_idx[ii]] = S_B_rep[gg, between_idx[ii], between_idx[(N_between + jj)]];
+	      }
+	    }
+	    S_B_rep[gg, betonly, betonly] = rep_matrix(0, N_between, N_between);
+	    for (cc in 1:nclus[gg, 2]) {
+	      S_B_rep[gg, betonly, betonly] += tcrossprod(to_matrix(mean_d_rep[cc, betonly] - ov_mean_rep[gg, betonly]));
+	    }
+	    S_B_rep[gg, betonly, betonly] *= gs[gg] * pow(nclus[gg, 2], -1);
+	  }
+	  cov_b_rep[gg] = pow(gs[gg], -1) * (S_B_rep[gg] - S_PW_rep_full[gg]);
+	  if (N_between > 0) {
+	    cov_b_rep[gg, between_idx[1:N_between], between_idx[1:N_between]] = S2_rep[gg];
+	  }
+	  rr1 = r1 - nclus[gg, 1];
+	  r2 = clusidx - nclus[gg, 2];
+	  Mu_rep_sat[gg] = rep_vector(0, N_within + N_both);
+	  if (N_within > 0) {
+	    for (j in 1:N_within) {
+	      xbar_b_rep[gg, within_idx[j]] = 0;
+	      Mu_rep_sat[gg, within_idx[j]] = ov_mean_rep[gg, within_idx[j]];
+	    }
+	  }
+	  S_PW_rep[gg] = S_PW_rep_full[gg, notbidx, notbidx];
+	  if (Nx[gg] > 0 || Nx_between[gg] > 0) {
+	    array[2] vector[p_tilde] mnvecs;
+	    array[3] matrix[p_tilde, p_tilde] covmats;
+	    mnvecs = calc_mean_vecs(YXstar_rep[rr1:(r1 - 1)], mean_d_rep[r2:(clusidx - 1)], nclus[gg], Xvar[gg], Xbetvar[gg], Nx[gg], Nx_between[gg], p_tilde);
+	    covmats = calc_cov_mats(YXstar_rep[rr1:(r1 - 1)], mean_d_rep[r2:(clusidx - 1)], mnvecs, nclus[gg], Xvar[gg], Xbetvar[gg], Nx[gg], Nx_between[gg], p_tilde);
+	    log_lik_x_rep[r2:(clusidx - 1)] = calc_log_lik_x(mean_d_rep[r2:(clusidx - 1)],
+							     mnvecs[2], covmats[1],
+							     covmats[2], covmats[3],
+							     nclus[gg], cluster_size[r2:(clusidx - 1)],
+							     Xvar[gg], Xbetvar[gg], Nx[gg], Nx_between[gg]);
+	  } // Nx[gg] > 0
+	} // gg
       } else {
- for (mm in 1:Np) {
-   matrix[Nobs[mm], Nobs[mm]] Sigma_chol;
-   obsidx = Obsvar[mm,];
-   xidx = Xvar[mm,];
-   xdatidx = Xdatvar[mm,];
-   grpidx = grpnum[mm];
-   r1 = startrow[mm];
-   r2 = endrow[mm];
-   Sigma_chol = cholesky_decompose(Sigma[ grpidx, obsidx[1:Nobs[mm]], obsidx[1:Nobs[mm]] ]);
-   for (jj in r1:r2) {
-     YXstar_rep[jj, 1:Nobs[mm]] = multi_normal_cholesky_rng(Mu[grpidx, obsidx[1:Nobs[mm]]], Sigma_chol);
-   }
- }
- if (missing) {
-   // start values for Mu and Sigma
-   for (g in 1:Ng) {
-     Mu_sat[g] = rep_vector(0, p + q);
-     Mu_rep_sat[g] = Mu_sat[g];
-     Sigma_sat[g] = diag_matrix(rep_vector(1, p + q));
-     Sigma_rep_sat[g] = Sigma_sat[g];
-   }
-   for (jj in 1:emiter) {
-     satout = estep(YXstar, Mu_sat, Sigma_sat, Nobs, Obsvar, startrow, endrow, grpnum, Np, Ng);
-     satrep_out = estep(YXstar_rep, Mu_rep_sat, Sigma_rep_sat, Nobs, Obsvar, startrow, endrow, grpnum, Np, Ng);
-     // M step
-     for (g in 1:Ng) {
-       Mu_sat[g] = satout[g,,1]/N[g];
-       Sigma_sat[g] = satout[g,,2:(p + q + 1)]/N[g] - Mu_sat[g] * Mu_sat[g]';
-       Mu_rep_sat[g] = satrep_out[g,,1]/N[g];
-       Sigma_rep_sat[g] = satrep_out[g,,2:(p + q + 1)]/N[g] - Mu_rep_sat[g] * Mu_rep_sat[g]';
-     }
-   }
- } else {
-   // complete data; Np patterns must only correspond to groups
-   for (mm in 1:Np) {
-     array[3] int arr_dims = dims(YXstar);
-     matrix[endrow[mm] - startrow[mm] + 1, arr_dims[2]] YXsmat; // crossprod needs matrix
-     matrix[endrow[mm] - startrow[mm] + 1, arr_dims[2]] YXsrepmat;
-     r1 = startrow[mm];
-     r2 = endrow[mm];
-     grpidx = grpnum[mm];
-     for (jj in 1:(p + q)) {
-       Mu_sat[grpidx,jj] = mean(YXstar[r1:r2,jj]);
-       Mu_rep_sat[grpidx,jj] = mean(YXstar_rep[r1:r2,jj]);
-     }
-     for (jj in r1:r2) {
-       YXsmat[jj - r1 + 1] = (YXstar[jj] - Mu_sat[grpidx])';
-       YXsrepmat[jj - r1 + 1] = (YXstar_rep[jj] - Mu_rep_sat[grpidx])';
-     }
-     Sigma_sat[grpidx] = crossprod(YXsmat)/N[grpidx];
-     Sigma_rep_sat[grpidx] = crossprod(YXsrepmat)/N[grpidx];
-     // FIXME? Sigma_sat[grpidx] = tcrossprod(YXsmat); does not throw an error??
-   }
- }
- for (g in 1:Ng) {
-   Sigma_sat_inv_grp[g] = inverse_spd(Sigma_sat[g]);
-   logdetS_sat_grp[g] = log_determinant(Sigma_sat[g]);
-   Sigma_rep_sat_inv_grp[g] = inverse_spd(Sigma_rep_sat[g]);
-   logdetS_rep_sat_grp[g] = log_determinant(Sigma_rep_sat[g]);
- }
- for (mm in 1:Np) {
-   Sigma_sat_inv[mm, 1:(Nobs[mm] + 1), 1:(Nobs[mm] + 1)] = sig_inv_update(Sigma_sat_inv_grp[grpnum[mm]], Obsvar[mm,], Nobs[mm], p + q, logdetS_sat_grp[grpnum[mm]]);
-   Sigma_rep_sat_inv[mm, 1:(Nobs[mm] + 1), 1:(Nobs[mm] + 1)] = sig_inv_update(Sigma_rep_sat_inv_grp[grpnum[mm]], Obsvar[mm,], Nobs[mm], p + q, logdetS_rep_sat_grp[grpnum[mm]]);
- }
+	for (mm in 1:Np) {
+	  matrix[Nobs[mm], Nobs[mm]] Sigma_chol;
+	  obsidx = Obsvar[mm,];
+	  xidx = Xvar[mm,];
+	  xdatidx = Xdatvar[mm,];
+	  grpidx = grpnum[mm];
+	  r1 = startrow[mm];
+	  r2 = endrow[mm];
+	  Sigma_chol = cholesky_decompose(Sigma[ grpidx, obsidx[1:Nobs[mm]], obsidx[1:Nobs[mm]] ]);
+	  for (jj in r1:r2) {
+	    YXstar_rep[jj, 1:Nobs[mm]] = multi_normal_cholesky_rng(Mu[grpidx, obsidx[1:Nobs[mm]]], Sigma_chol);
+	  }
+	}
+	if (missing) {
+	  // start values for Mu and Sigma
+	  for (g in 1:Ng) {
+	    Mu_sat[g] = rep_vector(0, p + q);
+	    Mu_rep_sat[g] = Mu_sat[g];
+	    Sigma_sat[g] = diag_matrix(rep_vector(1, p + q));
+	    Sigma_rep_sat[g] = Sigma_sat[g];
+	  }
+	  for (jj in 1:emiter) {
+	    satout = estep(YXstar, Mu_sat, Sigma_sat, Nobs, Obsvar, startrow, endrow, grpnum, Np, Ng);
+	    satrep_out = estep(YXstar_rep, Mu_rep_sat, Sigma_rep_sat, Nobs, Obsvar, startrow, endrow, grpnum, Np, Ng);
+	    // M step
+	    for (g in 1:Ng) {
+	      Mu_sat[g] = satout[g,,1]/N[g];
+	      Sigma_sat[g] = satout[g,,2:(p + q + 1)]/N[g] - Mu_sat[g] * Mu_sat[g]';
+	      Mu_rep_sat[g] = satrep_out[g,,1]/N[g];
+	      Sigma_rep_sat[g] = satrep_out[g,,2:(p + q + 1)]/N[g] - Mu_rep_sat[g] * Mu_rep_sat[g]';
+	    }
+	  }
+	} else {
+	  // complete data; Np patterns must only correspond to groups
+	  for (mm in 1:Np) {
+	    array[3] int arr_dims = dims(YXstar);
+	    matrix[endrow[mm] - startrow[mm] + 1, arr_dims[2]] YXsmat; // crossprod needs matrix
+	    matrix[endrow[mm] - startrow[mm] + 1, arr_dims[2]] YXsrepmat;
+	    r1 = startrow[mm];
+	    r2 = endrow[mm];
+	    grpidx = grpnum[mm];
+	    for (jj in 1:(p + q)) {
+	      Mu_sat[grpidx,jj] = mean(YXstar[r1:r2,jj]);
+	      Mu_rep_sat[grpidx,jj] = mean(YXstar_rep[r1:r2,jj]);
+	    }
+	    for (jj in r1:r2) {
+	      YXsmat[jj - r1 + 1] = (YXstar[jj] - Mu_sat[grpidx])';
+	      YXsrepmat[jj - r1 + 1] = (YXstar_rep[jj] - Mu_rep_sat[grpidx])';
+	    }
+	    Sigma_sat[grpidx] = crossprod(YXsmat)/N[grpidx];
+	    Sigma_rep_sat[grpidx] = crossprod(YXsrepmat)/N[grpidx];
+	    // FIXME? Sigma_sat[grpidx] = tcrossprod(YXsmat); does not throw an error??
+	  }
+	}
+	for (g in 1:Ng) {
+	  Sigma_sat_inv_grp[g] = inverse_spd(Sigma_sat[g]);
+	  logdetS_sat_grp[g] = log_determinant(Sigma_sat[g]);
+	  Sigma_rep_sat_inv_grp[g] = inverse_spd(Sigma_rep_sat[g]);
+	  logdetS_rep_sat_grp[g] = log_determinant(Sigma_rep_sat[g]);
+	}
+	for (mm in 1:Np) {
+	  Sigma_sat_inv[mm, 1:(Nobs[mm] + 1), 1:(Nobs[mm] + 1)] = sig_inv_update(Sigma_sat_inv_grp[grpnum[mm]], Obsvar[mm,], Nobs[mm], p + q, logdetS_sat_grp[grpnum[mm]]);
+	  Sigma_rep_sat_inv[mm, 1:(Nobs[mm] + 1), 1:(Nobs[mm] + 1)] = sig_inv_update(Sigma_rep_sat_inv_grp[grpnum[mm]], Obsvar[mm,], Nobs[mm], p + q, logdetS_rep_sat_grp[grpnum[mm]]);
+	}
       }
     }
     // compute log-likelihoods
@@ -1776,20 +1767,20 @@ generated quantities { // these matrices are saved in the output but do not figu
       r2 = 0;
       r4 = 0;
       for (mm in 1:Np) {
- grpidx = grpnum[mm];
- if (grpidx > 1) {
-   r1 += nclus[(grpidx - 1), 2];
-   r3 += nclus[(grpidx - 1), 1];
- }
- r2 += nclus[grpidx, 2];
- r4 += nclus[grpidx, 1];
- log_lik[r1:r2] = twolevel_logdens(mean_d_full[r1:r2], cov_d_full[r1:r2], S_PW[grpidx], YX[r3:r4],
-       nclus[grpidx,], cluster_size[r1:r2], cluster_size[r1:r2],
-       nclus[grpidx,2], intone[1:nclus[grpidx,2]], Mu[grpidx],
-       Sigma[grpidx], Mu_c[grpidx], Sigma_c[grpidx],
-       ov_idx1, ov_idx2, within_idx, between_idx, both_idx,
-       p_tilde, N_within, N_between, N_both);
- if (Nx[grpidx] + Nx_between[grpidx] > 0) log_lik[r1:r2] -= log_lik_x_full[r1:r2];
+	grpidx = grpnum[mm];
+	if (grpidx > 1) {
+	  r1 += nclus[(grpidx - 1), 2];
+	  r3 += nclus[(grpidx - 1), 1];
+	}
+	r2 += nclus[grpidx, 2];
+	r4 += nclus[grpidx, 1];
+	log_lik[r1:r2] = twolevel_logdens(mean_d_full[r1:r2], cov_d_full[r1:r2], S_PW[grpidx], YX[r3:r4],
+					  nclus[grpidx,], cluster_size[r1:r2], cluster_size[r1:r2],
+					  nclus[grpidx,2], intone[1:nclus[grpidx,2]], Mu[grpidx],
+					  Sigma[grpidx], Mu_c[grpidx], Sigma_c[grpidx],
+					  ov_idx1, ov_idx2, within_idx, between_idx, both_idx,
+					  p_tilde, N_within, N_between, N_both);
+	if (Nx[grpidx] + Nx_between[grpidx] > 0) log_lik[r1:r2] -= log_lik_x_full[r1:r2];
       }
     }
     zmat = rep_matrix(0, p + q, p + q);
@@ -1806,103 +1797,103 @@ generated quantities { // these matrices are saved in the output but do not figu
       r1 = startrow[mm];
       r2 = endrow[mm];
       if (use_cov) {
- log_lik[mm] = wishart_lpdf((N[mm] - 1) * Sstar[mm] | N[mm] - 1, Sigma[mm]);
- if (do_test) {
-   log_lik_sat[mm] = -log_lik[mm] + wishart_lpdf((N[mm] - 1) * Sstar[mm] | N[mm] - 1, Sstar[mm]);
-   log_lik_rep[mm] = wishart_lpdf(Sigma_rep_sat[mm] | N[mm] - 1, Sigma[mm]);
-   log_lik_rep_sat[mm] = wishart_lpdf(Sigma_rep_sat[mm] | N[mm] - 1, pow(N[mm] - 1, -1) * Sigma_rep_sat[mm]);
- }
- if (Nx[mm] > 0) {
-   array[Nx[mm]] int xvars = xdatidx[1:Nx[mm]];
-   log_lik[mm] += -wishart_lpdf((N[mm] - 1) * Sstar[mm, xvars, xvars] | N[mm] - 1, Sigma[mm, xvars, xvars]);
-   if (do_test) {
-     log_lik_sat[mm] += wishart_lpdf((N[mm] - 1) * Sstar[mm, xvars, xvars] | N[mm] - 1, Sigma[mm, xvars, xvars]);
-     log_lik_sat[mm] += -wishart_lpdf((N[mm] - 1) * Sstar[mm, xvars, xvars] | N[mm] - 1, Sstar[mm, xvars, xvars]);
-     log_lik_rep[mm] += -wishart_lpdf(Sigma_rep_sat[mm, xvars, xvars] | N[mm] - 1, Sigma[mm, xvars, xvars]);
-     log_lik_rep_sat[mm] += -wishart_lpdf(Sigma_rep_sat[mm, xvars, xvars] | N[mm] - 1, pow(N[mm] - 1, -1) * Sigma_rep_sat[mm, xvars, xvars]);
-   }
- }
+	log_lik[mm] = wishart_lpdf((N[mm] - 1) * Sstar[mm] | N[mm] - 1, Sigma[mm]);
+	if (do_test) {
+	  log_lik_sat[mm] = -log_lik[mm] + wishart_lpdf((N[mm] - 1) * Sstar[mm] | N[mm] - 1, Sstar[mm]);
+	  log_lik_rep[mm] = wishart_lpdf(Sigma_rep_sat[mm] | N[mm] - 1, Sigma[mm]);
+	  log_lik_rep_sat[mm] = wishart_lpdf(Sigma_rep_sat[mm] | N[mm] - 1, pow(N[mm] - 1, -1) * Sigma_rep_sat[mm]);
+	}
+	if (Nx[mm] > 0) {
+	  array[Nx[mm]] int xvars = xdatidx[1:Nx[mm]];
+	  log_lik[mm] += -wishart_lpdf((N[mm] - 1) * Sstar[mm, xvars, xvars] | N[mm] - 1, Sigma[mm, xvars, xvars]);
+	  if (do_test) {
+	    log_lik_sat[mm] += wishart_lpdf((N[mm] - 1) * Sstar[mm, xvars, xvars] | N[mm] - 1, Sigma[mm, xvars, xvars]);
+	    log_lik_sat[mm] += -wishart_lpdf((N[mm] - 1) * Sstar[mm, xvars, xvars] | N[mm] - 1, Sstar[mm, xvars, xvars]);
+	    log_lik_rep[mm] += -wishart_lpdf(Sigma_rep_sat[mm, xvars, xvars] | N[mm] - 1, Sigma[mm, xvars, xvars]);
+	    log_lik_rep_sat[mm] += -wishart_lpdf(Sigma_rep_sat[mm, xvars, xvars] | N[mm] - 1, pow(N[mm] - 1, -1) * Sigma_rep_sat[mm, xvars, xvars]);
+	  }
+	}
       } else if (has_data && !multilev) {
- for (jj in r1:r2) {
-   log_lik[jj] = multi_normal_suff(YXstar[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu[grpidx, obsidx[1:Nobs[mm]]], Sigmainv[mm], 1);
-   // TODO efficiency can be improved by getting inverse/chol of Sigma outside loop
-   if (Nx[mm] > 0 && !missing) {
-     log_lik[jj] += -multi_normal_suff(YXstar[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigmainv[grpidx], xidx, Nx[mm], p + q, logdetSigma_grp[grpidx]), 1);
-   } else if (Nx[mm] > 0) {
-     log_lik[jj] += -multi_normal_lpdf(YXstar[jj, xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
-   }
- }
+	for (jj in r1:r2) {
+	  log_lik[jj] = multi_normal_suff(YXstar[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu[grpidx, obsidx[1:Nobs[mm]]], Sigmainv[mm], 1);
+	  // TODO efficiency can be improved by getting inverse/chol of Sigma outside loop
+	  if (Nx[mm] > 0 && !missing) {
+	    log_lik[jj] += -1.0 * multi_normal_suff(YXstar[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigmainv[grpidx], xidx, Nx[mm], p + q, logdetSigma_grp[grpidx]), 1);
+	  } else if (Nx[mm] > 0) {
+	    log_lik[jj] += -1.0 * multi_normal_lpdf(YXstar[jj, xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
+	  }
+	}
       }
       // saturated and y_rep likelihoods for ppp
       if (do_test) {
- if (multilev) {
-   // compute clusterwise log_lik_rep for grpidx
-   if (grpidx > 1) {
-     rr1 += nclus[(grpidx - 1), 2];
-     r3 += nclus[(grpidx - 1), 1];
-   }
-   rr2 += nclus[grpidx, 2];
-   r4 += nclus[grpidx, 1];
-   // NB: cov_d is 0 when we go cluster by cluster.
-   // otherwise it is covariance of cluster means by each unique cluster size
-   // because we go cluster by cluster here, we can reuse cov_d_full everywhere
-   log_lik_rep[rr1:rr2] = twolevel_logdens(mean_d_rep[rr1:rr2], cov_d_full[rr1:rr2],
-        S_PW_rep[grpidx], YXstar_rep[r3:r4],
-        nclus[grpidx,], cluster_size[rr1:rr2],
-        cluster_size[rr1:rr2], nclus[grpidx,2],
-        intone[1:nclus[grpidx,2]], Mu[grpidx],
-        Sigma[grpidx], Mu_c[grpidx], Sigma_c[grpidx],
-        ov_idx1, ov_idx2, within_idx, between_idx,
-        both_idx, p_tilde, N_within, N_between, N_both);
-   log_lik_sat[rr1:rr2] = twolevel_logdens(mean_d_full[rr1:rr2], cov_d_full[rr1:rr2],
-        S_PW[grpidx], YX[r3:r4],
-        nclus[grpidx,], cluster_size[rr1:rr2],
-        cluster_size[rr1:rr2], nclus[grpidx,2],
-        intone[1:nclus[grpidx,2]], xbar_w[grpidx, ov_idx1],
-        S_PW[grpidx], xbar_b[grpidx, ov_idx2], cov_b[grpidx, ov_idx2, ov_idx2],
-        ov_idx1, ov_idx2, within_idx, between_idx,
-        both_idx, p_tilde, N_within, N_between, N_both);
-   log_lik_rep_sat[rr1:rr2] = twolevel_logdens(mean_d_rep[rr1:rr2], cov_d_full[rr1:rr2],
-            S_PW_rep[grpidx], YXstar_rep[r3:r4],
-            nclus[grpidx,], cluster_size[rr1:rr2],
-            cluster_size[rr1:rr2], nclus[grpidx,2],
-            intone[1:nclus[grpidx,2]], Mu_rep_sat[grpidx],
-            S_PW_rep[grpidx], xbar_b_rep[grpidx, ov_idx2],
-            cov_b_rep[grpidx, ov_idx2, ov_idx2],
-            ov_idx1, ov_idx2,
-            within_idx, between_idx, both_idx, p_tilde,
-            N_within, N_between, N_both);
-   if (Nx[grpidx] + Nx_between[grpidx] > 0) {
-     log_lik_rep[rr1:rr2] -= log_lik_x_rep[rr1:rr2];
-     log_lik_sat[rr1:rr2] -= log_lik_x_full[rr1:rr2];
-     log_lik_rep_sat[rr1:rr2] -= log_lik_x_rep[rr1:rr2];
-   }
-   // we subtract log_lik here so that _sat always varies and does not lead to
-   // problems with rhat and neff computations
-   log_lik_sat[rr1:rr2] -= log_lik[rr1:rr2];
- } else if (!use_cov) {
-   r1 = startrow[mm];
-   r2 = endrow[mm];
-   for (jj in r1:r2) {
-     // log_lik_rep, _sat, _rep_sat
-     log_lik_rep[jj] = multi_normal_suff(YXstar_rep[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu[grpidx, obsidx[1:Nobs[mm]]], Sigmainv[mm], 1);
-     log_lik_sat[jj] = multi_normal_suff(YXstar[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu_sat[grpidx, obsidx[1:Nobs[mm]]], Sigma_sat_inv[mm], 1);
-     log_lik_rep_sat[jj] = multi_normal_suff(YXstar_rep[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu_rep_sat[grpidx, obsidx[1:Nobs[mm]]], Sigma_rep_sat_inv[mm], 1);
-     // TODO efficiency can be improved by getting inverse/chol of Sigma outside loop
-     if (Nx[mm] > 0 && !missing) {
-       log_lik_rep[jj] += -multi_normal_suff(YXstar_rep[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigmainv[grpidx], xidx, Nx[mm], p + q, logdetSigma_grp[grpidx]), 1);
-       log_lik_sat[jj] += -multi_normal_suff(YXstar[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu_sat[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigma_sat_inv[grpidx], xidx, Nx[mm], p + q, logdetS_sat_grp[grpidx]), 1);
-       log_lik_rep_sat[jj] += -multi_normal_suff(YXstar_rep[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu_rep_sat[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigma_rep_sat_inv[grpidx], xidx, Nx[mm], p + q, logdetS_rep_sat_grp[grpidx]), 1);
-     } else if (Nx[mm] > 0) {
-       log_lik_rep[jj] += -multi_normal_lpdf(YXstar_rep[jj, xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
-       log_lik_sat[jj] += -multi_normal_lpdf(YXstar[jj, xdatidx[1:Nx[mm]]] | Mu_sat[grpidx, xidx[1:Nx[mm]]], Sigma_sat[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
-       log_lik_rep_sat[jj] += -multi_normal_lpdf(YXstar_rep[jj, xdatidx[1:Nx[mm]]] | Mu_rep_sat[grpidx, xidx[1:Nx[mm]]], Sigma_rep_sat[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
-     }
-   }
-   // we subtract log_lik here so that _sat always varies and does not lead to
-   // problems with rhat and neff computations
-   log_lik_sat[r1:r2] -= log_lik[r1:r2];
- }
+	if (multilev) {
+	  // compute clusterwise log_lik_rep for grpidx
+	  if (grpidx > 1) {
+	    rr1 += nclus[(grpidx - 1), 2];
+	    r3 += nclus[(grpidx - 1), 1];
+	  }
+	  rr2 += nclus[grpidx, 2];
+	  r4 += nclus[grpidx, 1];
+	  // NB: cov_d is 0 when we go cluster by cluster.
+	  // otherwise it is covariance of cluster means by each unique cluster size
+	  // because we go cluster by cluster here, we can reuse cov_d_full everywhere
+	  log_lik_rep[rr1:rr2] = twolevel_logdens(mean_d_rep[rr1:rr2], cov_d_full[rr1:rr2],
+						  S_PW_rep[grpidx], YXstar_rep[r3:r4],
+						  nclus[grpidx,], cluster_size[rr1:rr2],
+						  cluster_size[rr1:rr2], nclus[grpidx,2],
+						  intone[1:nclus[grpidx,2]], Mu[grpidx],
+						  Sigma[grpidx], Mu_c[grpidx], Sigma_c[grpidx],
+						  ov_idx1, ov_idx2, within_idx, between_idx,
+						  both_idx, p_tilde, N_within, N_between, N_both);
+	  log_lik_sat[rr1:rr2] = twolevel_logdens(mean_d_full[rr1:rr2], cov_d_full[rr1:rr2],
+						  S_PW[grpidx], YX[r3:r4],
+						  nclus[grpidx,], cluster_size[rr1:rr2],
+						  cluster_size[rr1:rr2], nclus[grpidx,2],
+						  intone[1:nclus[grpidx,2]], xbar_w[grpidx, ov_idx1],
+						  S_PW[grpidx], xbar_b[grpidx, ov_idx2], cov_b[grpidx, ov_idx2, ov_idx2],
+						  ov_idx1, ov_idx2, within_idx, between_idx,
+						  both_idx, p_tilde, N_within, N_between, N_both);
+	  log_lik_rep_sat[rr1:rr2] = twolevel_logdens(mean_d_rep[rr1:rr2], cov_d_full[rr1:rr2],
+						      S_PW_rep[grpidx], YXstar_rep[r3:r4],
+						      nclus[grpidx,], cluster_size[rr1:rr2],
+						      cluster_size[rr1:rr2], nclus[grpidx,2],
+						      intone[1:nclus[grpidx,2]], Mu_rep_sat[grpidx],
+						      S_PW_rep[grpidx], xbar_b_rep[grpidx, ov_idx2],
+						      cov_b_rep[grpidx, ov_idx2, ov_idx2],
+						      ov_idx1, ov_idx2,
+						      within_idx, between_idx, both_idx, p_tilde,
+						      N_within, N_between, N_both);
+	  if (Nx[grpidx] + Nx_between[grpidx] > 0) {
+	    log_lik_rep[rr1:rr2] -= log_lik_x_rep[rr1:rr2];
+	    log_lik_sat[rr1:rr2] -= log_lik_x_full[rr1:rr2];
+	    log_lik_rep_sat[rr1:rr2] -= log_lik_x_rep[rr1:rr2];
+	  }
+	  // we subtract log_lik here so that _sat always varies and does not lead to
+	  // problems with rhat and neff computations
+	  log_lik_sat[rr1:rr2] -= log_lik[rr1:rr2];
+	} else if (!use_cov) {
+	  r1 = startrow[mm];
+	  r2 = endrow[mm];
+	  for (jj in r1:r2) {
+	    // log_lik_rep, _sat, _rep_sat
+	    log_lik_rep[jj] = multi_normal_suff(YXstar_rep[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu[grpidx, obsidx[1:Nobs[mm]]], Sigmainv[mm], 1);
+	    log_lik_sat[jj] = multi_normal_suff(YXstar[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu_sat[grpidx, obsidx[1:Nobs[mm]]], Sigma_sat_inv[mm], 1);
+	    log_lik_rep_sat[jj] = multi_normal_suff(YXstar_rep[jj, 1:Nobs[mm]], zmat[1:Nobs[mm], 1:Nobs[mm]], Mu_rep_sat[grpidx, obsidx[1:Nobs[mm]]], Sigma_rep_sat_inv[mm], 1);
+	    // TODO efficiency can be improved by getting inverse/chol of Sigma outside loop
+	    if (Nx[mm] > 0 && !missing) {
+	      log_lik_rep[jj] += -1.0 * multi_normal_suff(YXstar_rep[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigmainv[grpidx], xidx, Nx[mm], p + q, logdetSigma_grp[grpidx]), 1);
+	      log_lik_sat[jj] += -1.0 * multi_normal_suff(YXstar[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu_sat[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigma_sat_inv[grpidx], xidx, Nx[mm], p + q, logdetS_sat_grp[grpidx]), 1);
+	      log_lik_rep_sat[jj] += -1.0 * multi_normal_suff(YXstar_rep[jj, xdatidx[1:Nx[mm]]], zmat[1:Nx[mm], 1:Nx[mm]], Mu_rep_sat[grpidx, xidx[1:Nx[mm]]], sig_inv_update(Sigma_rep_sat_inv[grpidx], xidx, Nx[mm], p + q, logdetS_rep_sat_grp[grpidx]), 1);
+	    } else if (Nx[mm] > 0) {
+	      log_lik_rep[jj] += -1.0 * multi_normal_lpdf(YXstar_rep[jj, xdatidx[1:Nx[mm]]] | Mu[grpidx, xidx[1:Nx[mm]]], Sigma[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
+	      log_lik_sat[jj] += -1.0 * multi_normal_lpdf(YXstar[jj, xdatidx[1:Nx[mm]]] | Mu_sat[grpidx, xidx[1:Nx[mm]]], Sigma_sat[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
+	      log_lik_rep_sat[jj] += -1.0 * multi_normal_lpdf(YXstar_rep[jj, xdatidx[1:Nx[mm]]] | Mu_rep_sat[grpidx, xidx[1:Nx[mm]]], Sigma_rep_sat[grpidx, xidx[1:Nx[mm]], xidx[1:Nx[mm]]]);
+	    }
+	  }
+	  // we subtract log_lik here so that _sat always varies and does not lead to
+	  // problems with rhat and neff computations
+	  log_lik_sat[r1:r2] -= log_lik[r1:r2];
+	}
       }
     }
     if (do_test) {

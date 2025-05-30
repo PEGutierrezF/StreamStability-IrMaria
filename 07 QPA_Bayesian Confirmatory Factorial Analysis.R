@@ -18,9 +18,13 @@ data_pm <- data_pm %>%
   dplyr::select(-date)
 
 head(data_pm)
+summary(data_pm)
+data_pm$canopy <- as.numeric(data_pm$canopy)
 
 # Interpolate NAs
 data_pm_interpolated <- apply(data_pm, 2, na.approx)
+head(data_pm_interpolated)
+summary(data_pm_interpolated)
 
 # Standardize variables
 data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
@@ -40,10 +44,11 @@ priors <- list(
 
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
-            n.chains = 4, burnin = 8000, sample = 10000,
+            n.chains = 4, burnin = 800, sample = 10000,
             seed = 14, control = list(adapt_delta = 0.9999, 
             dp = priors$dp, max_treedepth=12), mcmcfile = T)
 
+pairs(mod)
 summary(mod)
 semPaths(semPlotModel_lavaanModel(model))
 

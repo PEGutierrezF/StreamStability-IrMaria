@@ -16,7 +16,7 @@ remove.packages(c("StanHeaders", "rstan"))
 install.packages("StanHeaders", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages("mvnormalTest", dependencies=TRUE)
-install.packages('readxl')
+install.packages('optimx')
 
 # install.packages('optimx')
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
