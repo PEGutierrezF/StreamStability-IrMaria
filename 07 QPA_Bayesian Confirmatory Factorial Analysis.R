@@ -39,14 +39,16 @@ model <- '
 
 priors <- list(
   # Normal priors for regression coefficients
-  dp = "normal(0, 10)" # This sets a normal(0, 10) prior on all regression parameters
+  dp = "normal(0, 1)" # This sets a normal(0, 1) prior on all regression parameters
 )
 
 # Fit the model
 mod <- bcfa(model, data = data_pm_standardized,
-            n.chains = 4, burnin = 800, sample = 10000,
+            n.chains = 4, burnin = 8000, sample = 10000,
             seed = 14, control = list(adapt_delta = 0.9999, 
             dp = priors$dp, max_treedepth=12), mcmcfile = T)
+
+
 
 pairs(mod)
 summary(mod)

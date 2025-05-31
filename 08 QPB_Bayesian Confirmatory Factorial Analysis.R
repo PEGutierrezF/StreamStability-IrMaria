@@ -36,7 +36,7 @@ model_QPB <- '
 
 priors <- list(
   # Normal priors for regression coefficients
-  dp = "normal(0, 10)" # This sets a normal(0, 10) prior on all regression parameters
+  dp = "normal(0, 1)" # This sets a normal(0, 10) prior on all regression parameters
 )
 
 # Fit the model
