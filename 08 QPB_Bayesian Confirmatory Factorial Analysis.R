@@ -12,7 +12,8 @@
 
 
 
-bayes_cfa_QPB <- read.xlsx("data/data_bcfa.xlsx", sheet='QPB_pre_Hurricane',
+bayes_cfa_QPB <- read.xlsx("data/data_bcfa.xlsx", sheet='QPB_pre_Hurricane')
+,
                      detectDates = TRUE)
 
 bayes_cfa_QPB <- bayes_cfa_QPB %>% 

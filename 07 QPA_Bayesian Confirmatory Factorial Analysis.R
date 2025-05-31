@@ -31,8 +31,8 @@ data_pm_standardized <- as.data.frame(scale(data_pm_interpolated))
 
 model <- '
   leaflitter ~ prior("normal(0,1)")*canopy
-  epilithon ~ prior("normal(0,0.5)")*decapod + prior("normal(0,1)")*canopy
-  decapod ~ prior("normal(0,0.5)")*epilithon + prior("normal(0,1)")*leaflitter
+  epilithon ~ prior("normal(0,1)")*decapod + prior("normal(0,1)")*canopy
+  decapod ~ prior("normal(0,1)")*epilithon + prior("normal(0,1)")*leaflitter
   macroinvertebrates ~ prior("normal(0,1)")*epilithon + prior("normal(0,1)")*leaflitter + prior("normal(0,1)")*decapod
 '
 mod <- bsem(
