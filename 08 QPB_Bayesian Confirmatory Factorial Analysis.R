@@ -28,23 +28,24 @@ bayes_cfa_QPB_interp <- apply(bayes_cfa_QPB, 2, na.approx)
 bayes_cfa_QPB_interp_stand <- as.data.frame(scale(bayes_cfa_QPB_interp))
 
 model_QPB <- '
-  # Regressions
-  leaflitter ~ canopy
-  epilithon ~ canopy + decapod  
-  decapod ~ epilithon + leaflitter 
-  macroinvertebrates ~ epilithon + leaflitter + decapod 
+  leaflitter ~ prior("normal(0,1)")*canopy
+  epilithon ~ prior("normal(0,1)")*decapod + prior("normal(0,1)")*canopy
+  decapod ~ prior("normal(0,1)")*epilithon + prior("normal(0,1)")*leaflitter
+  macroinvertebrates ~ prior("normal(0,1)")*epilithon + prior("normal(0,1)")*leaflitter + prior("normal(0,1)")*decapod
 '
 
-priors <- list(
-  # Normal priors for regression coefficients
-  dp = "normal(0, 1)" # This sets a normal(0, 10) prior on all regression parameters
-)
 
 # Fit the model
-mod_QPB <- bcfa(model_QPB, data = bayes_cfa_QPB_interp_stand,
-            n.chains = 4, burnin = 8000, sample = 10000,
-            seed = 14, control = list(adapt_delta = 0.9999, 
-            dp = priors$dp, max_treedepth=12), mcmcfile = T)
+mod_QPB <- mod <- bsem(
+  model_QPB,
+  data = bayes_cfa_QPB_interp_stand,
+  control = list(adapt_delta = 0.9999, max_treedepth = 12),
+  n.chains = 4,
+  burnin = 8000,
+  sample = 10000,
+  seed = 14,
+  mcmcfile = TRUE
+)
 
 summary(mod_QPB)
 semPaths(semPlotModel_lavaanModel(model))
