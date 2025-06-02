@@ -13,8 +13,6 @@
 
 
 bayes_cfa_QPB <- read.xlsx("data/data_bcfa.xlsx", sheet='QPB_pre_Hurricane')
-,
-                     detectDates = TRUE)
 
 bayes_cfa_QPB <- bayes_cfa_QPB %>% 
   dplyr::select(-date)
@@ -41,8 +39,8 @@ mod_QPB <- mod <- bsem(
   data = bayes_cfa_QPB_interp_stand,
   control = list(adapt_delta = 0.9999, max_treedepth = 12),
   n.chains = 4,
-  burnin = 8000,
-  sample = 10000,
+  burnin = 9800,
+  sample = 100000,
   seed = 14,
   mcmcfile = TRUE
 )
@@ -57,7 +55,7 @@ blavInspect(mod, "mcobj")
 mcmc.list <- blavInspect(mod, what = "mcmc")
 gelman.diag(mcmc.list)
 
-plot(mod)
+plot(mod_QPB)
 plot(mod,plot.type = "acf")
 plot(bayes_cfa_QPB$canopy,bayes_cfa_QPB$epilithon)
 

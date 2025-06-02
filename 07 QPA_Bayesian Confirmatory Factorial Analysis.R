@@ -40,8 +40,8 @@ mod <- bsem(
   data = data_pm_standardized,
   control = list(adapt_delta = 0.9999, max_treedepth = 12),
   n.chains = 4,
-  burnin = 8000,
-  sample = 10000,
+  burnin = 98000,
+  sample = 100000,
   seed = 14,
   mcmcfile = TRUE
 )
