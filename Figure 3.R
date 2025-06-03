@@ -68,9 +68,9 @@ plot
 
 export_svg(plot) %>% 
   charToRaw %>% 
-  rsvg(width = 10000, 
-       height = 6000) %>% 
-  tiff::writeTIFF("Figure 3a.tiff", bits.per.sample = 8L)
+  rsvg(width = 5000, 
+       height = 3000) %>% 
+  tiff::writeTIFF("Figure 3.tiff", bits.per.sample = 8L)
 
 
 # Ensure the subfolder 'figures' exists
@@ -81,5 +81,5 @@ if(!dir.exists("figures")) {
 # Export the plot as a TIFF file in the 'figures' subfolder
 export_svg(plot) %>% 
   charToRaw %>% 
-  rsvg(width = 10000, height = 6000) %>% 
-  tiff::writeTIFF("figures/Figure_3a.tiff", bits.per.sample = 8L)
+  rsvg(width = 1000, height = 600) %>% 
+  tiff::writeTIFF("figures/Figure_3.tiff", bits.per.sample = 8L)
