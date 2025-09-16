@@ -39,7 +39,7 @@ mod_QPB <- mod <- bsem(
   data = bayes_cfa_QPB_interp_stand,
   control = list(adapt_delta = 0.9999, max_treedepth = 12),
   n.chains = 4,
-  burnin = 9800,
+  burnin = 98000,
   sample = 100000,
   seed = 14,
   mcmcfile = TRUE
