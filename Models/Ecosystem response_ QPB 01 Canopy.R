@@ -244,19 +244,26 @@ mod.6 <- nlsLM(canopy_QPB ~ exponential(event, A, B, C),
 
 # Get summary of the fitted model
 fit_summary <- summary(mod.6)
-
-# Calculate total sum of squares
-total_ss <- sum((data$canopy_QPB - mean(data$canopy_QPB))^2)
+# Extract residual standard error
+residual_standard_error <- fit_summary$sigma
 # Calculate residual sum of squares
 residual_ss <- sum(fit_summary$residuals^2)
 # Calculate R-squared value
 rsquared <- 1 - residual_ss / total_ss
-# Extract p-values
-p_values <- fit_summary$coefficients[, "Pr(>|t|)"]
-# Print the results
-cat("R-squared value:", rsquared, "\n")
-cat("P-values for parameters:\n")
-print(p_values)
+rsquared
+
+# Extract the residual sum of squares
+RSS <- sum(residuals(mod.6)^2)
+# Calculate the degrees of freedom for residuals
+df_residual <- nrow(data) - length(coef(mod.6))
+# Obtain the total sum of squares
+TSS <- sum((data$canopy_QPB - mean(data$canopy_QPB))^2)
+# Calculate the F-statistic
+F_statistic <- ((TSS - RSS) / 2) / (RSS / df_residual)
+# Calculate the p-value associated with the F-statistic
+p_value <- pf(F_statistic, 2, df_residual, lower.tail = FALSE)
+p_value
+
 
 
 # Create a new data frame for prediction

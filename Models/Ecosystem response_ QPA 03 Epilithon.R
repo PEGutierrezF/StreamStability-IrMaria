@@ -240,6 +240,8 @@ mod.6 <- nls(epilithon_QPA ~ exponential(event, A, B, C),
              data = data,
              start = list(A = 1, B = 0.1, C = 0))
 
+summary(mod.6)
+
 # Get summary of the exponential curve fit
 mod.6_summary <- summary(mod.6)
 # Extract residual standard error

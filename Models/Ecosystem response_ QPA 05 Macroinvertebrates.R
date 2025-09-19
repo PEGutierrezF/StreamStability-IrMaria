@@ -250,6 +250,10 @@ mod.5.plot.macros
 # Exponential curve (mod.6) -----------------------------------------------
 # Define the exponential function
 # Fit the exponential curve using nlsLM with adjusted starting values
+exponential <- function(x, A, B, C) {
+  A * exp(B * x) + C
+}
+
 mod.6 <- nlsLM(macros_QPA ~ exponential(event, A, B, C), 
                data = data,
                start = list(A = 1, B = 0.1, C = 0),
@@ -293,6 +297,11 @@ mod.6.plot
 ###########################################################################
 # Gompertz asymmetric sigmoid model curve (mod.7) -------------------------
 # Fit the Gompertz model using nlsLM with adjusted starting values and control settings
+gompertz_asymmetric <- function(x, A, b, c, d) {
+  y = A * exp(-b * exp(-c * x)) + d
+  return(y)
+}
+
 mod.7 <- nlsLM(macros_QPA ~ gompertz_asymmetric(event, A, b, c, d),
                data = data,
                start = list(A = 1, b = 0.1, c = 0.01, d = 0),
@@ -404,3 +413,25 @@ sorted_indices <- order(aic_values)
 for (i in sorted_indices) {
   cat("AICc Mod.", i, ":", aic_values[i], "\n")
 }
+
+
+
+# AIC weight  -------------------------------------------------------------
+# Compute ??AICc
+delta_aic <- aic_values - min(aic_values)
+
+# Compute Akaike weights
+akaike_weights <- exp(-0.5 * delta_aic) / sum(exp(-0.5 * delta_aic))
+
+# Combine into a table
+model_table <- data.frame(
+  Model = paste0("Mod.", 1:8),
+  AICc = aic_values,
+  Delta_AICc = delta_aic,
+  Akaike_Weight = akaike_weights
+)
+
+# Sort table by AICc
+model_table <- model_table[order(model_table$AICc), ]
+print(model_table)
+

@@ -122,10 +122,10 @@ summary(mod.3)
 
 # Extract R-squared value and p-value
 r_squared.mod3 <- summary(mod.3)$r.squared
-p_value.mod3 <- summary(mod.3)$coefficients[4]  # P-value for the quadratic term
+p_value.mod3 <- summary(mod.3)$coefficients["I(event^2)","Pr(>|t|)"] # P-value for the quadratic term
 # Display results
 cat("R-squared:", r_squared.mod3, "\n")
-cat("R-squared:", p_value.mod3, "\n")
+cat("p-value:", p_value.mod3, "\n")
 
 # Create a new data frame for prediction
 new_data <- data.frame(event = seq(1, length(chlorophyll_QPB), length.out = 100))
@@ -407,4 +407,24 @@ sorted_indices <- order(aic_values)
 for (i in sorted_indices) {
   cat("AICc Mod.", i, ":", aic_values[i], "\n")
 }
+
+
+# AIC weight  -------------------------------------------------------------
+# Compute ??AICc
+delta_aic <- aic_values - min(aic_values)
+
+# Compute Akaike weights
+akaike_weights <- exp(-0.5 * delta_aic) / sum(exp(-0.5 * delta_aic))
+
+# Combine into a table
+model_table <- data.frame(
+  Model = paste0("Mod.", 1:8),
+  AICc = aic_values,
+  Delta_AICc = delta_aic,
+  Akaike_Weight = akaike_weights
+)
+
+# Sort table by AICc
+model_table <- model_table[order(model_table$AICc), ]
+print(model_table)
 
