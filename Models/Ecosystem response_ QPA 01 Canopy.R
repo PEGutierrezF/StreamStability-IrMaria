@@ -375,7 +375,7 @@ mod.8.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
 
 mod.8.plot
 
-(mod.1.plot + mod.2.plot + mod.3.plot + mod.4.plot) /
+(mod.1.plot + mod.2.plot + mod.3.plot + mod.4.plot.canopy) /
   (mod.5.plot + mod.6.plot + mod.7.plot + mod.8.plot)
 
 

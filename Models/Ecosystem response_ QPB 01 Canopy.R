@@ -389,3 +389,23 @@ for (i in sorted_indices) {
   cat("AICc Mod.", i, ":", aic_values[i], "\n")
 }
 
+
+# AIC weight  -------------------------------------------------------------
+# Compute ??AICc
+delta_aic <- aic_values - min(aic_values)
+
+# Compute Akaike weights
+akaike_weights <- exp(-0.5 * delta_aic) / sum(exp(-0.5 * delta_aic))
+
+# Combine into a table
+model_table <- data.frame(
+  Model = paste0("Mod.", 1:8),
+  AICc = aic_values,
+  Delta_AICc = delta_aic,
+  Akaike_Weight = akaike_weights
+)
+
+# Sort table by AICc
+model_table <- model_table[order(model_table$AICc), ]
+print(model_table)
+

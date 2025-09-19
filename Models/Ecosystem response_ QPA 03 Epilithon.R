@@ -166,9 +166,13 @@ mod.4 <- nlsLM(epilithon_QPA ~ logistic_function(event, A, B, C, D),
              data = data,
              start = start_params)
 
+# Get fitted values
+data$predicted <- predict(mod.4)
+
+# Plot
 mod.4.plot <- ggplot(data, aes(x = event, y = epilithon_QPA)) +
   geom_point() +
-  geom_line(aes(x = event, y = predicted), color = "blue") +
+  geom_line(aes(y = predicted), color = "blue") +
   labs(title = "Custom Logistic Regression",
        x = "Event",
        y = "Epilithon QPA") +
@@ -403,3 +407,25 @@ sorted_indices <- order(aic_values)
 for (i in sorted_indices) {
   cat("AICc Mod.", i, ":", aic_values[i], "\n")
 }
+
+
+
+# AIC weight  -------------------------------------------------------------
+# Compute ??AICc
+delta_aic <- aic_values - min(aic_values)
+
+# Compute Akaike weights
+akaike_weights <- exp(-0.5 * delta_aic) / sum(exp(-0.5 * delta_aic))
+
+# Combine into a table
+model_table <- data.frame(
+  Model = paste0("Mod.", 1:8),
+  AICc = aic_values,
+  Delta_AICc = delta_aic,
+  Akaike_Weight = akaike_weights
+)
+
+# Sort table by AICc
+model_table <- model_table[order(model_table$AICc), ]
+print(model_table)
+

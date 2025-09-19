@@ -16,7 +16,7 @@ remove.packages(c("StanHeaders", "rstan"))
 install.packages("StanHeaders", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages("mvnormalTest", dependencies=TRUE)
-install.packages('ggthemes')
+install.packages('AICcmodavg')
 
 # install.packages('optimx')
 libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
@@ -24,7 +24,7 @@ libraries <- c("modelr", "ggplot2", "plyr","dplyr", 'patchwork',
                "fitdistrplus", "mgcv","ggtext", 'brms','magrittr',
                'readxl', 'optimx', 'minpack.lm','openxlsx',
                'lavaan', 'mvnormalTest', 'semPlot', 'lmtest',
-               'car', 'blavaan', 'coda')
+               'car', 'blavaan', 'coda', 'AICcmodavg')
 lapply(libraries, require, character.only = TRUE)
 
 

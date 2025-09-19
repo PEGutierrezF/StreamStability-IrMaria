@@ -316,14 +316,15 @@ mod.6.plot
 # Gompertz asymmetric sigmoid model curve (mod.7) -------------------------
 # Gompertz function
 gompertz_asymmetric <- function(x, A, b, c, d) {
-  y = A * exp(-b * exp(-c * x)) + d
-  return(y)
+  A * exp(-b * exp(-c * x)) + d
 }
 
 
-mod.7 <- nlsLM(leaflitter_QPA ~ gompertz_asymmetric(event, A, b, c, d),
-               data = data,
-               start = list(A = 1, b = 1, c = 1, d = 0))
+mod.7 <- nlsLM(
+  leaflitter_QPA ~ gompertz_asymmetric(event, A, b, c, d),
+  data = data,
+  start = list(A = 3.5, b = 2, c = 0.01, d = -3)
+)
 
 rss <- sum(residuals(mod.7)^2)
 tss <- sum((data$leaflitter_QPA - mean(data$leaflitter_QPA))^2)
@@ -337,7 +338,7 @@ cat("p-value value:", pvalue_mod.7, "\n")
 curve_data <- data.frame(event = seq(1, length(leaflitter_QPA), length.out = 100))
 curve_data$predicted <- predict(mod.7, newdata = curve_data)
 
-mod.7.plot <- ggplot(data, aes(x = event, y = canopy_QPA)) +
+mod.7.plot <- ggplot(data, aes(x = event, y = leaflitter_QPA)) +
   geom_point() +
   geom_line(data = curve_data, aes(x = event, y = predicted), color = "red") +
   labs(title = "Gompertz Asymmetric Sigmoid Model Fit",
@@ -355,10 +356,13 @@ goniometric <- function(x, a, b, c, d) {
 }
 
 # Fit the model using nonlinear least squares with adjusted initial values and different algorithm
-mod.8 <- nls(leaflitter_QPA ~ goniometric(event, a, b, c, d), 
-             data = data,
-             start = list(a = 1, b = 1, c = 0, d = mean(leaflitter_QPA)),
-             algorithm = "port")
+mod.8 <- nls(
+  leaflitter_QPA ~ goniometric(event, a, b, c, d), 
+  data = data,
+  start = list(a = 1, b = 0.05, c = 0, d = mean(leaflitter_QPA)),
+  algorithm = "port",
+  control = nls.control(maxiter = 500, warnOnly = TRUE)
+)
 
 # Extract coefficients
 coefficients <- coef(mod.8)
@@ -425,3 +429,25 @@ sorted_indices <- order(aic_values)
 for (i in sorted_indices) {
   cat("AICc Mod.", i, ":", aic_values[i], "\n")
 }
+
+
+# AIC weight  -------------------------------------------------------------
+# Compute ??AICc
+delta_aic <- aic_values - min(aic_values)
+
+# Compute Akaike weights
+akaike_weights <- exp(-0.5 * delta_aic) / sum(exp(-0.5 * delta_aic))
+
+# Combine into a table
+model_table <- data.frame(
+  Model = paste0("Mod.", 1:8),
+  AICc = aic_values,
+  Delta_AICc = delta_aic,
+  Akaike_Weight = akaike_weights
+)
+
+# Sort table by AICc
+model_table <- model_table[order(model_table$AICc), ]
+print(model_table)
+
+

@@ -398,7 +398,7 @@ mod.8.plot <- ggplot(data, aes(x = event, y = decapoda_QPA)) +
 
 mod.8.plot
 
-(mod.1.plot + mod.2.plot + mod.3.plot + mod.4.plot) /
+(mod.1.plot + mod.2.plot + mod.3.plot + mod.4.plot.shrimp) /
   (mod.5.plot + mod.6.plot + mod.7.plot + mod.8.plot)
 
 
@@ -434,3 +434,24 @@ sorted_indices <- order(aic_values)
 for (i in sorted_indices) {
   cat("AICc Mod.", i, ":", aic_values[i], "\n")
 }
+
+
+# AIC weight  -------------------------------------------------------------
+# Compute ??AICc
+delta_aic <- aic_values - min(aic_values)
+
+# Compute Akaike weights
+akaike_weights <- exp(-0.5 * delta_aic) / sum(exp(-0.5 * delta_aic))
+
+# Combine into a table
+model_table <- data.frame(
+  Model = paste0("Mod.", 1:8),
+  AICc = aic_values,
+  Delta_AICc = delta_aic,
+  Akaike_Weight = akaike_weights
+)
+
+# Sort table by AICc
+model_table <- model_table[order(model_table$AICc), ]
+print(model_table)
+
